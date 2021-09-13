@@ -1,0 +1,26 @@
+<Project>
+  <PropertyGroup Label="SDK Versions">
+    <TargetFramework>net5.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Package information">
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/darkdispatcher/darkdispatcher</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/darkdispatcher/darkdispatcher</RepositoryUrl>
+    <Authors>Dark Dispatcher Contributors</Authors>
+    <Company>Dark Dispatcher</Company>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>true;</AllowedOutputExtensionsInPackageBuildOutputFolder>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Namespaces and Assembly">
+    <AssemblyPrefixName>DarkDispatcher</AssemblyPrefixName>
+    <AssemblyName>$(AssemblyPrefixName).$(MSBuildProjectName)</AssemblyName>
+    <RootNamespace>$(AssemblyName)</RootNamespace>
+  </PropertyGroup>
+</Project>
