@@ -1,5 +1,4 @@
 using DarkDispatcher.Core.Domain;
-using DarkDispatcher.Domain.Accounts.Events;
 
 namespace DarkDispatcher.Domain.Accounts
 {
@@ -12,19 +11,19 @@ namespace DarkDispatcher.Domain.Accounts
     
     public Organization(OrganizationId id, string name)
     {
-      var @event = new OrganizationCreated(id, name);
+      var @event = new Events.v1.OrganizationCreated(id, name);
       Apply(@event);
     }
 
     public void Update(string name)
     {
-      var @event = new OrganizationUpdated(GetId(), name);
+      var @event = new Events.v1.OrganizationUpdated(GetId(), name);
       Apply(@event);
     }
 
     public void Delete()
     {
-      var @event = new OrganizationDeleted(GetId());
+      var @event = new Events.v1.OrganizationDeleted(GetId());
       Apply(@event);
     }
   }
@@ -39,13 +38,13 @@ namespace DarkDispatcher.Domain.Accounts
     {
       return @event switch
       {
-        OrganizationCreated created => this with
+        Events.v1.OrganizationCreated created => this with
         {
-          Id = new OrganizationId(created.OrganizationId),
+          Id = new OrganizationId(created.Id),
           Name = created.Name
         },
-        OrganizationUpdated updated => this with { Name = updated.Name },
-        OrganizationDeleted => this with { IsDeleted = true },
+        Events.v1.OrganizationUpdated updated => this with { Name = updated.Name },
+        Events.v1.OrganizationDeleted => this with { IsDeleted = true },
         _ => this
       };
     }

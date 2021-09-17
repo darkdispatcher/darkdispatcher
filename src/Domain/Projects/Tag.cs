@@ -37,32 +37,32 @@
 //       switch (@event)
 //       {
 //         case TagCreated created:
-//           Apply(created);
+//           When(created);
 //           break;
 //         case TagDeleted deleted:
-//           Apply(deleted);
+//           When(deleted);
 //           break;
 //         case TagUpdated updated:
-//           Apply(updated);
+//           When(updated);
 //           break;
 //       }
 //     }
 //
-//     private void Apply(TagDeleted deleted)
+//     private void When(TagDeleted deleted)
 //     {
 //       IsDeleted = false;
 //     }
 //
-//     private void Apply(TagCreated created)
+//     private void When(TagCreated created)
 //     {
 //       TenantId = created.TenantId;
-//       Id = created.AggregateId;
+//       Id = created.Id;
 //       Name = created.Name;
 //       Color = created.Color;
 //       IsDeleted = false;
 //     }
 //     
-//     private void Apply(TagUpdated updated)
+//     private void When(TagUpdated updated)
 //     {
 //       Name = updated.Name;
 //       Color = updated.Color;

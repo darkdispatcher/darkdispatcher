@@ -1,6 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
-using DarkDispatcher.Core;
+using DarkDispatcher.Application.Features.Accounts.Projections;
 using DarkDispatcher.Core.Domain;
 using DarkDispatcher.Core.Persistence;
 using DarkDispatcher.Domain.Accounts;
@@ -10,20 +10,20 @@ namespace DarkDispatcher.Application.Features.Accounts.Queries
 {
   public class GetOrganization
   {
-    public record Query(string OrganizationId) : IQuery<Organization>;
+    public record Query(OrganizationId OrganizationId) : IQuery<OrganizationProjection>;
     
-    internal class Handler : IRequestHandler<Query, Organization>
+    internal class Handler : IRequestHandler<Query, OrganizationProjection>
     {
-      private readonly IAggregateStore _store;
+      private readonly IReadRepository _repository;
 
-      public Handler(IAggregateStore store)
+      public Handler(IReadRepository repository)
       {
-        _store = store;
+        _repository = repository;
       }
 
-      public async Task<Organization> Handle(Query request, CancellationToken cancellationToken)
+      public async Task<OrganizationProjection> Handle(Query request, CancellationToken cancellationToken)
       {
-        var organization = await _store.LoadAsync<Organization>(request.OrganizationId, cancellationToken: cancellationToken);
+        var organization = await _repository.FindAsync<OrganizationProjection, OrganizationId>(request.OrganizationId, cancellationToken);
 
         return organization;
       }

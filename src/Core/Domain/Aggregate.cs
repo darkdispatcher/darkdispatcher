@@ -1,14 +1,16 @@
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Text.Json.Serialization;
+using DarkDispatcher.Core.Persistence;
 
 namespace DarkDispatcher.Core.Domain
 {
   public abstract class Aggregate
   {
     private readonly ConcurrentQueue<IDomainEvent> _changes = new();
+    
     public IReadOnlyCollection<IDomainEvent> Changes => _changes.ToImmutableList();
 
     /// <summary>
