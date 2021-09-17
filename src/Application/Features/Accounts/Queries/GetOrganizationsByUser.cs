@@ -1,8 +1,7 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using DarkDispatcher.Core;
+using DarkDispatcher.Application.Features.Accounts.Projections;
 using DarkDispatcher.Core.Domain;
 using DarkDispatcher.Core.Persistence;
 using DarkDispatcher.Domain.Accounts;
@@ -12,9 +11,9 @@ namespace DarkDispatcher.Application.Features.Accounts.Queries
 {
   public class GetOrganizationsByUser
   {
-    public record Query(string UserId) : IQuery<IReadOnlyCollection<Organization>>;
+    public record Query(string UserId) : IQuery<IReadOnlyCollection<OrganizationProjection>>;
     
-    internal class Handler : IRequestHandler<Query, IReadOnlyCollection<Organization>>
+    internal class Handler : IRequestHandler<Query, IReadOnlyCollection<OrganizationProjection>>
     {
       private readonly IReadRepository _repository;
 
@@ -23,10 +22,10 @@ namespace DarkDispatcher.Application.Features.Accounts.Queries
         _repository = repository;
       }
       
-      public async Task<IReadOnlyCollection<Organization>> Handle(Query request, CancellationToken cancellationToken)
+      public async Task<IReadOnlyCollection<OrganizationProjection>> Handle(Query request, CancellationToken cancellationToken)
       {
         var organizations =
-          await _repository.ListAsync<Organization>("", x => x.State.IsDeleted == false, cancellationToken);
+          await _repository.ListAsync<OrganizationProjection, OrganizationId>(new OrganizationId(""), x => x.IsDeleted == false, cancellationToken);
 
         return organizations;
       }

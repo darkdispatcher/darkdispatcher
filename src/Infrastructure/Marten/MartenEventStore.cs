@@ -6,19 +6,16 @@ using System.Threading.Tasks;
 using DarkDispatcher.Core.Domain;
 using DarkDispatcher.Core.Persistence;
 using Marten;
-using MediatR;
 
 namespace DarkDispatcher.Infrastructure.Marten
 {
   public class MartenEventStore : IEventStore
   {
     private readonly IDocumentStore _store;
-    private readonly IMediator _mediator;
 
-    public MartenEventStore(IDocumentStore store, IMediator mediator)
+    public MartenEventStore(IDocumentStore store)
     {
       _store = store;
-      _mediator = mediator;
     }
 
     public async Task AddEventsAsync<TAggregate>(

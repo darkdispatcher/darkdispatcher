@@ -5,7 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
-using DarkDispatcher.Core;
+using DarkDispatcher.Core.Domain;
 using DarkDispatcher.Core.Persistence;
 using Marten;
 
@@ -19,29 +19,48 @@ namespace DarkDispatcher.Infrastructure.Marten
     {
       _store = store;
     }
-    
-    public async ValueTask<T> FindAsync<T>(string tenantId, string id, CancellationToken cancellationToken = default) where T : class
+
+    public async ValueTask<TView> FindAsync<TView, TId>(TId id, CancellationToken cancellationToken = default)
+      where TView : class, IProjection
+      where TId : AggregateId
     {
-      await using var session = _store.LightweightSession(tenantId);
-      var document = await session.LoadAsync<T>(id, cancellationToken);
+      await using var session = GetLightweightSession(id);
+      var document = await session.LoadAsync<TView>(id, cancellationToken);
 
       return document!;
     }
 
-    public async ValueTask<T> FindAsync<T>(string tenantId, Expression<Func<T, bool>> expression, CancellationToken cancellationToken = default) where T : class
+    public async ValueTask<TView> FindAsync<TView, TId>(TId id, Expression<Func<TView, bool>> expression,
+      CancellationToken cancellationToken = default) 
+      where TView : class, IProjection 
+      where TId : AggregateId
     {
-      await using var session = _store.LightweightSession(tenantId);
-      var document = await session.Query<T>().SingleOrDefaultAsync(expression, cancellationToken);
+      await using var session = GetLightweightSession(id);
+      var document = await session.Query<TView>().SingleOrDefaultAsync(expression, cancellationToken);
 
       return document;
     }
 
-    public async ValueTask<IReadOnlyCollection<T>> ListAsync<T>(string tenantId, Expression<Func<T, bool>> expression, CancellationToken cancellationToken = default) where T : class
+    public async ValueTask<IReadOnlyCollection<TView>> ListAsync<TView, TId>(
+      TId id, 
+      Expression<Func<TView, bool>> expression,
+      CancellationToken cancellationToken = default)
+      where TView : class, IProjection 
+      where TId : AggregateId
     {
-      await using var session = _store.LightweightSession(tenantId);
-      var documents = session.Query<T>().Where(expression).ToImmutableList();
+      await using var session = GetLightweightSession(id);
+      var documents = session.Query<TView>().Where(expression).ToImmutableList();
 
       return documents;
+    }
+
+    private IDocumentSession GetLightweightSession<TId>(TId id) 
+      where TId : AggregateId
+    {
+      var session = id is AggregateWithTenantId withTenantId
+        ? _store.LightweightSession(withTenantId.TenantId)
+        : _store.LightweightSession();
+      return session;
     }
   }
 }

@@ -1,12 +1,10 @@
-using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using DarkDispatcher.Core.Domain;
 
 namespace DarkDispatcher.Core.Persistence
 {
-  public class AggregateStore : IAggregateStore
+  internal class AggregateStore : IAggregateStore
   {
     private readonly IEventStore _eventStore;
 

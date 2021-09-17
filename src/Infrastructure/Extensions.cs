@@ -1,8 +1,6 @@
 using DarkDispatcher.Application.Common.Behaviors;
 using DarkDispatcher.Application.Features.Accounts.Commands;
 using DarkDispatcher.Core;
-using DarkDispatcher.Domain.Accounts;
-using DarkDispatcher.Domain.Accounts.Events;
 using DarkDispatcher.Infrastructure.GraphQL;
 using DarkDispatcher.Infrastructure.Marten;
 using MediatR;

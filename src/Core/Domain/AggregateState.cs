@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using DarkDispatcher.Core.Exceptions;
 
 namespace DarkDispatcher.Core.Domain
 {
@@ -11,11 +12,13 @@ namespace DarkDispatcher.Core.Domain
     public virtual T When(IDomainEvent @event)
     {
       var eventType = @event.GetType();
-      if (!_handlers.ContainsKey(eventType)) return (T)this;
+      if (!_handlers.ContainsKey(eventType))
+        throw new NoEventHandlerRegisteredException<T>(@event);
+      //return (T)this;
 
       return _handlers[eventType](@event);
     }
-
+    
     protected void On<TEvent>(Func<TEvent, T> handle)
     {
       if (!_handlers.TryAdd(typeof(TEvent), x => handle((TEvent)x)))

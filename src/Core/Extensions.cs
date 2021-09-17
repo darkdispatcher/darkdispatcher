@@ -12,7 +12,8 @@ namespace DarkDispatcher.Core
       var builder = DarkDispatcherBuilder.Create(services);
 
       builder.Services.AddScoped<IAggregateStore, AggregateStore>();
-      builder.Services.TryAddScoped<IIdGenerator, NullIdGenerator>();
+      builder.Services.TryAddScoped<IIdGenerator, GuidIdGenerator>();
+      builder.Services.TryAddScoped<IEventStore, InMemoryEventStore>();
       
       return builder;
     }

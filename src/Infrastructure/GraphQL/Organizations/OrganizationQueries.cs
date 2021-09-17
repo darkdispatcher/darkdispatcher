@@ -24,13 +24,14 @@ namespace DarkDispatcher.Infrastructure.GraphQL.Organizations
     
     public async Task<IEnumerable<OrganizationType>> Organizations()
     {
+      // TODO: Move to common method for all queries
       var user = _httpContextAccessor.HttpContext?.User;
       var userId = user?.Identity?.Name;
 
       var organizations = await  _mediator.Send(new GetOrganizationsByUser.Query(userId!));
       return organizations.Select(x => new OrganizationType
       {
-        Name = "Yo"
+        Name = x.Name
       });
     }
   }
