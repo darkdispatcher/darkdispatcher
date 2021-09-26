@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
-    <PackageReference Include="HotChocolate.AspNetCore" Version="11.3.7" />
+    <PackageReference Include="HotChocolate.AspNetCore" Version="11.3.8" />
     <PackageReference Include="HotChocolate.Data" Version="11.3.8" />
     <PackageReference Include="Marten" Version="4.0.0-rc.6" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
