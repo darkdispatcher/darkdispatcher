@@ -11,22 +11,13 @@ namespace DarkDispatcher.Infrastructure.GraphQL
   {
     internal static IDarkDispatcherBuilder AddGraphQLServer(this IDarkDispatcherBuilder builder)
     {
-      //builder.Services.AddScoped<OrganizationQueries>();
-
       var graphqlBuilder = builder.Services
         .AddGraphQLServer()
         .AddAuthorization();
 
-      // Queries
       graphqlBuilder
         .AddQueryType()
-        .AddTypeExtension<OrganizationQueries>();
-      //.AddTypeExtension<ProjectQueries>();
-
-      // Types
-      graphqlBuilder
-        .AddType<Organization>();
-      //.AddType<ProjectType>();
+        .AddOrganizations();
 
       return builder;
     }

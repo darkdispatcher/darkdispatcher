@@ -11,7 +11,6 @@ using Marten.Services;
 using Marten.Storage;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Weasel.Core;
 using Weasel.Postgresql;
 using IEventStore = DarkDispatcher.Core.Persistence.IEventStore;

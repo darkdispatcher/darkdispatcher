@@ -1,8 +1,10 @@
 using DarkDispatcher.Core;
 using DarkDispatcher.Infrastructure;
 using DarkDispatcher.Infrastructure.GraphQL;
+using DarkDispatcher.Infrastructure.Identity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -19,21 +21,23 @@ namespace DarkDispatcher.Api
       _configuration = configuration;
       _environment = environment;
     }
-    
+
     public void ConfigureServices(IServiceCollection services)
     {
       services
         .AddDarkDispatcher()
+        .AddIdentity(_configuration.GetConnectionString("Identity"))
         .AddInfrastructure(_configuration, _environment);
-     
+
       services.AddAuthentication();
       services.AddAuthorization();
     }
 
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IdentityContext identityContext)
     {
       if (env.IsDevelopment())
       {
+        identityContext.Database.Migrate();
         app.UseDeveloperExceptionPage();
       }
 
@@ -45,10 +49,7 @@ namespace DarkDispatcher.Api
       app.UseAuthentication();
       app.UseAuthorization();
 
-      app.UseEndpoints(endpoints =>
-      {
-        endpoints.UseGraphQLServer();
-      });
+      app.UseEndpoints(endpoints => { endpoints.UseGraphQLServer(); });
     }
   }
 }
