@@ -28,8 +28,8 @@ namespace DarkDispatcher.Infrastructure.Marten
       IConfiguration configuration,
       Action<StoreOptions>? configureOptions = null)
     {
-      builder.Services.TryAddTransient<IEventStore, MartenEventStore>();
-      builder.Services.TryAddScoped<IReadRepository, MartenReadRepository>();
+      builder.Services.AddTransient<IEventStore, MartenEventStore>();
+      builder.Services.AddScoped<IReadRepository, MartenReadRepository>();
       
       var martenConfig = new MartenOptions();
       configuration.GetSection(DefaultConfigKey).Bind(martenConfig);
@@ -63,7 +63,12 @@ namespace DarkDispatcher.Infrastructure.Marten
         .InitializeStore();
 
       if (martenConfig.ShouldRecreateDatabase)
+      {
         documentStore.Advanced.Clean.CompletelyRemoveAll();
+        
+        // TODO: Move to separate setting
+        builder.Services.AddHostedService<SeedService>();
+      }
 
       // TODO: Move to Hosted Service?
       documentStore.Schema.ApplyAllConfiguredChangesToDatabaseAsync().Wait();
@@ -77,7 +82,7 @@ namespace DarkDispatcher.Infrastructure.Marten
     /// <param name="options">The <see cref="ProjectionOptions"/></param>
     /// <param name="lifecycle">The <see cref="ProjectionLifecycle"/></param>
     /// <returns><see cref="ProjectionOptions"/></returns>
-    public static ProjectionOptions RegisterAllProjections(this ProjectionOptions options, ProjectionLifecycle lifecycle = ProjectionLifecycle.Async)
+    private static ProjectionOptions RegisterAllProjections(this ProjectionOptions options, ProjectionLifecycle lifecycle = ProjectionLifecycle.Async)
     {
       var projections = GetAllProjections();
       var methodInfo = typeof(ProjectionOptions).GetMethod(nameof(ProjectionOptions.SelfAggregate), new[] { typeof(ProjectionLifecycle?) });
@@ -96,7 +101,7 @@ namespace DarkDispatcher.Infrastructure.Marten
     /// Get all projections types (<see cref="IProjection"/>) in Dark Dispatcher assemblies
     /// </summary>
     /// <returns>Types that inherit from <see cref="IProjection"/></returns>
-    public static IReadOnlyCollection<Type> GetAllProjections()
+    private static IReadOnlyCollection<Type> GetAllProjections()
     {
       var assemblies = AppDomain.CurrentDomain.GetAssemblies().Where(x => x.FullName!.StartsWith("DarkDispatcher"));
       var types = assemblies.SelectMany(x => x.GetTypes())

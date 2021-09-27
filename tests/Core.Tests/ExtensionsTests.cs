@@ -1,13 +1,10 @@
-using System;
-using System.Threading.Tasks;
-using DarkDispatcher.Core;
 using DarkDispatcher.Core.Ids;
 using DarkDispatcher.Core.Persistence;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
-namespace Core.Tests
+namespace DarkDispatcher.Core.Tests
 {
   public class ExtensionsTests
   {

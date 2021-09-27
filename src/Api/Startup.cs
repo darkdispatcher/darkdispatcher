@@ -25,12 +25,9 @@ namespace DarkDispatcher.Api
       services
         .AddDarkDispatcher()
         .AddInfrastructure(_configuration, _environment);
-      
-      services.AddHostedService<SeedService>();
-      
-      // services.AddAuthentication();
-      // services.AddAuthorization();
-
+     
+      services.AddAuthentication();
+      services.AddAuthorization();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -45,8 +42,8 @@ namespace DarkDispatcher.Api
 
       app.UseRouting();
 
-      // app.UseAuthentication();
-      // app.UseAuthorization();
+      app.UseAuthentication();
+      app.UseAuthorization();
 
       app.UseEndpoints(endpoints =>
       {

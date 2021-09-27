@@ -11,35 +11,51 @@ namespace DarkDispatcher.Infrastructure.GraphQL
   {
     internal static IDarkDispatcherBuilder AddGraphQLServer(this IDarkDispatcherBuilder builder)
     {
-      var graphqlBuilder = builder.Services.AddGraphQLServer();
+      //builder.Services.AddScoped<OrganizationQueries>();
 
+      var graphqlBuilder = builder.Services
+        .AddGraphQLServer()
+        .AddAuthorization();
+
+      // Queries
       graphqlBuilder
         .AddQueryType()
         .AddTypeExtension<OrganizationQueries>();
-        //.AddTypeExtension<ProjectQueries>();
+      //.AddTypeExtension<ProjectQueries>();
 
-        graphqlBuilder
-          .AddType<OrganizationType>();
-        //.AddType<ProjectType>();
+      // Types
+      graphqlBuilder
+        .AddType<Organization>();
+      //.AddType<ProjectType>();
 
       return builder;
     }
-    
+
     public static IEndpointRouteBuilder UseGraphQLServer(this IEndpointRouteBuilder builder)
     {
       builder
-        .MapGraphQL()
-        .WithOptions(new GraphQLServerOptions
+        .MapGraphQLHttp("/graphql")
+        .WithOptions(new GraphQLHttpOptions
         {
-          Tool =
-          {
-            Enable = true,
-            Document = "Query",
-            HttpMethod = DefaultHttpMethod.Get
-          },
           EnableGetRequests = true,
           AllowedGetOperations = AllowedGetOperations.QueryAndMutation
         });
+
+      builder
+        .MapBananaCakePop("/explorer")
+        .WithOptions(new GraphQLToolOptions
+        {
+          Enable = true,
+          Title = "Dark Dispatcher Api Explorer",
+          Document = "",
+          GraphQLEndpoint = "/graphql",
+          UseBrowserUrlAsGraphQLEndpoint = true,
+          DisableTelemetry = true,
+          HttpMethod = DefaultHttpMethod.Get
+        });
+
+      builder
+        .MapGraphQLSchema("/schema");
 
       return builder;
     }

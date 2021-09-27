@@ -9,7 +9,6 @@ namespace DarkDispatcher.Core.Tests.Helpers
 
     public override TestAggregateState When(IDomainEvent @event)
     {
-      base.When(@event);
       return @event switch
       {
         TestEvents.TestAggregateCreated created => this with
@@ -17,6 +16,7 @@ namespace DarkDispatcher.Core.Tests.Helpers
           Id = new TestAggregateId(created.Id),
           Name = created.Name
         },
+        TestEvents.TestAggregateUpdated updated => this with { Name = updated.Name }, 
         TestEvents.TestAggregateDeleted => this with { IsDeleted = true },
         _ => this
       };

@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace DarkDispatcher.Api
+namespace DarkDispatcher.Infrastructure.Marten
 {
   internal class SeedService : IHostedService
   {
@@ -28,15 +28,9 @@ namespace DarkDispatcher.Api
       var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
 
       var org1 = await mediator.Send(new CreateOrganization.Command("Acme"), cancellationToken);
-      org1.Update("Acme2");
-      org1.Update("Acme3");
-      org1.Update("Acme4");
-      org1.Update("Acme1");
-      
       var org2 = await mediator.Send(new CreateOrganization.Command("Dunder Mifflin"), cancellationToken);
       org2.Update("Dunder");
  
-      await mediator.Send(new UpdateOrganization.Command(org1), cancellationToken);
       await mediator.Send(new UpdateOrganization.Command(org2), cancellationToken);
 
       //await Task.Delay(TimeSpan.FromSeconds(10), cancellationToken);

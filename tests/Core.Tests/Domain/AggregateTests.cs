@@ -1,8 +1,10 @@
 using System;
 using System.Linq;
+using DarkDispatcher.Core.Domain;
 using DarkDispatcher.Core.Exceptions;
 using DarkDispatcher.Core.Tests.Helpers;
 using FluentAssertions;
+using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities.EventHandlers;
 using Xunit;
 
 namespace DarkDispatcher.Core.Tests.Domain
@@ -24,7 +26,7 @@ namespace DarkDispatcher.Core.Tests.Domain
       var @event = aggregate.Changes.Single();
       @event.Should().BeOfType<TestEvents.TestAggregateUpdated>();
     }
-
+    
     [Fact]
     public void GivenANewAggregate_WhenClearingChanges_ShouldHaveEmptyChanges()
     {
@@ -40,18 +42,23 @@ namespace DarkDispatcher.Core.Tests.Domain
       // Assert
       aggregate.Changes.Should().BeEmpty();
     }
-
+    
     [Fact]
-    public void GivenLoadFromHistory_WhenPassingAnInvalidEvent_ShouldThrowAnException()
+    public void GivenANewAggregate_WhenLoadingFromHistory_ShouldMutateProperly()
     {
       // Arrange
-      var aggregate = new TestAggregate();
+      var id = new TestAggregateId(Guid.NewGuid().ToString());
+      var aggregate = new TestAggregate(id, "test");
 
       // Act
-      Assert.Throws<NoEventHandlerRegisteredException<TestAggregateState>>(() =>
-        aggregate.Load(new[] { new TestEvents.Invalid("test") }));
-
+      aggregate.ClearChanges();
+      var created = new TestEvents.TestAggregateCreated(id, "test99");
+      var updated = new TestEvents.TestAggregateUpdated(id, "test101");
+      aggregate.Load(new IDomainEvent[]{ created, updated });
+      
       // Assert
+      aggregate.Changes.Should().BeEmpty();
+      aggregate.State.Name.Should().Be("test101");
     }
   }
 }

@@ -1,7 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591</NoWarn>
+  </PropertyGroup>
+  
   <ItemGroup>
-    <PackageReference Include="HotChocolate.AspNetCore" Version="11.3.7" />
-    <PackageReference Include="HotChocolate.Data" Version="11.3.7" />
+    <PackageReference Include="HotChocolate.AspNetCore" Version="12.0.0" />
+    <PackageReference Include="HotChocolate.AspNetCore.Authorization" Version="12.0.0" />
+    <PackageReference Include="HotChocolate.Data" Version="12.0.0" />
     <PackageReference Include="Marten" Version="4.0.0-rc.6" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="5.0.0" />

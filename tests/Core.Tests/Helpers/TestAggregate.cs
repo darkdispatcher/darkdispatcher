@@ -2,11 +2,8 @@ using DarkDispatcher.Core.Domain;
 
 namespace DarkDispatcher.Core.Tests.Helpers
 {
-  internal class TestAggregate : Aggregate<TestAggregateState, TestAggregateId>
+  internal sealed class TestAggregate : Aggregate<TestAggregateState, TestAggregateId>
   {
-    public TestAggregate()
-    {}
-    
     public TestAggregate(TestAggregateId id, string name)
     {
       var @event = new TestEvents.TestAggregateCreated(id, name);

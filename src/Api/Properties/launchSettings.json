@@ -4,11 +4,11 @@
       "commandName": "Project",
       "dotnetRunMessages": "true",
       "launchBrowser": true,
-      "launchUrl": "graphql",
+      "launchUrl": "explorer",
       "applicationUrl": "https://localhost:5001;http://localhost:5000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "EventStore:ShouldRecreateDatabase": "True",
+        "EventStore:ShouldRecreateDatabase": "False",
         "EventStore:DaemonMode": "Solo",
         "EventStore:ConnectionString": "Server=127.0.0.1;Port=5434;Database=DarkDispatcher;User Id=postgres;Password=DarkDispatcher20!;"
       }
