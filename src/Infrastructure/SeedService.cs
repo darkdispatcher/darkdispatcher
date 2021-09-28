@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace DarkDispatcher.Infrastructure.Marten
+namespace DarkDispatcher.Infrastructure
 {
   internal class SeedService : IHostedService
   {

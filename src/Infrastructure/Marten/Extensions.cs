@@ -64,9 +64,6 @@ namespace DarkDispatcher.Infrastructure.Marten
       if (martenConfig.ShouldRecreateDatabase)
       {
         documentStore.Advanced.Clean.CompletelyRemoveAll();
-        
-        // TODO: Move to separate setting
-        builder.Services.AddHostedService<SeedService>();
       }
 
       // TODO: Move to Hosted Service?

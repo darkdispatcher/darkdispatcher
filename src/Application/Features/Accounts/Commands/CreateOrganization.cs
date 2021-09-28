@@ -1,16 +1,31 @@
 using System.Threading;
 using System.Threading.Tasks;
+using DarkDispatcher.Core.Domain;
 using DarkDispatcher.Core.Ids;
 using DarkDispatcher.Core.Persistence;
 using DarkDispatcher.Domain.Accounts;
+using FluentValidation;
 using MediatR;
 
 namespace DarkDispatcher.Application.Features.Accounts.Commands
 {
   public class CreateOrganization
   {
-    public record Command(string Name) : IRequest<Organization>;
-    
+    public record Command(string Name) : ICommand<Organization>;
+
+    internal class Validator : AbstractValidator<Command>
+    {
+      public Validator()
+      {
+        const int min = 4;
+        const int max = 50;
+        
+        RuleFor(x => x.Name)
+          .NotEmpty().WithMessage("Name is required.")
+          .Length(min, max).WithMessage($"Name must be between {min} and {max} characters.");
+      }
+    }
+
     internal class Handler : IRequestHandler<Command, Organization>
     {
       private readonly IAggregateStore _store;

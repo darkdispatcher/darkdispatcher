@@ -10,7 +10,7 @@ namespace DarkDispatcher.Application.Common.Behaviors
   {
     public static IDarkDispatcherBuilder AddValidations(this IDarkDispatcherBuilder builder)
     {
-      builder.Services.AddValidatorsFromAssembly(typeof(CreateOrganization).Assembly);
+      builder.Services.AddValidatorsFromAssembly(typeof(CreateOrganization).Assembly, includeInternalTypes: true);
       builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
       return builder;

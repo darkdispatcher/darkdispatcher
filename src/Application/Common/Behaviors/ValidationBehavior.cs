@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation;
@@ -30,6 +31,9 @@ namespace DarkDispatcher.Application.Common.Behaviors
       CancellationToken cancellationToken,
       RequestHandlerDelegate<TResponse> next)
     {
+      _logger.LogInformation("[{Prefix}] Handle request={X-RequestData} and response={X-ResponseData}",
+        nameof(ValidationBehavior<TRequest, TResponse>), typeof(TRequest).Name, typeof(TResponse).Name);
+      
       if (!_validators.Any())
         return await next();
       
@@ -37,10 +41,16 @@ namespace DarkDispatcher.Application.Common.Behaviors
       var validationResults = await Task.WhenAll(_validators.Select(v => v.ValidateAsync(context, cancellationToken)));
       var failures = validationResults.SelectMany(r => r.Errors).Where(f => f != null).ToList();
       
+      _logger.LogDebug($"Handling {typeof(TRequest).FullName} with content {JsonSerializer.Serialize(request)}");
+      
       if (failures.Count != 0)
         throw new ValidationException(failures);
 
-      return await next();
+      var response = await next();
+      
+      _logger.LogInformation($"Handled {typeof(TRequest).FullName}");
+      
+      return response;
     }
   }
 }

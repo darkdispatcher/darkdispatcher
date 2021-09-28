@@ -1,3 +1,4 @@
+using DarkDispatcher.Infrastructure.Logging;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
@@ -12,6 +13,10 @@ namespace DarkDispatcher.Api
 
     public static IHostBuilder CreateHostBuilder(string[] args) =>
       Host.CreateDefaultBuilder(args)
+        .ConfigureLogging((context, builder) =>
+        {
+          builder.AddLogging(context.Configuration);
+        })
         .ConfigureWebHostDefaults(webBuilder =>
         {
           webBuilder.CaptureStartupErrors(true);

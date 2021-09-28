@@ -16,7 +16,7 @@ namespace DarkDispatcher.Infrastructure
     public static IDarkDispatcherBuilder AddInfrastructure(this IDarkDispatcherBuilder builder, IConfiguration configuration, IHostEnvironment environment)
     {
       builder.Services.AddHttpContextAccessor();
-      
+      builder.Services.AddMediatR(typeof(CreateOrganization).Assembly);
       builder.AddValidations();
       builder
         .AddMarten(configuration, options =>
@@ -28,8 +28,8 @@ namespace DarkDispatcher.Infrastructure
           }
         })
         .AddGraphQLServer();
-
-      builder.Services.AddMediatR(typeof(CreateOrganization).Assembly);
+      
+      builder.Services.AddHostedService<SeedService>();
       
       return builder;
     }

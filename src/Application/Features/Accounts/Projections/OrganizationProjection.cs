@@ -5,21 +5,21 @@ namespace DarkDispatcher.Application.Features.Accounts.Projections
 {
   public record OrganizationProjection : IProjection
   {
-    public string Id { get; set; }
+    public string Id { get; private set; }
     
-    public string Name { get; set; }
+    public string Name { get; private set; }
 
-    public bool IsDeleted { get; set; }
+    public bool IsDeleted { get; private set; }
 
     public void Apply(IDomainEvent @event)
     {
       switch (@event)
       {
-        case OrganizationCreated created:
-          Id = created.Id;
-          Name = created.Name;
+        case OrganizationCreated(var id, var name):
+          Id = id;
+          Name = name;
           break;
-        case OrganizationDeleted deleted:
+        case OrganizationDeleted:
           IsDeleted = true;
           break;
         case OrganizationUpdated updated:

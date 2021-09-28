@@ -24,6 +24,5 @@
   <ItemGroup>
     <Folder Include="Extensions" />
     <Folder Include="Identity\Migrations" />
-    <Folder Include="Logging" />
   </ItemGroup>
 </Project>
