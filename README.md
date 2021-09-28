@@ -1,8 +1,7 @@
-<p align="center">
+<div align="center">
   <img src="media/logo.svg" width="250" alt="Dark Dispatcher" /><br />
-</p>
-
-<h1 align="center">Dark Dispatcher</h1>
-
+  <h1>Dark Dispatcher</h1>
+  <a href="https://github.com/darkdispatcher/darkdispatcher/actions/workflows/build.yml"><img src="https://github.com/darkdispatcher/darkdispatcher/actions/workflows/build.yml/badge.svg" alt="Build Status" /></a>
+</div>
 
 ## Overview
