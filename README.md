@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="./logo.png" alt="Dark Dispatcher" />
+  <img src="media/logo.svg" width="250" alt="Dark Dispatcher" /><br />
 </p>
 
-# Dark Dispatcher
+<h1 align="center">Dark Dispatcher</h1>
 
 
 ## Overview

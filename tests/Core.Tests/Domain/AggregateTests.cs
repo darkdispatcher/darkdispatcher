@@ -1,10 +1,8 @@
 using System;
 using System.Linq;
 using DarkDispatcher.Core.Domain;
-using DarkDispatcher.Core.Exceptions;
 using DarkDispatcher.Core.Tests.Helpers;
 using FluentAssertions;
-using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities.EventHandlers;
 using Xunit;
 
 namespace DarkDispatcher.Core.Tests.Domain

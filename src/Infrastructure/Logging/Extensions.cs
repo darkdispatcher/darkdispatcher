@@ -10,6 +10,11 @@ namespace DarkDispatcher.Infrastructure.Logging
     {
       var logger = new LoggerConfiguration()
         .ReadFrom.Configuration(configuration)
+        .Enrich.FromLogContext()
+        .Enrich.WithEnvironmentName()
+        .Enrich.WithMachineName()
+        .Enrich.WithProcessId()
+        .Enrich.WithThreadId()
         .CreateLogger();
 
       Log.Logger = logger;

@@ -9,8 +9,6 @@ namespace DarkDispatcher.Core.Tests.Persistence
 {
   public class InMemoryEventStoreTests
   {
-
-
     [Fact]
     public async Task GivenInMemoryStoreIsRegistered_WhenAddEvents_ShouldAddEventsToStore()
     {
