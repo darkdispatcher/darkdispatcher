@@ -1,4 +1,6 @@
-namespace DarkDispatcher.Core.Domain
+using DarkDispatcher.Core.Events;
+
+namespace DarkDispatcher.Core.Aggregates
 {
   public abstract record AggregateState<T> 
     where T : AggregateState<T>

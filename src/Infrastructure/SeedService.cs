@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using DarkDispatcher.Application.Features.Accounts.Commands;
+using DarkDispatcher.Application.Features.Projects.Commands;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -27,11 +28,13 @@ namespace DarkDispatcher.Infrastructure
       using var scope = _services.CreateScope();
       var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
 
-      var org1 = await mediator.Send(new CreateOrganization.Command("Acme"), cancellationToken);
-      var org2 = await mediator.Send(new CreateOrganization.Command("Dunder Mifflin"), cancellationToken);
-      org2.Update("Dunder");
- 
-      await mediator.Send(new UpdateOrganization.Command(org2), cancellationToken);
+      var organization = await mediator.Send(new CreateOrganization.Command("Acme"), cancellationToken);
+      var organizationId = organization.State.Id;
+      var project = await mediator.Send(new CreateProject.Command(organizationId, "Demo", "Demo project"), cancellationToken);
+      project.AddEnvironment(organizationId, "Development", "Development Environment");
+      project.AddEnvironment(organizationId, "Staging", "Staging Environment");
+      project.AddEnvironment(organizationId, "Production", "Production Environment");
+      await mediator.Send(new UpdateProject.Command(project), cancellationToken);
 
       //await Task.Delay(TimeSpan.FromSeconds(10), cancellationToken);
     }

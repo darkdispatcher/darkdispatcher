@@ -1,11 +1,11 @@
-using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using DarkDispatcher.Core.Events;
 using DarkDispatcher.Core.Persistence;
 
-namespace DarkDispatcher.Core.Domain
+namespace DarkDispatcher.Core.Aggregates
 {
   public abstract class Aggregate
   {

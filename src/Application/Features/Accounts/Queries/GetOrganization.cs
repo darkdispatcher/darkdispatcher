@@ -1,18 +1,18 @@
 using System.Threading;
 using System.Threading.Tasks;
 using DarkDispatcher.Application.Features.Accounts.Projections;
-using DarkDispatcher.Core.Domain;
 using DarkDispatcher.Core.Persistence;
+using DarkDispatcher.Core.Queries;
 using DarkDispatcher.Domain.Accounts;
-using MediatR;
+using Organization = DarkDispatcher.Application.Features.Accounts.Projections.Organization;
 
 namespace DarkDispatcher.Application.Features.Accounts.Queries
 {
   public class GetOrganization
   {
-    public record Query(OrganizationId OrganizationId) : IQuery<OrganizationProjection>;
+    public record Query(OrganizationId OrganizationId) : IQuery<Organization>;
     
-    internal class Handler : IRequestHandler<Query, OrganizationProjection>
+    internal class Handler : IQueryHandler<Query, Organization>
     {
       private readonly IReadRepository _repository;
 
@@ -21,9 +21,9 @@ namespace DarkDispatcher.Application.Features.Accounts.Queries
         _repository = repository;
       }
 
-      public async Task<OrganizationProjection> Handle(Query request, CancellationToken cancellationToken)
+      public async Task<Organization> Handle(Query request, CancellationToken cancellationToken)
       {
-        var organization = await _repository.FindAsync<OrganizationProjection, OrganizationId>(request.OrganizationId, cancellationToken);
+        var organization = await _repository.FindAsync<Organization, OrganizationId>(request.OrganizationId, cancellationToken);
 
         return organization;
       }

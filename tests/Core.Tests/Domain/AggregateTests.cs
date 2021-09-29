@@ -1,6 +1,6 @@
 using System;
 using System.Linq;
-using DarkDispatcher.Core.Domain;
+using DarkDispatcher.Core.Events;
 using DarkDispatcher.Core.Tests.Helpers;
 using FluentAssertions;
 using Xunit;

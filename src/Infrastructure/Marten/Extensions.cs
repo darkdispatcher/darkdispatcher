@@ -3,18 +3,19 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using DarkDispatcher.Core;
+using DarkDispatcher.Core.Events;
 using DarkDispatcher.Core.Persistence;
 using Marten;
 using Marten.Events;
 using Marten.Events.Projections;
 using Marten.Services;
 using Marten.Storage;
+using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Weasel.Core;
 using Weasel.Postgresql;
 using IEventStore = DarkDispatcher.Core.Persistence.IEventStore;
-using IProjection = DarkDispatcher.Core.Domain.IProjection;
 
 namespace DarkDispatcher.Infrastructure.Marten
 {
@@ -71,9 +72,23 @@ namespace DarkDispatcher.Infrastructure.Marten
 
       return builder;
     }
+    
+    public static IServiceCollection Project<TEvent, TView>(this IServiceCollection services, Func<TEvent, Guid> getId)
+      where TView: Core.Projections.IProjection
+      where TEvent: class, IDomainEvent
+    {
+      services.AddTransient<INotificationHandler<TEvent>>(sp =>
+      {
+        var session = sp.GetRequiredService<IDocumentSession>();
+
+        return new MartenProjection<TEvent, TView>(session, getId);
+      });
+
+      return services;
+    }
 
     /// <summary>
-    /// Registers all projections of <see cref="IProjection"/>
+    /// Registers all projections of <see cref="IProjection"/> for Marten.
     /// </summary>
     /// <param name="options">The <see cref="ProjectionOptions"/></param>
     /// <param name="lifecycle">The <see cref="ProjectionLifecycle"/></param>
@@ -101,7 +116,7 @@ namespace DarkDispatcher.Infrastructure.Marten
     {
       var assemblies = AppDomain.CurrentDomain.GetAssemblies().Where(x => x.FullName!.StartsWith("DarkDispatcher"));
       var types = assemblies.SelectMany(x => x.GetTypes())
-        .Where(x => typeof(IProjection).IsAssignableFrom(x) && !x.IsInterface && !x.IsAbstract && !x.IsGenericTypeDefinition)
+        .Where(x => typeof(Core.Projections.IProjection).IsAssignableFrom(x) && !x.IsInterface && !x.IsAbstract && !x.IsGenericTypeDefinition)
         .ToImmutableList();
       return types;
     }

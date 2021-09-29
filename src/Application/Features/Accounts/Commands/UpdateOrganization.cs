@@ -1,9 +1,8 @@
 using System.Threading;
 using System.Threading.Tasks;
-using DarkDispatcher.Core.Domain;
+using DarkDispatcher.Core.Commands;
 using DarkDispatcher.Core.Persistence;
 using DarkDispatcher.Domain.Accounts;
-using MediatR;
 
 namespace DarkDispatcher.Application.Features.Accounts.Commands
 {
@@ -11,7 +10,7 @@ namespace DarkDispatcher.Application.Features.Accounts.Commands
   {
     public record Command(Organization Organization) : ICommand<Organization>;
 
-    internal class Handler : IRequestHandler<Command, Organization>
+    internal class Handler : ICommandHandler<Command, Organization>
     {
       private readonly IAggregateStore _store;
 

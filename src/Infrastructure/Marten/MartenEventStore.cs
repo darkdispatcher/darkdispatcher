@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using DarkDispatcher.Core.Domain;
+using DarkDispatcher.Core.Aggregates;
+using DarkDispatcher.Core.Events;
 using DarkDispatcher.Core.Persistence;
 using Marten;
 

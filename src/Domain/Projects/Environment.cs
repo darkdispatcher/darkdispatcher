@@ -1,7 +1,5 @@
+
 namespace DarkDispatcher.Domain.Projects
 {
-  public class Environment
-  {
-    
-  }
+  public record Environment(string Name, string Description);
 }

@@ -1,9 +1,8 @@
-using DarkDispatcher.Core.Domain;
 using DarkDispatcher.Domain.ValueObjects;
 
 namespace DarkDispatcher.Domain.Accounts
 {
-  public class User : IEntity<string>
+  public class User
   {
     public string Id { get; }
 

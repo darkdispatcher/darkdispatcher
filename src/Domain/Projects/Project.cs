@@ -1,4 +1,6 @@
-using DarkDispatcher.Core.Domain;
+using System.Collections.Generic;
+using DarkDispatcher.Core.Aggregates;
+using DarkDispatcher.Core.Events;
 using DarkDispatcher.Domain.Accounts;
 using DarkDispatcher.Domain.Projects.Events.v1;
 
@@ -30,6 +32,12 @@ namespace DarkDispatcher.Domain.Projects
       var @event = new ProjectDeleted(organizationId, GetId());
       Apply(@event);
     }
+    
+    public void AddEnvironment(string organizationId, string name, string description)
+    {
+      var @event = new EnvironmentAdded(organizationId, GetId(), name, description);
+      Apply(@event);
+    }
   }
 
   public record ProjectState : AggregateState<ProjectState, ProjectId>
@@ -38,24 +46,33 @@ namespace DarkDispatcher.Domain.Projects
     public string Description { get; init; }
     public bool IsDeleted { get; init; }
 
+    public ICollection<Environment> Environments { get; init; }
+
     public override ProjectState When(IDomainEvent @event)
     {
-      return @event switch
+      switch (@event)
       {
-        ProjectCreated created => this with
+        case ProjectCreated created:
+          return this with
+          {
+            Id = new ProjectId(new OrganizationId(created.TenantId), created.Id),
+            Name = created.Name,
+            Description = created.Description,
+            Environments = new List<Environment>()
+          };
+        case ProjectUpdated updated:
+          return this with { Name = updated.Name, Description = updated.Description };
+        case ProjectDeleted:
+          return this with { IsDeleted = true };
+        case EnvironmentAdded added:
         {
-          Id = new ProjectId(new OrganizationId(created.TenantId), created.Id),
-          Name = created.Name,
-          Description = created.Description
-        },
-        ProjectUpdated updated => this with
-        {
-          Name = updated.Name,
-          Description = updated.Description
-        },
-        ProjectDeleted => this with { IsDeleted = true },
-        _ => this
-      };
+          var environment = new Environment(added.EnvironmentName, added.EnvironmentDescription);
+          Environments.Add(environment);
+          return this;
+        }
+        default:
+          return this;
+      }
     }
   }
 }

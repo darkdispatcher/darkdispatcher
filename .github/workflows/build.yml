@@ -2,9 +2,14 @@ name: Build
 
 on:
   push:
-    branches: [ main, feature/* ]
+    branches: 
+      - main
+      - feature/*
   pull_request:
-    branches: [ main, feature/*, release/* ]
+    branches: 
+      - main
+      - feature/*
+      - release/*
 
 env:
   DOTNET_VERSION: '5.0.400'

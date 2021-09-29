@@ -4,7 +4,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Extensions" />
-    <Folder Include="Features\Projects\Commands" />
     <Folder Include="Features\Projects\Queries" />
     <InternalsVisibleTo Include="$(AssemblyPrefixName).Infrastructure" /> 
     <Folder Include="Common\Exceptions" />

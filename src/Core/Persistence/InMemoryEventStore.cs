@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using DarkDispatcher.Core.Domain;
+using DarkDispatcher.Core.Aggregates;
+using DarkDispatcher.Core.Events;
 
 namespace DarkDispatcher.Core.Persistence
 {

@@ -5,8 +5,9 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
-using DarkDispatcher.Core.Domain;
+using DarkDispatcher.Core.Aggregates;
 using DarkDispatcher.Core.Persistence;
+using DarkDispatcher.Core.Projections;
 using Marten;
 
 namespace DarkDispatcher.Infrastructure.Marten

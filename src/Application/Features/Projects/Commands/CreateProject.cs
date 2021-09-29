@@ -4,13 +4,14 @@ using DarkDispatcher.Core.Commands;
 using DarkDispatcher.Core.Ids;
 using DarkDispatcher.Core.Persistence;
 using DarkDispatcher.Domain.Accounts;
+using DarkDispatcher.Domain.Projects;
 using FluentValidation;
 
-namespace DarkDispatcher.Application.Features.Accounts.Commands
+namespace DarkDispatcher.Application.Features.Projects.Commands
 {
-  public class CreateOrganization
+  public class CreateProject
   {
-    public record Command(string Name) : ICommand<Organization>;
+    public record Command(OrganizationId OrganizationId, string Name, string Description) : ICommand<Project>;
 
     internal class Validator : AbstractValidator<Command>
     {
@@ -18,14 +19,20 @@ namespace DarkDispatcher.Application.Features.Accounts.Commands
       {
         const int min = 4;
         const int max = 50;
-        
+
+        RuleFor(x => x.OrganizationId)
+          .NotEmpty().WithMessage("OrganizationId is required.");
+
         RuleFor(x => x.Name)
           .NotEmpty().WithMessage("Name is required.")
           .Length(min, max).WithMessage($"Name must be between {min} and {max} characters.");
+        
+        RuleFor(x => x.Description)
+          .MaximumLength(250).WithMessage("Description must not exceed 250 characters.");
       }
     }
-
-    internal class Handler : ICommandHandler<Command, Organization>
+    
+    internal class Handler : ICommandHandler<Command, Project>
     {
       private readonly IAggregateStore _store;
       private readonly IIdGenerator _idGenerator;
@@ -36,11 +43,11 @@ namespace DarkDispatcher.Application.Features.Accounts.Commands
         _idGenerator = idGenerator;
       }
       
-      public async Task<Organization> Handle(Command request, CancellationToken cancellationToken)
+      public async Task<Project> Handle(Command request, CancellationToken cancellationToken)
       {
         var id = _idGenerator.New();
-        var organization = new Organization(new OrganizationId(id), request.Name);
-        var created = await _store.StoreAsync(organization, cancellationToken);
+        var project = new Project(request.OrganizationId, id, request.Name, request.Description);
+        var created = await _store.StoreAsync(project, cancellationToken);
         
         return created;
       }

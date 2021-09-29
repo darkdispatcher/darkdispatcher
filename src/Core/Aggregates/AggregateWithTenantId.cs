@@ -1,4 +1,4 @@
-namespace DarkDispatcher.Core.Domain
+namespace DarkDispatcher.Core.Aggregates
 {
   public abstract record AggregateWithTenantId(string TenantId, string Value) : AggregateId(Value)
   {

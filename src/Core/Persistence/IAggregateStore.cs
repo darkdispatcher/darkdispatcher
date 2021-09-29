@@ -1,6 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
-using DarkDispatcher.Core.Domain;
+using DarkDispatcher.Core.Aggregates;
 
 namespace DarkDispatcher.Core.Persistence
 {

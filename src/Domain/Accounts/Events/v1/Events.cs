@@ -1,4 +1,4 @@
-using DarkDispatcher.Core.Domain;
+using DarkDispatcher.Core.Events;
 
 namespace DarkDispatcher.Domain.Accounts.Events.v1
 {
