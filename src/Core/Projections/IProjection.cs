@@ -2,8 +2,9 @@ using DarkDispatcher.Core.Events;
 
 namespace DarkDispatcher.Core.Projections
 {
-  public interface IProjection
+  public interface IProjection<in TEvent>
+    where TEvent : class, IDomainEvent
   {
-    void When(IDomainEvent @event);
+    void Apply(TEvent @event);
   }
 }

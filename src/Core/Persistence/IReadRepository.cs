@@ -4,7 +4,6 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using DarkDispatcher.Core.Aggregates;
-using DarkDispatcher.Core.Projections;
 
 namespace DarkDispatcher.Core.Persistence
 {
@@ -19,7 +18,7 @@ namespace DarkDispatcher.Core.Persistence
     /// <typeparam name="TId">The id of the aggregate projection.</typeparam>
     /// <returns></returns>
     ValueTask<TProjection> FindAsync<TProjection, TId>(TId id, CancellationToken cancellationToken = default)
-      where TProjection : class, IProjection
+      where TProjection : class, new()
       where TId : AggregateId;
     
     /// <summary>
@@ -32,7 +31,7 @@ namespace DarkDispatcher.Core.Persistence
     /// <typeparam name="TId">The id of the aggregate projection.</typeparam>
     /// <returns></returns>
     ValueTask<TProjection> FindAsync<TProjection, TId>(TId id, Expression<Func<TProjection, bool>> expression, CancellationToken cancellationToken = default) 
-      where TProjection : class, IProjection
+      where TProjection : class, new()
       where TId : AggregateId;
     
     /// <summary>
@@ -45,7 +44,7 @@ namespace DarkDispatcher.Core.Persistence
     /// <typeparam name="TId">The id of the aggregate projection.</typeparam>
     /// <returns></returns>
     ValueTask<IReadOnlyCollection<TProjection>> ListAsync<TProjection, TId>(TId id, Expression<Func<TProjection, bool>> expression, CancellationToken cancellationToken = default) 
-      where TProjection : class, IProjection
+      where TProjection : class, new()
       where TId : AggregateId;
   }
 }

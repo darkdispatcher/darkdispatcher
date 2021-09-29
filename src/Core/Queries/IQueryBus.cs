@@ -4,7 +4,8 @@ namespace DarkDispatcher.Core.Queries
 {
   public interface IQueryBus
   {
-    Task<TResponse> SendAsync<TQuery, TResponse>(TQuery query) 
-      where TQuery : IQuery<TResponse>;
+    Task<TResponse> SendAsync<TQuery, TResponse>(TQuery query)
+      where TQuery : IQuery<TResponse>
+      where TResponse : notnull;
   }
 }

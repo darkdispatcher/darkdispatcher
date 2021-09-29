@@ -20,7 +20,7 @@ namespace DarkDispatcher.Core.Persistence
     {
       var list = _eventStore.Where(x => x.StreamId == streamId).ToList();
       var version = list.Any() ? list.Last().Version + 1 : 1;
-      
+
       foreach (var @event in events)
       {
         _eventStore.Enqueue(new EventData
@@ -51,7 +51,7 @@ namespace DarkDispatcher.Core.Persistence
       var events = _eventStore.Where(x => x.StreamId == streamId).Select(x => x.Data as IDomainEvent);
       foreach (var @event in events)
       {
-        callback(@event);
+        callback(@event!);
       }
 
       return Task.CompletedTask;
@@ -59,10 +59,10 @@ namespace DarkDispatcher.Core.Persistence
 
     private record EventData
     {
-      public string StreamId { get; set; }
-      public long Version { get; set; }
-      public string Type { get; set; }
-      public object Data { get; set; }
+      public string StreamId { get; init; } = null!;
+      public long Version { get; init; }
+      public string Type { get; set; } = null!;
+      public object? Data { get; init; }
     }
   }
 }

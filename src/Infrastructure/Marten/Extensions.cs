@@ -1,16 +1,13 @@
 using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
 using DarkDispatcher.Core;
-using DarkDispatcher.Core.Events;
+using DarkDispatcher.Core.Extensions;
 using DarkDispatcher.Core.Persistence;
+using DarkDispatcher.Core.Projections;
 using Marten;
 using Marten.Events;
 using Marten.Events.Projections;
 using Marten.Services;
 using Marten.Storage;
-using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Weasel.Core;
@@ -73,20 +70,6 @@ namespace DarkDispatcher.Infrastructure.Marten
       return builder;
     }
     
-    public static IServiceCollection Project<TEvent, TView>(this IServiceCollection services, Func<TEvent, Guid> getId)
-      where TView: Core.Projections.IProjection
-      where TEvent: class, IDomainEvent
-    {
-      services.AddTransient<INotificationHandler<TEvent>>(sp =>
-      {
-        var session = sp.GetRequiredService<IDocumentSession>();
-
-        return new MartenProjection<TEvent, TView>(session, getId);
-      });
-
-      return services;
-    }
-
     /// <summary>
     /// Registers all projections of <see cref="IProjection"/> for Marten.
     /// </summary>
@@ -95,7 +78,7 @@ namespace DarkDispatcher.Infrastructure.Marten
     /// <returns><see cref="ProjectionOptions"/></returns>
     private static ProjectionOptions RegisterAllProjections(this ProjectionOptions options, ProjectionLifecycle lifecycle = ProjectionLifecycle.Async)
     {
-      var projections = GetAllProjections();
+      var projections = typeof(IProjection<>).GetAllTypesImplementingOpenGenericType();
       var methodInfo = typeof(ProjectionOptions).GetMethod(nameof(ProjectionOptions.SelfAggregate), new[] { typeof(ProjectionLifecycle?) });
 
       foreach (var view in projections)
@@ -106,19 +89,6 @@ namespace DarkDispatcher.Infrastructure.Marten
       }
 
       return options;
-    }
-
-    /// <summary>
-    /// Get all projections types (<see cref="IProjection"/>) in Dark Dispatcher assemblies
-    /// </summary>
-    /// <returns>Types that inherit from <see cref="IProjection"/></returns>
-    private static IReadOnlyCollection<Type> GetAllProjections()
-    {
-      var assemblies = AppDomain.CurrentDomain.GetAssemblies().Where(x => x.FullName!.StartsWith("DarkDispatcher"));
-      var types = assemblies.SelectMany(x => x.GetTypes())
-        .Where(x => typeof(Core.Projections.IProjection).IsAssignableFrom(x) && !x.IsInterface && !x.IsAbstract && !x.IsGenericTypeDefinition)
-        .ToImmutableList();
-      return types;
     }
   }
 }

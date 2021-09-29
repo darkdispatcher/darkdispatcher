@@ -7,7 +7,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using DarkDispatcher.Core.Aggregates;
 using DarkDispatcher.Core.Persistence;
-using DarkDispatcher.Core.Projections;
 using Marten;
 
 namespace DarkDispatcher.Infrastructure.Marten
@@ -22,7 +21,7 @@ namespace DarkDispatcher.Infrastructure.Marten
     }
 
     public async ValueTask<TView> FindAsync<TView, TId>(TId id, CancellationToken cancellationToken = default)
-      where TView : class, IProjection
+      where TView : class, new()
       where TId : AggregateId
     {
       await using var session = GetLightweightSession(id);
@@ -33,7 +32,7 @@ namespace DarkDispatcher.Infrastructure.Marten
 
     public async ValueTask<TView> FindAsync<TView, TId>(TId id, Expression<Func<TView, bool>> expression,
       CancellationToken cancellationToken = default) 
-      where TView : class, IProjection 
+      where TView : class, new() 
       where TId : AggregateId
     {
       await using var session = GetLightweightSession(id);
@@ -46,7 +45,7 @@ namespace DarkDispatcher.Infrastructure.Marten
       TId id, 
       Expression<Func<TView, bool>> expression,
       CancellationToken cancellationToken = default)
-      where TView : class, IProjection 
+      where TView : class, new() 
       where TId : AggregateId
     {
       await using var session = GetLightweightSession(id);

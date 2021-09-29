@@ -9,11 +9,9 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace DarkDispatcher.Core
 {
-  public static class Extensions
+  public static class ServiceCollectionExtensions
   {
-    public static IServiceCollection AddEventHandler<TEvent, TEventHandler>(
-      this IServiceCollection services
-    )
+    public static IServiceCollection AddEventHandler<TEvent, TEventHandler>(this IServiceCollection services)
       where TEvent : class, IDomainEvent
       where TEventHandler : class, IEventHandler<TEvent>
     {
@@ -24,10 +22,10 @@ namespace DarkDispatcher.Core
     
     public static IDarkDispatcherBuilder AddDarkDispatcher(this IServiceCollection services)
     {
-      // services
-      //   .AddMediatR()
-      //   .AddScoped<ICommandBus, CommandBus>()
-      //   .AddScoped<IQueryBus, QueryBus>();
+      services
+        .AddMediatR()
+        .AddScoped<ICommandBus, CommandBus>()
+        .AddScoped<IQueryBus, QueryBus>();
       
       services.AddScoped<IAggregateStore, AggregateStore>();
       services.TryAddScoped<IIdGenerator, GuidIdGenerator>();

@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 
@@ -12,11 +13,11 @@ namespace DarkDispatcher.Core.Events
       _mediator = mediator;
     }
 
-    public async Task PublishAsync(params IDomainEvent[] events)
+    public async Task PublishAsync(IDomainEvent[] events, CancellationToken cancellationToken = default)
     {
       foreach (var @event in events)
       {
-        await _mediator.Publish(@event);
+        await _mediator.Publish(@event, cancellationToken);
       }
     }
   }

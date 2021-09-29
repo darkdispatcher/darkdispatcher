@@ -14,6 +14,7 @@ namespace DarkDispatcher.Core.Queries
 
     public Task<TResponse> SendAsync<TQuery, TResponse>(TQuery query) 
       where TQuery : IQuery<TResponse>
+      where TResponse : notnull
     {
       return _mediator.Send(query);
     }
