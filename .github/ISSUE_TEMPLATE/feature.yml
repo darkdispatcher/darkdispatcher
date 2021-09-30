@@ -1,0 +1,27 @@
+name: 🧠 Feature Request
+description: Suggest an idea for Dark Dispatcher
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this feature request!
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: One paragraph description of the feature.
+    validations:
+      required: true
+
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Motivation
+      description: Why should this be worked on? What problems or use cases does it solve or improve?
+
+  - type: textarea
+    attributes:
+      label: Additional Context
+      description: Any other context or screenshots or API request payload/responses that you pertain to the feature.
