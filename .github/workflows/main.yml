@@ -7,7 +7,8 @@ on:
       - main
       - feature/**
     paths-ignore:
-      - '**.md'
+      - '.github/ISSUE_TEMPLATE/**'
+      - '**/*.md'
 
 env:
   DOTNET_NOLOGO: true
