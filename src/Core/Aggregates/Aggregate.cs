@@ -14,12 +14,19 @@ namespace DarkDispatcher.Core.Aggregates
     public IReadOnlyCollection<IDomainEvent> Changes => _changes.ToImmutableList();
 
     /// <summary>
+    /// Get the tenant id in a storage-friendly format. Allows using a value object as the tenant id
+    /// inside the model, which then gets converted to a string for storage purposes.
+    /// </summary>
+    /// <returns></returns>
+    public abstract string? GetTenantId();
+    
+    /// <summary>
     /// Get the aggregate id in a storage-friendly format. Allows using a value object as the aggregate id
     /// inside the model, which then gets converted to a string for storage purposes.
     /// </summary>
     /// <returns></returns>
     public abstract string GetId();
-
+    
     public long Version { get; protected set; }
 
     /// <summary>
@@ -88,6 +95,7 @@ namespace DarkDispatcher.Core.Aggregates
     where T : AggregateState<T, TId>, new()
     where TId : AggregateId {
     /// <inheritdoc />
-    public override string GetId() => State.Id;
+    public override string? GetTenantId() => State.Id.TenantId;
+    public override string GetId() => State.Id.Value;
   }
 }

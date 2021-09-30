@@ -19,7 +19,7 @@ namespace DarkDispatcher.Core.Tests
       var services = new ServiceCollection();
       
       // Act
-      services.AddDarkDispatcher();
+      services.AddDarkDispatcherCore();
       
       // Assert
       using var provider = services.BuildServiceProvider();

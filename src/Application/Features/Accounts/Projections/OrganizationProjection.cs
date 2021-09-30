@@ -8,26 +8,26 @@ namespace DarkDispatcher.Application.Features.Accounts.Projections
     IProjection<OrganizationDeleted>,
     IProjection<OrganizationUpdated>
   {
-    public string Id { get; private set; }
-  
-    public string Name { get; private set; }
+    public string Id { get; private set; } = null!;
+
+    public string Name { get; private set; } = null!;
 
     public bool IsDeleted { get; private set; }
 
-    public void Apply(OrganizationCreated created)
+    public void Apply(OrganizationCreated @event)
     {
-      Id = created.Id;
-      Name = created.Name;
+      Id = @event.Id;
+      Name = @event.Name;
     }
 
-    public void Apply(OrganizationDeleted deleted)
+    public void Apply(OrganizationDeleted @event)
     {
       IsDeleted = true;
     }
 
-    public void Apply(OrganizationUpdated updated)
+    public void Apply(OrganizationUpdated @event)
     {
-      Name = updated.Name;
+      Name = @event.Name;
     }
   }
 }

@@ -31,9 +31,12 @@ namespace DarkDispatcher.Infrastructure
       var organization = await mediator.Send(new CreateOrganization.Command("Acme"), cancellationToken);
       var organizationId = organization.State.Id;
       var project = await mediator.Send(new CreateProject.Command(organizationId, "Demo", "Demo project"), cancellationToken);
-      project.AddEnvironment(organizationId, "Development", "Development Environment");
-      project.AddEnvironment(organizationId, "Staging", "Staging Environment");
-      project.AddEnvironment(organizationId, "Production", "Production Environment");
+      project.AddEnvironment(Guid.NewGuid().ToString(), "Development", "Development Environment", "red");
+      project.AddEnvironment(Guid.NewGuid().ToString(), "Staging", "Staging Environment", "yellow");
+      var prodId = Guid.NewGuid().ToString();
+      project.AddEnvironment(prodId, "Production", "Production Environment", "green");
+      project.UpdateEnvironment(prodId, "Prod", "Production Environment", "orange");
+      
       await mediator.Send(new UpdateProject.Command(project), cancellationToken);
 
       //await Task.Delay(TimeSpan.FromSeconds(10), cancellationToken);

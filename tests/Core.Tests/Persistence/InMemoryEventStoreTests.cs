@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using DarkDispatcher.Core.Ids;
 using DarkDispatcher.Core.Persistence;
 using DarkDispatcher.Core.Tests.Helpers;
 using FluentAssertions;
@@ -22,8 +23,9 @@ namespace DarkDispatcher.Core.Tests.Persistence
       var aggregate = new TestAggregate(new TestAggregateId("test1"), "Test1");
       aggregate.Delete();
 
-      await eventStore.AddEventsAsync<TestAggregate>(aggregate.GetId(), aggregate.Version, aggregate.Changes);
-      var events = await eventStore.GetEventsAsync(aggregate.GetId());
+      var streamId = new StreamId("1234", aggregate.GetId());
+      await eventStore!.AddEventsAsync<TestAggregate>(streamId, aggregate.Version, aggregate.Changes);
+      var events = await eventStore.GetEventsAsync(streamId);
       
       // Assert
       events.Should().HaveCount(2);

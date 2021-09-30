@@ -46,7 +46,7 @@ namespace DarkDispatcher.Application.Features.Projects.Commands
       public async Task<Project> Handle(Command request, CancellationToken cancellationToken)
       {
         var id = _idGenerator.New();
-        var project = new Project(request.OrganizationId, id, request.Name, request.Description);
+        var project = new Project(request.OrganizationId.Value, id, request.Name, request.Description);
         var created = await _store.StoreAsync(project, cancellationToken);
         
         return created;

@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using DarkDispatcher.Core.Aggregates;
 using DarkDispatcher.Core.Events;
+using DarkDispatcher.Core.Ids;
 
 namespace DarkDispatcher.Core.Persistence
 {
@@ -19,7 +20,7 @@ namespace DarkDispatcher.Core.Persistence
     /// <returns>Append result, which contains the global position of the last written event,
     /// as well as the next stream version</returns>
     Task AddEventsAsync<TAggregate>(
-      string streamId,
+      StreamId streamId,
       long expectedVersion,
       IReadOnlyCollection<IDomainEvent> events,
       CancellationToken cancellationToken = default)
@@ -33,7 +34,7 @@ namespace DarkDispatcher.Core.Persistence
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>An array with events retrieved from the stream</returns>
     ValueTask<IDomainEvent[]> GetEventsAsync(
-      string streamId,
+      StreamId streamId,
       long startVersion = 0L,
       CancellationToken cancellationToken = default);
 
@@ -46,7 +47,7 @@ namespace DarkDispatcher.Core.Persistence
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns></returns>
     Task ReadStreamAsync(
-      string streamId,
+      StreamId streamId,
       long startVersion,
       Action<IDomainEvent> callback,
       CancellationToken cancellationToken = default

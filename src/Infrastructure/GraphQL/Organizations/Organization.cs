@@ -8,6 +8,6 @@ namespace DarkDispatcher.Infrastructure.GraphQL.Organizations
     /// <summary>
     /// Name of the Organization
     /// </summary>
-    public string Name { get; set; }
+    public string Name { get; init; } = null!;
   }
 }

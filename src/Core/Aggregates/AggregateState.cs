@@ -1,11 +1,32 @@
+using System;
+using System.Collections.Generic;
 using DarkDispatcher.Core.Events;
 
 namespace DarkDispatcher.Core.Aggregates
 {
-  public abstract record AggregateState<T> 
+  public abstract record AggregateState<T>
     where T : AggregateState<T>
   {
-    public abstract T When(IDomainEvent @event);
+    private readonly Dictionary<Type, Func<T, IDomainEvent, T>> _handlers = new();
+
+    public virtual T When(IDomainEvent @event)
+    {
+      var eventType = @event.GetType();
+
+      if (!_handlers.TryGetValue(eventType, out var handler))
+        return (T)this;
+
+      return handler((T)this, @event);
+    }
+
+    protected void On<TEvent>(Func<T, TEvent, T> handle)
+      where TEvent : class, IDomainEvent
+    {
+      if (!_handlers.TryAdd(typeof(TEvent), (state, @event) => handle(state, (TEvent)@event)))
+      {
+        throw new InvalidOperationException($"Duplicate handler for {typeof(TEvent).Name}");
+      }
+    }
   }
 
   public abstract record AggregateState<T, TId> : AggregateState<T>

@@ -11,14 +11,17 @@ using Weasel.Postgresql;
 
 namespace DarkDispatcher.Infrastructure
 {
-  public static class DarkDispatcherBuilderExtensions
+  public static class Extensions
   {
     public static IDarkDispatcherBuilder AddInfrastructure(this IDarkDispatcherBuilder builder, IConfiguration configuration, IHostEnvironment environment)
     {
-      builder.Services.AddHttpContextAccessor();
-      builder.Services.AddMediatR(typeof(CreateOrganization).Assembly);
-      builder.AddValidations();
+      builder.Services
+        .AddHttpContextAccessor()
+        .AddMediatR(typeof(CreateOrganization).Assembly)
+        .AddHostedService<SeedService>();
+
       builder
+        .AddValidations()
         .AddMarten(configuration, options =>
         {
           // Use the more permissive schema auto create behavior while in development
@@ -28,9 +31,7 @@ namespace DarkDispatcher.Infrastructure
           }
         })
         .AddGraphQLServer();
-      
-      builder.Services.AddHostedService<SeedService>();
-      
+        
       return builder;
     }
   }

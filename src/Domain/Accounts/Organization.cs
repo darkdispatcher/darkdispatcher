@@ -1,5 +1,4 @@
 using DarkDispatcher.Core.Aggregates;
-using DarkDispatcher.Core.Events;
 
 namespace DarkDispatcher.Domain.Accounts
 {
@@ -12,7 +11,7 @@ namespace DarkDispatcher.Domain.Accounts
     
     public Organization(OrganizationId id, string name)
     {
-      var @event = new Events.v1.OrganizationCreated(id, name);
+      var @event = new Events.v1.OrganizationCreated(id.Value, name);
       Apply(@event);
     }
 
@@ -31,23 +30,27 @@ namespace DarkDispatcher.Domain.Accounts
 
   public record OrganizationState : AggregateState<OrganizationState, OrganizationId>
   {
-    public string Name { get; init; }
+    public OrganizationState()
+    {
+      On<Events.v1.OrganizationCreated>((state, created) => state with
+      {
+        Id = new OrganizationId(created.Id),
+        Name = created.Name
+      });
+      
+      On<Events.v1.OrganizationUpdated>((state, updated) => state with
+      {
+        Name = updated.Name 
+      });
+      
+      On<Events.v1.OrganizationDeleted>((state, deleted) => state with
+      {
+        IsDeleted = true
+      });
+    }
+    
+    public string Name { get; init; } = null!;
     
     public bool IsDeleted { get; init; }
-    
-    public override OrganizationState When(IDomainEvent @event)
-    {
-      return @event switch
-      {
-        Events.v1.OrganizationCreated created => this with
-        {
-          Id = new OrganizationId(created.Id),
-          Name = created.Name
-        },
-        Events.v1.OrganizationUpdated updated => this with { Name = updated.Name },
-        Events.v1.OrganizationDeleted => this with { IsDeleted = true },
-        _ => this
-      };
-    }
   }
 }

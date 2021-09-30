@@ -1,20 +1,14 @@
 using System.Collections.Generic;
 using DarkDispatcher.Core.Aggregates;
-using DarkDispatcher.Core.Events;
 using DarkDispatcher.Domain.Accounts;
 using DarkDispatcher.Domain.Projects.Events.v1;
 
 namespace DarkDispatcher.Domain.Projects
 {
-  public record ProjectId(OrganizationId OrganizationId, string Value) 
-    : AggregateWithTenantId(OrganizationId, Value);
+  public record ProjectId(OrganizationId OrganizationId, string Value) : AggregateId(OrganizationId.Value, Value);
   
   public sealed class Project : Aggregate<ProjectState, ProjectId>
   {
-    private Project()
-    {
-    }
-    
     public Project(string organizationId, string id, string name, string description) 
     {
       var @event = new ProjectCreated(organizationId, id, name, description);
@@ -27,52 +21,74 @@ namespace DarkDispatcher.Domain.Projects
       Apply(@event);
     }
     
-    public void Delete(string organizationId)
+    public void Delete()
     {
-      var @event = new ProjectDeleted(organizationId, GetId());
+      var @event = new ProjectDeleted(GetTenantId()!, GetId());
       Apply(@event);
     }
     
-    public void AddEnvironment(string organizationId, string name, string description)
+    public void AddEnvironment(string id, string name, string description, string color)
     {
-      var @event = new EnvironmentAdded(organizationId, GetId(), name, description);
+      var @event = new EnvironmentAdded(GetId(), id, name, description, color);
+      Apply(@event);
+    }
+    
+    public void UpdateEnvironment(string id, string name, string description, string color)
+    {
+      var @event = new EnvironmentUpdated(GetId(), id, name, description, color);
       Apply(@event);
     }
   }
 
   public record ProjectState : AggregateState<ProjectState, ProjectId>
   {
-    public string Name { get; init; }
-    public string Description { get; init; }
-    public bool IsDeleted { get; init; }
-
-    public ICollection<Environment> Environments { get; init; }
-
-    public override ProjectState When(IDomainEvent @event)
+    public ProjectState()
     {
-      switch (@event)
+      On<ProjectCreated>((state, created) => state with
       {
-        case ProjectCreated created:
-          return this with
-          {
-            Id = new ProjectId(new OrganizationId(created.TenantId), created.Id),
-            Name = created.Name,
-            Description = created.Description,
-            Environments = new List<Environment>()
-          };
-        case ProjectUpdated updated:
-          return this with { Name = updated.Name, Description = updated.Description };
-        case ProjectDeleted:
-          return this with { IsDeleted = true };
-        case EnvironmentAdded added:
+        Id = new ProjectId(new OrganizationId(created.TenantId), created.Id),
+        Name = created.Name,
+        Description = created.Description
+      });
+      
+      On<ProjectUpdated>((state, updated) => state with
+      {
+        Name = updated.Name,
+        Description = updated.Description
+      });
+      
+      On<ProjectDeleted>((state, _) => state with
+      {
+        IsDeleted = true
+      });
+      
+      On<EnvironmentAdded>((state, added) => 
+      {
+        var environment = new Environment(added.Id, added.Name, added.Description, added.Color);
+        state.Environments.Add(environment);
+        return state;
+      });
+      
+      On<EnvironmentUpdated>((state, updated) => 
+      {
+        var index = state.Environments.FindIndex(x => x.Id == updated.Id);
+        if (index >= 0)
         {
-          var environment = new Environment(added.EnvironmentName, added.EnvironmentDescription);
-          Environments.Add(environment);
-          return this;
+          state.Environments[index] = Environments[index] with
+          {
+            Name = updated.Name,
+            Description = updated.Description,
+            Color = updated.Color
+          };
         }
-        default:
-          return this;
-      }
+
+        return state;
+      });
     }
+    
+    public string Name { get; init; } = null!;
+    public string? Description { get; init; }
+    public bool IsDeleted { get; init; }
+    public List<Environment> Environments { get; } = new();
   }
 }

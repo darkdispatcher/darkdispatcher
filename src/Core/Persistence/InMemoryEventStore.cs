@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using DarkDispatcher.Core.Aggregates;
 using DarkDispatcher.Core.Events;
+using DarkDispatcher.Core.Ids;
 
 namespace DarkDispatcher.Core.Persistence
 {
@@ -13,19 +14,20 @@ namespace DarkDispatcher.Core.Persistence
   {
     private readonly ConcurrentQueue<EventData> _eventStore = new();
 
-    public Task AddEventsAsync<TAggregate>(string streamId, long expectedVersion,
+    public Task AddEventsAsync<TAggregate>(StreamId streamId, long expectedVersion,
       IReadOnlyCollection<IDomainEvent> events,
       CancellationToken cancellationToken = default)
       where TAggregate : Aggregate
     {
-      var list = _eventStore.Where(x => x.StreamId == streamId).ToList();
+      var list = _eventStore.Where(x => x.Id == streamId.AggregateId).ToList();
       var version = list.Any() ? list.Last().Version + 1 : 1;
 
       foreach (var @event in events)
       {
         _eventStore.Enqueue(new EventData
         {
-          StreamId = streamId,
+          TenantId = streamId.TenantId,
+          Id = streamId.AggregateId,
           Type = @event.GetType().Name,
           Version = version,
           Data = @event
@@ -37,18 +39,24 @@ namespace DarkDispatcher.Core.Persistence
       return Task.CompletedTask;
     }
 
-    public ValueTask<IDomainEvent[]> GetEventsAsync(string streamId, long startVersion = 0,
+    public ValueTask<IDomainEvent[]> GetEventsAsync(StreamId streamId, long startVersion = 0,
       CancellationToken cancellationToken = default)
     {
-      var events = _eventStore.Where(x => x.StreamId == streamId && x.Version >= startVersion);
+      var events = _eventStore.Where(x =>
+        x.TenantId == streamId.TenantId
+        && x.Id == streamId.AggregateId
+        && x.Version >= startVersion);
       var domainEvents = events.Select(x => x.Data as IDomainEvent).ToArray();
       return ValueTask.FromResult(domainEvents)!;
     }
 
-    public Task ReadStreamAsync(string streamId, long startVersion, Action<IDomainEvent> callback,
+    public Task ReadStreamAsync(StreamId streamId, long startVersion, Action<IDomainEvent> callback,
       CancellationToken cancellationToken = default)
     {
-      var events = _eventStore.Where(x => x.StreamId == streamId).Select(x => x.Data as IDomainEvent);
+      var events = _eventStore.Where(x =>
+          x.TenantId == streamId.TenantId
+          && x.Id == streamId.AggregateId)
+        .Select(x => x.Data as IDomainEvent);
       foreach (var @event in events)
       {
         callback(@event!);
@@ -59,7 +67,8 @@ namespace DarkDispatcher.Core.Persistence
 
     private record EventData
     {
-      public string StreamId { get; init; } = null!;
+      public string? TenantId { get; init; }
+      public string Id { get; init; } = null!;
       public long Version { get; init; }
       public string Type { get; set; } = null!;
       public object? Data { get; init; }

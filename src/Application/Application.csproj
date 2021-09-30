@@ -5,8 +5,7 @@
   <ItemGroup>
     <Folder Include="Extensions" />
     <Folder Include="Features\Projects\Queries" />
-    <InternalsVisibleTo Include="$(AssemblyPrefixName).Infrastructure" /> 
-    <Folder Include="Common\Exceptions" />
+    <InternalsVisibleTo Include="$(AssemblyPrefixName).Infrastructure" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="10.3.3" />

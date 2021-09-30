@@ -4,9 +4,7 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
   </ItemGroup>
   <ItemGroup>
+    <InternalsVisibleTo Include="$(AssemblyPrefixName).Api" />
     <InternalsVisibleTo Include="$(AssemblyName).Tests" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Exceptions" />
   </ItemGroup>
 </Project>

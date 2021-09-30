@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using DarkDispatcher.Core.Aggregates;
 using DarkDispatcher.Core.Persistence;
+using DarkDispatcher.Core.Projections;
 using Marten;
 
 namespace DarkDispatcher.Infrastructure.Marten
@@ -21,18 +22,18 @@ namespace DarkDispatcher.Infrastructure.Marten
     }
 
     public async ValueTask<TView> FindAsync<TView, TId>(TId id, CancellationToken cancellationToken = default)
-      where TView : class, new()
+      where TView : class, IView
       where TId : AggregateId
     {
       await using var session = GetLightweightSession(id);
-      var document = await session.LoadAsync<TView>(id, cancellationToken);
+      var document = await session.LoadAsync<TView>(id.Value, cancellationToken);
 
       return document!;
     }
 
-    public async ValueTask<TView> FindAsync<TView, TId>(TId id, Expression<Func<TView, bool>> expression,
+    public async ValueTask<TView?> FindAsync<TView, TId>(TId id, Expression<Func<TView, bool>> expression,
       CancellationToken cancellationToken = default) 
-      where TView : class, new() 
+      where TView : class, IView 
       where TId : AggregateId
     {
       await using var session = GetLightweightSession(id);
@@ -45,7 +46,7 @@ namespace DarkDispatcher.Infrastructure.Marten
       TId id, 
       Expression<Func<TView, bool>> expression,
       CancellationToken cancellationToken = default)
-      where TView : class, new() 
+      where TView : class, IView 
       where TId : AggregateId
     {
       await using var session = GetLightweightSession(id);
@@ -57,10 +58,8 @@ namespace DarkDispatcher.Infrastructure.Marten
     private IDocumentSession GetLightweightSession<TId>(TId id) 
       where TId : AggregateId
     {
-      var session = id is AggregateWithTenantId withTenantId
-        ? _store.LightweightSession(withTenantId.TenantId)
-        : _store.LightweightSession();
-      return session;
+      // TODO: Get tenantId
+      return _store.LightweightSession();
     }
   }
 }

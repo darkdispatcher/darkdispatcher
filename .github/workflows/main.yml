@@ -1,0 +1,37 @@
+name: main
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches: 
+      - main
+      - feature/**
+    paths-ignore:
+      - '**.md'
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+
+jobs:
+  build:
+    name: Build & Test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        dotnet-version: [ '5.0.x' ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Setup .Net ${{ matrix.dotnet-version }}
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{ matrix.dotnet-version }}
+          
+      - name: build
+        run: dotnet build -c Release
+        
+      - name: test
+        run: dotnet test -c Release -l trx --no-build --verbosity=normal

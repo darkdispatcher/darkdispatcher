@@ -4,10 +4,10 @@ namespace DarkDispatcher.Domain.Accounts
 {
   public class User
   {
-    public string Id { get; }
+    public string Id { get; set; } = null!;
 
-    public Name Name { get; set; }
+    public Name Name { get; set; } = null!;
 
-    public string Email { get; set; }
+    public string Email { get; set; } = null!;
   }
 }

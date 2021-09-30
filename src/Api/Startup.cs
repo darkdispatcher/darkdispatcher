@@ -25,7 +25,7 @@ namespace DarkDispatcher.Api
     public void ConfigureServices(IServiceCollection services)
     {
       services
-        .AddDarkDispatcher()
+        .AddDarkDispatcherCore()
         .AddIdentity(_configuration.GetConnectionString("Identity"))
         .AddInfrastructure(_configuration, _environment);
 

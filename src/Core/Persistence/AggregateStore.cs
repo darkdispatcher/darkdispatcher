@@ -1,6 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using DarkDispatcher.Core.Aggregates;
+using DarkDispatcher.Core.Ids;
 
 namespace DarkDispatcher.Core.Persistence
 {
@@ -17,8 +18,9 @@ namespace DarkDispatcher.Core.Persistence
       where TAggregate : Aggregate
     {
       var events = aggregate.Changes;
+      var streamId = new StreamId(aggregate.GetTenantId(), aggregate.GetId());
       await _eventStore
-        .AddEventsAsync<TAggregate>(aggregate.GetId(), aggregate.Version, events, cancellationToken)
+        .AddEventsAsync<TAggregate>(streamId, aggregate.Version, events, cancellationToken)
         .ConfigureAwait(false);
       aggregate.ClearChanges();
 
@@ -26,13 +28,14 @@ namespace DarkDispatcher.Core.Persistence
     }
 
     public async ValueTask<TAggregate> LoadAsync<TAggregate>(
-      string aggregateId,
+      AggregateId aggregateId,
       long? version = null,
       CancellationToken cancellationToken = default)
       where TAggregate : Aggregate, new()
     {
       var aggregate = new TAggregate();
-      await _eventStore.ReadStreamAsync(aggregateId, version ?? 0L, e => aggregate.Fold(e), cancellationToken);
+      var streamId = new StreamId(aggregateId.TenantId, aggregateId.Value);
+      await _eventStore.ReadStreamAsync(streamId, version ?? 0L, e => aggregate.Fold(e), cancellationToken);
       
       return aggregate;
     }

@@ -9,18 +9,19 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace DarkDispatcher.Core
 {
-  public static class ServiceCollectionExtensions
+  internal static class ServiceCollectionExtensions
   {
     public static IServiceCollection AddEventHandler<TEvent, TEventHandler>(this IServiceCollection services)
       where TEvent : class, IDomainEvent
       where TEventHandler : class, IEventHandler<TEvent>
     {
-      return services.AddTransient<TEventHandler>()
+      return services
+        .AddTransient<TEventHandler>()
         .AddTransient<INotificationHandler<TEvent>>(sp => sp.GetRequiredService<TEventHandler>())
         .AddTransient<IEventHandler<TEvent>>(sp => sp.GetRequiredService<TEventHandler>());
     }
     
-    public static IDarkDispatcherBuilder AddDarkDispatcher(this IServiceCollection services)
+    public static IDarkDispatcherBuilder AddDarkDispatcherCore(this IServiceCollection services)
     {
       services
         .AddMediatR()

@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using DarkDispatcher.Core.Aggregates;
 using DarkDispatcher.Core.Events;
+using DarkDispatcher.Core.Ids;
 using DarkDispatcher.Core.Persistence;
 using Marten;
 
@@ -20,42 +21,49 @@ namespace DarkDispatcher.Infrastructure.Marten
     }
 
     public async Task AddEventsAsync<TAggregate>(
-      string streamId,
+      StreamId streamId,
       long expectedVersion,
       IReadOnlyCollection<IDomainEvent> events,
       CancellationToken cancellationToken = default)
       where TAggregate : Aggregate
     {
-      await using var session = _store.OpenSession();
+      await using var session = GetSession(streamId);
       
-      session.Events.Append(streamId, expectedVersion, events);
+      session.Events.Append(streamId.AggregateId, expectedVersion, events);
       await session.SaveChangesAsync(cancellationToken);
     }
 
     public async ValueTask<IDomainEvent[]> GetEventsAsync(
-      string aggregateId,
+      StreamId streamId,
       long startVersion = 0L,
       CancellationToken cancellationToken = default)
     {
-      await using var session = _store.OpenSession();
-      var events = await session.Events.FetchStreamAsync(aggregateId, startVersion, token: cancellationToken);
+      await using var session = GetSession(streamId);
+      var events = await session.Events.FetchStreamAsync(streamId.AggregateId, startVersion, token: cancellationToken);
       var savedEvents = events.Select(x => (x.Data as IDomainEvent)!).ToArray();
 
       return savedEvents;
     }
 
     public async Task ReadStreamAsync(
-      string streamId, long startVersion, Action<IDomainEvent> callback,
+      StreamId streamId, 
+      long startVersion, 
+      Action<IDomainEvent> callback,
       CancellationToken cancellationToken = default)
     {
-      await using var session = _store.OpenSession();
-      var events = await session.Events.FetchStreamAsync(streamId, startVersion, token: cancellationToken);
+      await using var session = GetSession(streamId);
+      var events = await session.Events.FetchStreamAsync(streamId.AggregateId, startVersion, token: cancellationToken);
       var savedEvents = events.Select(x => (x.Data as IDomainEvent)!).ToArray();
 
       foreach (var @event in savedEvents)
       {
         callback(@event);
       }
+    }
+    
+    private IDocumentSession GetSession(StreamId streamId)
+    {
+      return !string.IsNullOrWhiteSpace(streamId.TenantId) ? _store.OpenSession(streamId.TenantId) : _store.OpenSession();
     }
   }
 }
