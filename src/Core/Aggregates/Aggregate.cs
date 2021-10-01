@@ -94,8 +94,9 @@ namespace DarkDispatcher.Core.Aggregates
   public abstract class Aggregate<T, TId> : Aggregate<T>
     where T : AggregateState<T, TId>, new()
     where TId : AggregateId {
-    /// <inheritdoc />
+    public TId GetAggregateId() => State.Id;
     public override string? GetTenantId() => State.Id.TenantId;
     public override string GetId() => State.Id.Value;
+
   }
 }

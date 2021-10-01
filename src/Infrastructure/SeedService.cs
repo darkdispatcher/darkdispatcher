@@ -3,10 +3,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using DarkDispatcher.Application.Features.Accounts.Commands;
 using DarkDispatcher.Application.Features.Projects.Commands;
+using DarkDispatcher.Domain.Projects;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Environment = DarkDispatcher.Domain.Projects.Environment;
 
 namespace DarkDispatcher.Infrastructure
 {
@@ -28,18 +30,33 @@ namespace DarkDispatcher.Infrastructure
       using var scope = _services.CreateScope();
       var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
 
+      // Organization
       var organization = await mediator.Send(new CreateOrganization.Command("Acme"), cancellationToken);
-      var organizationId = organization.State.Id;
-      var project = await mediator.Send(new CreateProject.Command(organizationId, "Demo", "Demo project"), cancellationToken);
-      project.AddEnvironment(Guid.NewGuid().ToString(), "Development", "Development Environment", "red");
-      project.AddEnvironment(Guid.NewGuid().ToString(), "Staging", "Staging Environment", "yellow");
-      var prodId = Guid.NewGuid().ToString();
-      project.AddEnvironment(prodId, "Production", "Production Environment", "green");
-      project.UpdateEnvironment(prodId, "Prod", "Production Environment", "orange");
       
+      // Project
+      var project = await mediator.Send(new CreateProject.Command(organization.GetAggregateId(), "Demo", "Demo project"), cancellationToken);
+      
+      // Environments
+      var development = new Environment(Guid.NewGuid().ToString(), "Development", "Development Environment", EnvironmentColor.FireEngineRed);
+      var staging = new Environment(Guid.NewGuid().ToString(), "Staging", "Staging Environment", EnvironmentColor.WindsorTan);
+      var production = new Environment(Guid.NewGuid().ToString(), "Production", "Production Environment", EnvironmentColor.GreenPigment);
+      project.CreateEnvironment(development);
+      project.CreateEnvironment(staging);
+      project.CreateEnvironment(production);
+
+      // Tags
+      var tag = new Tag(Guid.NewGuid().ToString(), "demo", TagColor.Concrete);
+      project.CreateTag(tag);
+
       await mediator.Send(new UpdateProject.Command(project), cancellationToken);
 
-      //await Task.Delay(TimeSpan.FromSeconds(10), cancellationToken);
+      // Configuration
+      var configuration = await mediator.Send(new CreateConfiguration.Command(project.GetAggregateId(), "Demo Config", "Demo configuration"), cancellationToken);
+      configuration.Update("demo-config", "Demo Config");
+      configuration = await mediator.Send(new UpdateConfiguration.Command(configuration), cancellationToken);
+      
+      // Features
+      var feature = await mediator.Send(new CreateFeature.Command(configuration.GetAggregateId(), "feature1", "Demo Feature", "Demo feature to test"), cancellationToken);
     }
 
     public Task StopAsync(CancellationToken cancellationToken)

@@ -25,41 +25,38 @@ namespace DarkDispatcher.Infrastructure.Marten
       where TView : class, IView
       where TId : AggregateId
     {
-      await using var session = GetLightweightSession(id);
+      await using var session = GetSession(id);
       var document = await session.LoadAsync<TView>(id.Value, cancellationToken);
 
       return document!;
     }
 
     public async ValueTask<TView?> FindAsync<TView, TId>(TId id, Expression<Func<TView, bool>> expression,
-      CancellationToken cancellationToken = default) 
-      where TView : class, IView 
+      CancellationToken cancellationToken = default)
+      where TView : class, IView
       where TId : AggregateId
     {
-      await using var session = GetLightweightSession(id);
+      await using var session = GetSession(id);
       var document = await session.Query<TView>().SingleOrDefaultAsync(expression, cancellationToken);
 
       return document;
     }
 
     public async ValueTask<IReadOnlyCollection<TView>> ListAsync<TView, TId>(
-      TId id, 
+      TId id,
       Expression<Func<TView, bool>> expression,
       CancellationToken cancellationToken = default)
-      where TView : class, IView 
+      where TView : class, IView
       where TId : AggregateId
     {
-      await using var session = GetLightweightSession(id);
+      await using var session = GetSession(id);
       var documents = session.Query<TView>().Where(expression).ToImmutableList();
 
       return documents;
     }
 
-    private IDocumentSession GetLightweightSession<TId>(TId id) 
-      where TId : AggregateId
-    {
-      // TODO: Get tenantId
-      return _store.LightweightSession();
-    }
+    private IQuerySession GetSession<TId>(TId id)
+      where TId : AggregateId =>
+      string.IsNullOrEmpty(id.TenantId) ? _store.QuerySession() : _store.QuerySession(id.TenantId);
   }
 }

@@ -3,12 +3,9 @@ using DarkDispatcher.Core.Aggregates;
 namespace DarkDispatcher.Domain.Accounts
 {
   public record OrganizationId(string Value) : AggregateId(Value);
-  
+
   public sealed class Organization : Aggregate<OrganizationState, OrganizationId>
   {
-    public Organization()
-    {}
-    
     public Organization(OrganizationId id, string name)
     {
       var @event = new Events.v1.OrganizationCreated(id.Value, name);
@@ -40,7 +37,7 @@ namespace DarkDispatcher.Domain.Accounts
       
       On<Events.v1.OrganizationUpdated>((state, updated) => state with
       {
-        Name = updated.Name 
+        Name = updated.Name
       });
       
       On<Events.v1.OrganizationDeleted>((state, deleted) => state with

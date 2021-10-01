@@ -38,11 +38,16 @@ namespace DarkDispatcher.Infrastructure.Marten
           options.AutoCreateSchemaObjects = AutoCreate.All;
           options.Events.DatabaseSchemaName = martenConfig.WriteModelSchema;
           options.DatabaseSchemaName = martenConfig.ReadModelSchema;
-          options.Serializer(new SystemTextJsonSerializer
+          var systemTextJsonSerializer = new SystemTextJsonSerializer
           {
             Casing = Casing.Default,
             EnumStorage = EnumStorage.AsString
+          };
+          systemTextJsonSerializer.Customize(serializerOptions =>
+          {
+            serializerOptions.IgnoreNullValues = true;
           });
+          options.Serializer(systemTextJsonSerializer);
           
           options.Events.StreamIdentity = StreamIdentity.AsString;
           options.Events.TenancyStyle = TenancyStyle.Conjoined;

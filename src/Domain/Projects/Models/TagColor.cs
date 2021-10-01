@@ -2,10 +2,10 @@ using DarkDispatcher.Core;
 
 namespace DarkDispatcher.Domain.Projects
 {
-  public record Tag(string Name, TagColor Color);
-
-  public class TagColor : Enumeration
+  public record TagColor(int Id, string Name, string Value) : Enumeration(Id, Name)
   {
+    public static TagColor Default => Concrete;
+    
     public static TagColor Salmon = new(1, nameof(Salmon), "#fadbd8");
     public static TagColor Plum = new(2, nameof(Plum), "#e8daef");
     public static TagColor River = new(3, nameof(River), "#d6eaf8");
@@ -14,12 +14,6 @@ namespace DarkDispatcher.Domain.Projects
     public static TagColor Carrot = new(6, nameof(Carrot), "#f5cba7");
     public static TagColor Concrete = new(7, nameof(Concrete), "#d5dbdb");
     
-    public TagColor(int id, string name, string value) 
-      : base(id, name)
-    {
-      Value = value;
-    }
-
-    public string Value { get; }
+    public static TagColor FindColorOrDefault(string name) => SingleOrDefault<TagColor>(x => x.Name == name) ?? Default;
   }
 }

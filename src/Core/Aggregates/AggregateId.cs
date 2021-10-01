@@ -8,5 +8,7 @@ namespace DarkDispatcher.Core.Aggregates
     }
 
     public string? TenantId { get; }
+
+    public override string ToString() => $"{TenantId}:{Value}";
   }
 }
