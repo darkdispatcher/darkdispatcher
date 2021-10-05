@@ -1,7 +1,7 @@
 using DarkDispatcher.Core.Aggregates;
-using DarkDispatcher.Domain.Projects.Events.v1;
+using DarkDispatcher.Domain.Projects;
 
-namespace DarkDispatcher.Domain.Projects
+namespace DarkDispatcher.Domain.Features
 {
   public record FeatureId(ConfigurationId ConfigurationId, string Value) : AggregateId(ConfigurationId.TenantId, Value);
 
@@ -9,7 +9,7 @@ namespace DarkDispatcher.Domain.Projects
   {
     public Feature(FeatureId id, string key, string name, string? description = null)
     {
-      var @event = new FeatureCreated(id, key, name, description);
+      var @event = new FeatureEvents.V1.FeatureCreated(id, key, name, description);
       Apply(@event);
     }
   }
@@ -18,7 +18,7 @@ namespace DarkDispatcher.Domain.Projects
   {
     public FeatureState()
     {
-      On<FeatureCreated>((state, created) => state with
+      On<FeatureEvents.V1.FeatureCreated>((state, created) => state with
       {
         Id = created.FeatureId,
         Key = created.Key,
@@ -26,7 +26,7 @@ namespace DarkDispatcher.Domain.Projects
         Description = created.Description
       });
       
-      On<FeatureUpdated>((state, updated) => state with
+      On<FeatureEvents.V1.FeatureUpdated>((state, updated) => state with
       {
         Key = updated.Key,
         Name = updated.Name,

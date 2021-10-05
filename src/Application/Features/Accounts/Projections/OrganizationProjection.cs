@@ -1,12 +1,12 @@
 using DarkDispatcher.Core.Projections;
-using DarkDispatcher.Domain.Accounts.Events.v1;
+using DarkDispatcher.Domain.Accounts;
 
 namespace DarkDispatcher.Application.Features.Accounts.Projections
 {
   public record OrganizationProjection : 
-    IProjection<OrganizationCreated>,
-    IProjection<OrganizationDeleted>,
-    IProjection<OrganizationUpdated>
+    IProjection<AccountEvents.V1.OrganizationCreated>,
+    IProjection<AccountEvents.V1.OrganizationDeleted>,
+    IProjection<AccountEvents.V1.OrganizationUpdated>
   {
     public string Id { get; private set; } = null!;
 
@@ -14,18 +14,18 @@ namespace DarkDispatcher.Application.Features.Accounts.Projections
 
     public bool IsDeleted { get; private set; }
 
-    public void Apply(OrganizationCreated @event)
+    public void Apply(AccountEvents.V1.OrganizationCreated @event)
     {
       Id = @event.Id;
       Name = @event.Name;
     }
 
-    public void Apply(OrganizationDeleted @event)
+    public void Apply(AccountEvents.V1.OrganizationDeleted @event)
     {
       IsDeleted = true;
     }
 
-    public void Apply(OrganizationUpdated @event)
+    public void Apply(AccountEvents.V1.OrganizationUpdated @event)
     {
       Name = @event.Name;
     }
