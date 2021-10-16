@@ -22,7 +22,7 @@ namespace DarkDispatcher.Core.Persistence
     Task AddEventsAsync<TAggregate>(
       StreamId streamId,
       long expectedVersion,
-      IReadOnlyCollection<IDomainEvent> events,
+      IReadOnlyCollection<DomainEvent> events,
       CancellationToken cancellationToken = default)
       where TAggregate : Aggregate;
 
@@ -33,7 +33,7 @@ namespace DarkDispatcher.Core.Persistence
     /// <param name="startVersion">Where to start reading events</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>An array with events retrieved from the stream</returns>
-    ValueTask<IDomainEvent[]> GetEventsAsync(
+    ValueTask<DomainEvent[]> GetEventsAsync(
       StreamId streamId,
       long startVersion = 0L,
       CancellationToken cancellationToken = default);
@@ -49,7 +49,7 @@ namespace DarkDispatcher.Core.Persistence
     Task ReadStreamAsync(
       StreamId streamId,
       long startVersion,
-      Action<IDomainEvent> callback,
+      Action<DomainEvent> callback,
       CancellationToken cancellationToken = default
     );
   }

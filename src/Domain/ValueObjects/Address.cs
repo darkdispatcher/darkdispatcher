@@ -8,9 +8,6 @@ namespace DarkDispatcher.Domain.ValueObjects
     string Country,
     string? Address2 = null)
   {
-    public override string ToString()
-    {
-      return $"{Address1}\n{Address2}\n{City}, {State} {PostalCode}\n{Country}";
-    }
+    public override string ToString() => $"{Address1}\n{Address2}\n{City}, {State} {PostalCode}\n{Country}";
   }
 }

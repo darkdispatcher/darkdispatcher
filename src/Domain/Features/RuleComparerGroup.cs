@@ -1,4 +1,5 @@
 using DarkDispatcher.Core;
+using DarkDispatcher.Domain.SeedWork;
 
 namespace DarkDispatcher.Domain.Features
 {

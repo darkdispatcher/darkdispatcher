@@ -49,6 +49,5 @@ namespace DarkDispatcher.Domain.Accounts
     public string Name { get; init; } = null!;
     
     public bool IsDeleted { get; init; }
-    
   }
 }

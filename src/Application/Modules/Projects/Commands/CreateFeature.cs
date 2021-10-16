@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using DarkDispatcher.Core.Commands;
@@ -11,7 +12,7 @@ namespace DarkDispatcher.Application.Features.Projects.Commands
 {
   public class CreateFeature
   {
-    public record Command(ConfigurationId ConfigurationId, string Key, string Name, string? Description) : ICommand<Feature>;
+    public record Command(ConfigurationId ConfigurationId, string Key, string Name, VariationType Type, Variation[] Variations, RuleVariationDefaults Defaults, Tag[] Tags = null, string? Description = null) : ICommand<Feature>;
 
     internal class Validator : AbstractValidator<Command>
     {
@@ -47,7 +48,7 @@ namespace DarkDispatcher.Application.Features.Projects.Commands
       {
         var id = _idGenerator.New();
         var featureId = new FeatureId(request.ConfigurationId, id);
-        var feature = new Feature(featureId, request.Key, request.Name, request.Description);
+        var feature = new Feature(featureId, request.Key, request.Name, request.Type, request.Variations, request.Defaults, request.Tags, request.Description);
         var created = await _store.StoreAsync(feature, cancellationToken);
         
         return created;

@@ -4,9 +4,9 @@ namespace DarkDispatcher.Core.Tests.Helpers
 {
   internal static class TestEvents
   {
-    public record TestAggregateCreated(string Id, string Name) : IDomainEvent;
-    public record TestAggregateUpdated(string Id, string Name) : IDomainEvent;
-    public record TestAggregateDeleted(string Id) : IDomainEvent;
-    public record Invalid(string Id) : IDomainEvent;
+    public record TestAggregateCreated(string Id, string Name) : DomainEvent;
+    public record TestAggregateUpdated(string Id, string Name) : DomainEvent;
+    public record TestAggregateDeleted(string Id) : DomainEvent;
+    public record Invalid(string Id) : DomainEvent;
   }
 }

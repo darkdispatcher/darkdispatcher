@@ -6,11 +6,11 @@ namespace DarkDispatcher.Domain.Accounts
   {
     public static class V1
     {
-      public record OrganizationCreated(string Id, string Name) : IDomainEvent;
+      public record OrganizationCreated(string Id, string Name) : DomainEvent;
 
-      public record OrganizationDeleted(string Id) : IDomainEvent;
+      public record OrganizationDeleted(string Id) : DomainEvent;
 
-      public record OrganizationUpdated(string Id, string Name) : IDomainEvent;
+      public record OrganizationUpdated(string Id, string Name) : DomainEvent;
     }
   }
 }

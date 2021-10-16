@@ -15,7 +15,7 @@ namespace DarkDispatcher.Core.Persistence
     private readonly ConcurrentQueue<EventData> _eventStore = new();
 
     public Task AddEventsAsync<TAggregate>(StreamId streamId, long expectedVersion,
-      IReadOnlyCollection<IDomainEvent> events,
+      IReadOnlyCollection<DomainEvent> events,
       CancellationToken cancellationToken = default)
       where TAggregate : Aggregate
     {
@@ -39,24 +39,24 @@ namespace DarkDispatcher.Core.Persistence
       return Task.CompletedTask;
     }
 
-    public ValueTask<IDomainEvent[]> GetEventsAsync(StreamId streamId, long startVersion = 0,
+    public ValueTask<DomainEvent[]> GetEventsAsync(StreamId streamId, long startVersion = 0,
       CancellationToken cancellationToken = default)
     {
       var events = _eventStore.Where(x =>
         x.TenantId == streamId.TenantId
         && x.Id == streamId.AggregateId
         && x.Version >= startVersion);
-      var domainEvents = events.Select(x => x.Data as IDomainEvent).ToArray();
+      var domainEvents = events.Select(x => x.Data as DomainEvent).ToArray();
       return ValueTask.FromResult(domainEvents)!;
     }
 
-    public Task ReadStreamAsync(StreamId streamId, long startVersion, Action<IDomainEvent> callback,
+    public Task ReadStreamAsync(StreamId streamId, long startVersion, Action<DomainEvent> callback,
       CancellationToken cancellationToken = default)
     {
       var events = _eventStore.Where(x =>
           x.TenantId == streamId.TenantId
           && x.Id == streamId.AggregateId)
-        .Select(x => x.Data as IDomainEvent);
+        .Select(x => x.Data as DomainEvent);
       foreach (var @event in events)
       {
         callback(@event!);

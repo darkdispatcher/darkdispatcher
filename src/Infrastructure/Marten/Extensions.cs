@@ -40,12 +40,12 @@ namespace DarkDispatcher.Infrastructure.Marten
           options.DatabaseSchemaName = martenConfig.ReadModelSchema;
           var systemTextJsonSerializer = new SystemTextJsonSerializer
           {
-            Casing = Casing.Default,
+            Casing = Casing.CamelCase,
             EnumStorage = EnumStorage.AsString
           };
-          systemTextJsonSerializer.Customize(serializerOptions =>
+          systemTextJsonSerializer.Customize(o =>
           {
-            serializerOptions.IgnoreNullValues = true;
+            o.IgnoreNullValues = true;
           });
           options.Serializer(systemTextJsonSerializer);
           

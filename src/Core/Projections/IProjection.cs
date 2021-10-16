@@ -7,7 +7,7 @@ namespace DarkDispatcher.Core.Projections
   }
 
   public interface IProjection<in TEvent> : IView
-    where TEvent : class, IDomainEvent
+    where TEvent : DomainEvent
   {
     void Apply(TEvent @event);
   }

@@ -12,7 +12,7 @@ namespace DarkDispatcher.Core
   internal static class ServiceCollectionExtensions
   {
     public static IServiceCollection AddEventHandler<TEvent, TEventHandler>(this IServiceCollection services)
-      where TEvent : class, IDomainEvent
+      where TEvent : DomainEvent
       where TEventHandler : class, IEventHandler<TEvent>
     {
       return services

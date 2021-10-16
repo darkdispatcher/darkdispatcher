@@ -61,7 +61,7 @@ namespace DarkDispatcher.Core.Tests.Aggregates
       aggregate.ClearChanges();
       var created = new TestEvents.TestAggregateCreated(id.Value, "test99");
       var updated = new TestEvents.TestAggregateUpdated(id.Value, "test101");
-      aggregate.Load(new IDomainEvent[]{ created, updated });
+      aggregate.Load(new DomainEvent[]{ created, updated });
       
       // Assert
       aggregate.Changes.Should().BeEmpty();

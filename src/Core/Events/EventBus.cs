@@ -13,7 +13,7 @@ namespace DarkDispatcher.Core.Events
       _mediator = mediator;
     }
 
-    public async Task PublishAsync(IDomainEvent[] events, CancellationToken cancellationToken = default)
+    public async Task PublishAsync(DomainEvent[] events, CancellationToken cancellationToken = default)
     {
       foreach (var @event in events)
       {

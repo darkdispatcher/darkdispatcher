@@ -7,9 +7,9 @@ namespace DarkDispatcher.Core.Aggregates
   public abstract record AggregateState<T>
     where T : AggregateState<T>
   {
-    private readonly Dictionary<Type, Func<T, IDomainEvent, T>> _handlers = new();
+    private readonly Dictionary<Type, Func<T, DomainEvent, T>> _handlers = new();
 
-    public virtual T When(IDomainEvent @event)
+    public virtual T When(DomainEvent @event)
     {
       var eventType = @event.GetType();
 
@@ -20,7 +20,7 @@ namespace DarkDispatcher.Core.Aggregates
     }
 
     protected void On<TEvent>(Func<T, TEvent, T> handle)
-      where TEvent : class, IDomainEvent
+      where TEvent : DomainEvent
     {
       if (!_handlers.TryAdd(typeof(TEvent), (state, @event) => handle(state, (TEvent)@event)))
       {

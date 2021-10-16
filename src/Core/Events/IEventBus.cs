@@ -5,6 +5,6 @@ namespace DarkDispatcher.Core.Events
 {
   public interface IEventBus
   {
-    Task PublishAsync(IDomainEvent[] events, CancellationToken cancellationToken = default);
+    Task PublishAsync(DomainEvent[] events, CancellationToken cancellationToken = default);
   }
 }

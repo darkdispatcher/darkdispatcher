@@ -23,7 +23,7 @@ namespace DarkDispatcher.Infrastructure.Marten
     public async Task AddEventsAsync<TAggregate>(
       StreamId streamId,
       long expectedVersion,
-      IReadOnlyCollection<IDomainEvent> events,
+      IReadOnlyCollection<DomainEvent> events,
       CancellationToken cancellationToken = default)
       where TAggregate : Aggregate
     {
@@ -33,14 +33,14 @@ namespace DarkDispatcher.Infrastructure.Marten
       await session.SaveChangesAsync(cancellationToken);
     }
 
-    public async ValueTask<IDomainEvent[]> GetEventsAsync(
+    public async ValueTask<DomainEvent[]> GetEventsAsync(
       StreamId streamId,
       long startVersion = 0L,
       CancellationToken cancellationToken = default)
     {
       await using var session = GetSession(streamId);
       var events = await session.Events.FetchStreamAsync(streamId.AggregateId, startVersion, token: cancellationToken);
-      var savedEvents = events.Select(x => (x.Data as IDomainEvent)!).ToArray();
+      var savedEvents = events.Select(x => (x.Data as DomainEvent)!).ToArray();
 
       return savedEvents;
     }
@@ -48,12 +48,12 @@ namespace DarkDispatcher.Infrastructure.Marten
     public async Task ReadStreamAsync(
       StreamId streamId, 
       long startVersion, 
-      Action<IDomainEvent> callback,
+      Action<DomainEvent> callback,
       CancellationToken cancellationToken = default)
     {
       await using var session = GetSession(streamId);
       var events = await session.Events.FetchStreamAsync(streamId.AggregateId, startVersion, token: cancellationToken);
-      var savedEvents = events.Select(x => (x.Data as IDomainEvent)!).ToArray();
+      var savedEvents = events.Select(x => (x.Data as DomainEvent)!).ToArray();
 
       foreach (var @event in savedEvents)
       {

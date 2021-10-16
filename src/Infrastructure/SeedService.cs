@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using DarkDispatcher.Application.Features.Accounts.Commands;
 using DarkDispatcher.Application.Features.Projects.Commands;
+using DarkDispatcher.Domain.Features;
 using DarkDispatcher.Domain.Projects;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -56,7 +57,15 @@ namespace DarkDispatcher.Infrastructure
       configuration = await mediator.Send(new UpdateConfiguration.Command(configuration), cancellationToken);
       
       // Features
-      var feature = await mediator.Send(new CreateFeature.Command(configuration.GetAggregateId(), "feature1", "Demo Feature", "Demo feature to test"), cancellationToken);
+      var trueVariation = new Variation(Guid.NewGuid().ToString(), "true");
+      var falseVariation = new Variation(Guid.NewGuid().ToString(), "false");
+      var variations = new[]
+      {
+        trueVariation,
+        falseVariation
+      };
+      var defaults = new RuleVariationDefaults(trueVariation.Id, falseVariation.Id);
+      var feature = await mediator.Send(new CreateFeature.Command(configuration.GetAggregateId(), "feature1", "Demo Feature", VariationType.Boolean, variations, defaults, Description: "Demo feature to test"), cancellationToken);
     }
 
     public Task StopAsync(CancellationToken cancellationToken)
