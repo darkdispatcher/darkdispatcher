@@ -1,0 +1,22 @@
+# User-specific files
+*.suo
+*.user
+*.vs
+*.log
+
+.vs
+.git
+
+# Build results
+**/bin
+**/build
+**/obj
+**/out
+**/publish
+
+# NodeJS 
+**/node_modules
+
+**/appsettings.Development.json
+**/appsettings.Production.json
+**/launchSettings.json

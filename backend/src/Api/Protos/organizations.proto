@@ -1,0 +1,28 @@
+syntax = "proto3";
+package darkdispatcher.grpc.organizations.v1;
+
+import "Protos/Model/organization.proto";
+
+service OrganizationService {
+  rpc GetOrganizations (GetOrganizationsRequest) returns (GetOrganizationsResponse);
+  rpc GetOrganization (GetOrganizationRequest) returns (darkdispatcher.proto.Organization);
+  rpc UpdateOrganization (UpdateOrganizationRequest) returns (UpdateOrganizationResponse);
+}
+
+message GetOrganizationRequest {
+  string id = 1;
+}
+message GetOrganizationsRequest {}
+
+message GetOrganizationsResponse {
+  repeated darkdispatcher.proto.Organization organizations = 1;
+}
+
+message UpdateOrganizationRequest {
+  string id = 1;
+  string name = 2;
+}
+
+message UpdateOrganizationResponse {
+  string id = 1;
+}
