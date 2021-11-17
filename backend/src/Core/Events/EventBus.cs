@@ -2,23 +2,22 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 
-namespace DarkDispatcher.Core.Events
+namespace DarkDispatcher.Core.Events;
+
+public class EventBus : IEventBus
 {
-  public class EventBus : IEventBus
+  private readonly IMediator _mediator;
+
+  public EventBus(IMediator mediator)
   {
-    private readonly IMediator _mediator;
+    _mediator = mediator;
+  }
 
-    public EventBus(IMediator mediator)
+  public async Task PublishAsync(DomainEvent[] events, CancellationToken cancellationToken = default)
+  {
+    foreach (var @event in events)
     {
-      _mediator = mediator;
-    }
-
-    public async Task PublishAsync(DomainEvent[] events, CancellationToken cancellationToken = default)
-    {
-      foreach (var @event in events)
-      {
-        await _mediator.Publish(@event, cancellationToken);
-      }
+      await _mediator.Publish(@event, cancellationToken);
     }
   }
 }

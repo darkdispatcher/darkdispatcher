@@ -1,7 +1,7 @@
 ﻿syntax = "proto3";
-package darkdispatcher.proto;
+package darkDispatcher.proto;
 
 message Organization {
-  string id = 1;
+  string organization_id = 1;
   string name = 2;
 }

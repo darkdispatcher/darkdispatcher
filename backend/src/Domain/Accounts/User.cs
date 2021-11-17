@@ -1,13 +1,12 @@
 using DarkDispatcher.Domain.ValueObjects;
 
-namespace DarkDispatcher.Domain.Accounts
+namespace DarkDispatcher.Domain.Accounts;
+
+public class User
 {
-  public class User
-  {
-    public string Id { get; set; } = null!;
+  public string Id { get; set; } = null!;
 
-    public Name Name { get; set; } = null!;
+  public Name Name { get; set; } = null!;
 
-    public string Email { get; set; } = null!;
-  }
+  public string Email { get; set; } = null!;
 }

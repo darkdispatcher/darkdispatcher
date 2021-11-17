@@ -1,14 +1,13 @@
-namespace DarkDispatcher.Core.Aggregates
+namespace DarkDispatcher.Core.Aggregates;
+
+public abstract record AggregateId(string Value)
 {
-  public abstract record AggregateId(string Value)
+  protected AggregateId(string tenantId, string value) : this(value)
   {
-    protected AggregateId(string tenantId, string value) : this(value)
-    {
-      TenantId = tenantId;
-    }
-
-    public string? TenantId { get; }
-
-    public override string ToString() => $"{TenantId}:{Value}";
+    TenantId = tenantId;
   }
+
+  public string? TenantId { get; }
+
+  public override string ToString() => $"{TenantId}:{Value}";
 }

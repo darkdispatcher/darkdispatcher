@@ -1,10 +1,9 @@
-namespace DarkDispatcher.Core.Ids
+namespace DarkDispatcher.Core.Ids;
+
+/// <summary>
+/// Helper to generate an id
+/// </summary>
+public interface IIdGenerator
 {
-  /// <summary>
-  /// Helper to generate an id
-  /// </summary>
-  public interface IIdGenerator
-  {
-    public string New();
-  }
+  public string New();
 }

@@ -3,22 +3,21 @@ using Xunit;
 using DarkDispatcher.Domain.Accounts;
 using FluentAssertions;
 
-namespace DarkDispatcher.Application.Tests
+namespace DarkDispatcher.Application.Tests;
+
+public class AccountTests
 {
-  public class AccountTests
+  [Fact]
+  public void GivenANewOrganization_WhenCheckingTheChanges_ShouldHaveRaisedCreatedEvent()
   {
-    [Fact]
-    public void GivenANewOrganization_WhenCheckingTheChanges_ShouldHaveRaisedCreatedEvent()
-    {
-      // Given
-      var id = new OrganizationId("acme");
+    // Given
+    var id = new OrganizationId("acme");
 
-      // When
-      var organization = new Organization(id, "Acme");
+    // When
+    var organization = new Organization(id, "Acme");
 
-      // Then
-      var @event = organization.Changes.Single();
-      @event.Should().BeOfType<AccountEvents.V1.OrganizationCreated>();
-    }
+    // Then
+    var @event = organization.Changes.Single();
+    @event.Should().BeOfType<AccountEvents.V1.OrganizationCreated>();
   }
 }

@@ -4,26 +4,25 @@ using DarkDispatcher.Core.Commands;
 using DarkDispatcher.Core.Persistence;
 using DarkDispatcher.Domain.Accounts;
 
-namespace DarkDispatcher.Application.Features.Accounts.Commands
+namespace DarkDispatcher.Application.Modules.Accounts.Commands;
+
+public class UpdateOrganization
 {
-  public class UpdateOrganization
+  public record Command(Organization Organization) : ICommand<Organization>;
+
+  internal class Handler : ICommandHandler<Command, Organization>
   {
-    public record Command(Organization Organization) : ICommand<Organization>;
+    private readonly IAggregateStore _store;
 
-    internal class Handler : ICommandHandler<Command, Organization>
+    public Handler(IAggregateStore store)
     {
-      private readonly IAggregateStore _store;
-
-      public Handler(IAggregateStore store)
-      {
-        _store = store;
-      }
+      _store = store;
+    }
       
-      public async Task<Organization> Handle(Command request, CancellationToken cancellationToken)
-      {
-        var updated = await _store.StoreAsync(request.Organization, cancellationToken);
-        return updated;
-      }
+    public async Task<Organization> Handle(Command request, CancellationToken cancellationToken)
+    {
+      var updated = await _store.StoreAsync(request.Organization, cancellationToken);
+      return updated;
     }
   }
 }

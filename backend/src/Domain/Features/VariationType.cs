@@ -1,9 +1,8 @@
-namespace DarkDispatcher.Domain.Features
+namespace DarkDispatcher.Domain.Features;
+
+public enum VariationType
 {
-  public enum VariationType
-  {
-    Boolean,
-    String,
-    Number
-  }
+  Boolean,
+  String,
+  Number
 }

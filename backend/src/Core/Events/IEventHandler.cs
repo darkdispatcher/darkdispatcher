@@ -1,10 +1,9 @@
 using System;
 using MediatR;
 
-namespace DarkDispatcher.Core.Events
+namespace DarkDispatcher.Core.Events;
+
+public interface IEventHandler<in TEvent>: INotificationHandler<TEvent>
+  where TEvent : DomainEvent
 {
-  public interface IEventHandler<in TEvent>: INotificationHandler<TEvent>
-    where TEvent : DomainEvent
-  {
-  }
 }

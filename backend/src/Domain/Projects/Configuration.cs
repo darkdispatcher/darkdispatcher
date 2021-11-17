@@ -1,51 +1,21 @@
 using DarkDispatcher.Core.Aggregates;
+using DarkDispatcher.Domain.Projects.Events.v1;
+using DarkDispatcher.Domain.Projects.Ids;
+using DarkDispatcher.Domain.Projects.States;
 
-namespace DarkDispatcher.Domain.Projects
+namespace DarkDispatcher.Domain.Projects;
+
+public sealed class Configuration : Aggregate<ConfigurationState, ConfigurationId>
 {
-  public record ConfigurationId(ProjectId ProjectId, string Value) : AggregateId(ProjectId.TenantId, Value);
-  
-  public sealed class Configuration : Aggregate<ConfigurationState, ConfigurationId>
+  public Configuration(ConfigurationId id, string name, string? description = null)
   {
-    public Configuration(ConfigurationId id, string name, string? description = null)
-    {
-      var @event = new ProjectEvents.V1.ConfigurationCreated(id, name, description);
-      Apply(@event);
-    }
-
-    public void Update(string name, string description)
-    {
-      var @event = new ProjectEvents.V1.ConfigurationUpdated(GetAggregateId(), name, description);
-      Apply(@event);
-    }
+    var @event = new ConfigurationCreated(id, name, description);
+    Apply(@event);
   }
 
-  public record ConfigurationState : AggregateState<ConfigurationState, ConfigurationId>
+  public void Update(string name, string description)
   {
-    public ConfigurationState()
-    {
-      On<ProjectEvents.V1.ConfigurationCreated>((state, created) => state with
-      {
-        Id = created.ConfigurationId,
-        Name = created.Name,
-        Description = created.Description
-      });
-      
-      On<ProjectEvents.V1.ConfigurationUpdated>((state, updated) => state with
-      {
-        Name = updated.Name,
-        Description = updated.Description
-      });
-      
-      On<ProjectEvents.V1.ConfigurationDeleted>((state, deleted) => state with
-      {
-        IsDeleted = true
-      });
-    }
-    
-    public string Name { get; init; } = null!;
-    
-    public string? Description { get; init; }
-
-    public bool IsDeleted { get; init; }
+    var @event = new ConfigurationUpdated(GetAggregateId(), name, description);
+    Apply(@event);
   }
 }

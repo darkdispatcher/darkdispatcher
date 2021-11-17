@@ -3,20 +3,19 @@ using DarkDispatcher.Core.Projections;
 using FluentAssertions;
 using Xunit;
 
-namespace DarkDispatcher.Core.Tests.Extensions
+namespace DarkDispatcher.Core.Tests.Extensions;
+
+public class TypeExtensionsTests
 {
-  public class TypeExtensionsTests
+  [Fact]
+  public void GivenAGenericInterface_WhenClassesImplementInterface_ShouldFindAllConcreteImplementations()
   {
-    [Fact]
-    public void GivenAGenericInterface_WhenClassesImplementInterface_ShouldFindAllConcreteImplementations()
-    {
-      // Arrange
+    // Arrange
       
-      // Act
-      var types = typeof(IProjection<>).GetAllTypesImplementingOpenGenericType();
+    // Act
+    var types = typeof(IProjection<>).GetAllTypesImplementingOpenGenericType();
       
-      // Assert
-      types.Should().HaveCount(2);
-    }
+    // Assert
+    types.Should().HaveCount(2);
   }
 }

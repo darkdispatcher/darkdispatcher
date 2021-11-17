@@ -1,0 +1,11 @@
+﻿syntax = "proto3";
+package darkDispatcher.proto;
+
+import "protos/models/organization.proto";
+
+message Project {
+  Organization organization = 1;
+  string project_id = 2;
+  string name = 3;
+  string description = 4;
+}

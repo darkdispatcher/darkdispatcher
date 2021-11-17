@@ -1,9 +1,8 @@
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DarkDispatcher.Core
+namespace DarkDispatcher.Core;
+
+public interface IDarkDispatcherBuilder
 {
-  public interface IDarkDispatcherBuilder
-  {
-    IServiceCollection Services { get; }
-  }
+  IServiceCollection Services { get; }
 }

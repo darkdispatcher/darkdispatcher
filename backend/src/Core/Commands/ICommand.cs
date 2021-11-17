@@ -1,8 +1,7 @@
 using MediatR;
 
-namespace DarkDispatcher.Core.Commands
+namespace DarkDispatcher.Core.Commands;
+
+public interface ICommand<out TResult> : IRequest<TResult>
 {
-  public interface ICommand<out TResult> : IRequest<TResult>
-  {
-  }
 }

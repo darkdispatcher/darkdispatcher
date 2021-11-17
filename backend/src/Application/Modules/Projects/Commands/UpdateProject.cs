@@ -4,26 +4,25 @@ using DarkDispatcher.Core.Commands;
 using DarkDispatcher.Core.Persistence;
 using DarkDispatcher.Domain.Projects;
 
-namespace DarkDispatcher.Application.Features.Projects.Commands
+namespace DarkDispatcher.Application.Modules.Projects.Commands;
+
+public class UpdateProject
 {
-  public class UpdateProject
+  public record Command(Project Project) : ICommand<Project>;
+
+  internal class Handler : ICommandHandler<Command, Project>
   {
-    public record Command(Project Project) : ICommand<Project>;
+    private readonly IAggregateStore _store;
 
-    internal class Handler : ICommandHandler<Command, Project>
+    public Handler(IAggregateStore store)
     {
-      private readonly IAggregateStore _store;
-
-      public Handler(IAggregateStore store)
-      {
-        _store = store;
-      }
+      _store = store;
+    }
       
-      public async Task<Project> Handle(Command request, CancellationToken cancellationToken)
-      {
-        var updated = await _store.StoreAsync(request.Project, cancellationToken);
-        return updated;
-      }
+    public async Task<Project> Handle(Command request, CancellationToken cancellationToken)
+    {
+      var updated = await _store.StoreAsync(request.Project, cancellationToken);
+      return updated;
     }
   }
 }

@@ -7,39 +7,38 @@ using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace DarkDispatcher.Core
+namespace DarkDispatcher.Core;
+
+internal static class ServiceCollectionExtensions
 {
-  internal static class ServiceCollectionExtensions
+  public static IServiceCollection AddEventHandler<TEvent, TEventHandler>(this IServiceCollection services)
+    where TEvent : DomainEvent
+    where TEventHandler : class, IEventHandler<TEvent>
   {
-    public static IServiceCollection AddEventHandler<TEvent, TEventHandler>(this IServiceCollection services)
-      where TEvent : DomainEvent
-      where TEventHandler : class, IEventHandler<TEvent>
-    {
-      return services
-        .AddTransient<TEventHandler>()
-        .AddTransient<INotificationHandler<TEvent>>(sp => sp.GetRequiredService<TEventHandler>())
-        .AddTransient<IEventHandler<TEvent>>(sp => sp.GetRequiredService<TEventHandler>());
-    }
+    return services
+      .AddTransient<TEventHandler>()
+      .AddTransient<INotificationHandler<TEvent>>(sp => sp.GetRequiredService<TEventHandler>())
+      .AddTransient<IEventHandler<TEvent>>(sp => sp.GetRequiredService<TEventHandler>());
+  }
     
-    public static IDarkDispatcherBuilder AddDarkDispatcherCore(this IServiceCollection services)
-    {
-      services
-        .AddMediatR()
-        .AddScoped<ICommandBus, CommandBus>()
-        .AddScoped<IQueryBus, QueryBus>();
+  public static IDarkDispatcherBuilder AddDarkDispatcherCore(this IServiceCollection services)
+  {
+    services
+      .AddMediatR()
+      .AddScoped<ICommandBus, CommandBus>()
+      .AddScoped<IQueryBus, QueryBus>();
       
-      services.AddScoped<IAggregateStore, AggregateStore>();
-      services.TryAddScoped<IIdGenerator, GuidIdGenerator>();
-      services.TryAddScoped<IEventStore, InMemoryEventStore>();
-      services.TryAddScoped<IEventBus, EventBus>();
+    services.AddScoped<IAggregateStore, AggregateStore>();
+    services.TryAddScoped<IIdGenerator, GuidIdGenerator>();
+    services.TryAddScoped<IEventStore, InMemoryEventStore>();
+    services.TryAddScoped<IEventBus, EventBus>();
       
-      return DarkDispatcherBuilder.Create(services);
-    }
+    return DarkDispatcherBuilder.Create(services);
+  }
     
-    private static IServiceCollection AddMediatR(this IServiceCollection services)
-    {
-      return services.AddScoped<IMediator, Mediator>()
-        .AddTransient<ServiceFactory>(sp => sp.GetRequiredService);
-    }
+  private static IServiceCollection AddMediatR(this IServiceCollection services)
+  {
+    return services.AddScoped<IMediator, Mediator>()
+      .AddTransient<ServiceFactory>(sp => sp.GetRequiredService);
   }
 }

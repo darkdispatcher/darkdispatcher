@@ -1,9 +1,8 @@
 using System;
 
-namespace DarkDispatcher.Core.Ids
+namespace DarkDispatcher.Core.Ids;
+
+public class GuidIdGenerator : IIdGenerator
 {
-  public class GuidIdGenerator : IIdGenerator
-  {
-    public string New() => Guid.NewGuid().ToString();
-  }
+  public string New() => Guid.NewGuid().ToString();
 }
