@@ -6,7 +6,6 @@ using DarkDispatcher.Domain.Features.Entities;
 using DarkDispatcher.Domain.Features.Events.v1;
 using DarkDispatcher.Domain.Features.Ids;
 using DarkDispatcher.Domain.Features.States;
-using DarkDispatcher.Domain.Projects;
 using DarkDispatcher.Domain.Projects.Entities;
 
 namespace DarkDispatcher.Domain.Features;
