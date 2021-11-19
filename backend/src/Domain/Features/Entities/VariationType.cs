@@ -1,4 +1,4 @@
-namespace DarkDispatcher.Domain.Features;
+namespace DarkDispatcher.Domain.Features.Entities;
 
 public enum VariationType
 {

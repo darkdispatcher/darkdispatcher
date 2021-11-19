@@ -5,13 +5,14 @@ using DarkDispatcher.Application.Modules.Accounts.Commands;
 using DarkDispatcher.Application.Modules.Projects.Commands;
 using DarkDispatcher.Core.Ids;
 using DarkDispatcher.Domain.Features;
+using DarkDispatcher.Domain.Features.Entities;
 using DarkDispatcher.Domain.Projects;
-using DarkDispatcher.Domain.Projects.Models;
+using DarkDispatcher.Domain.Projects.Entities;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Environment = DarkDispatcher.Domain.Projects.Models.Environment;
+using Environment = DarkDispatcher.Domain.Projects.Entities.Environment;
 
 namespace DarkDispatcher.Infrastructure;
 

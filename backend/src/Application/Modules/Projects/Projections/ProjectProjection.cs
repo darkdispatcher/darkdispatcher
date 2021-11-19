@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using System.Linq;
 using DarkDispatcher.Core.Projections;
 using DarkDispatcher.Domain.Projects;
+using DarkDispatcher.Domain.Projects.Entities;
 using DarkDispatcher.Domain.Projects.Events.v1;
-using DarkDispatcher.Domain.Projects.Models;
-using Environment = DarkDispatcher.Domain.Projects.Models.Environment;
+using Environment = DarkDispatcher.Domain.Projects.Entities.Environment;
 
 namespace DarkDispatcher.Application.Modules.Projects.Projections;
 

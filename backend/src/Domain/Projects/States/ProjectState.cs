@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DarkDispatcher.Core.Aggregates;
+using DarkDispatcher.Domain.Projects.Entities;
 using DarkDispatcher.Domain.Projects.Events.v1;
 using DarkDispatcher.Domain.Projects.Ids;
-using DarkDispatcher.Domain.Projects.Models;
 
 namespace DarkDispatcher.Domain.Projects.States;
 

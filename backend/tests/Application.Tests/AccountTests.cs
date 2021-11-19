@@ -1,6 +1,8 @@
 using System.Linq;
 using Xunit;
 using DarkDispatcher.Domain.Accounts;
+using DarkDispatcher.Domain.Accounts.Events.v1;
+using DarkDispatcher.Domain.Accounts.Ids;
 using FluentAssertions;
 
 namespace DarkDispatcher.Application.Tests;
@@ -18,6 +20,6 @@ public class AccountTests
 
     // Then
     var @event = organization.Changes.Single();
-    @event.Should().BeOfType<AccountEvents.V1.OrganizationCreated>();
+    @event.Should().BeOfType<OrganizationCreated>();
   }
 }

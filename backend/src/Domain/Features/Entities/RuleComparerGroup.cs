@@ -1,7 +1,6 @@
-using DarkDispatcher.Core;
 using DarkDispatcher.Domain.SeedWork;
 
-namespace DarkDispatcher.Domain.Features;
+namespace DarkDispatcher.Domain.Features.Entities;
 
 public record RuleComparerGroup(int Id, string Name) : Enumeration(Id, Name)
 {

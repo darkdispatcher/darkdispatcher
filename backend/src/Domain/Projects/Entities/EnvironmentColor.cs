@@ -1,6 +1,6 @@
 using DarkDispatcher.Domain.SeedWork;
 
-namespace DarkDispatcher.Domain.Projects.Models;
+namespace DarkDispatcher.Domain.Projects.Entities;
 
 public record EnvironmentColor(int Id, string Name, string Value) : Enumeration(Id, Name)
 {

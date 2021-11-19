@@ -1,6 +1,6 @@
 using DarkDispatcher.Domain.SeedWork;
 
-namespace DarkDispatcher.Domain.Features;
+namespace DarkDispatcher.Domain.Features.Entities;
 
 public record RuleAttributeType(int Id, string Name, bool RequiresComparisonValue = true) : Enumeration(Id, Name)
 {

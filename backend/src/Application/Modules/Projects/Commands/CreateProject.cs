@@ -4,6 +4,7 @@ using DarkDispatcher.Core.Commands;
 using DarkDispatcher.Core.Ids;
 using DarkDispatcher.Core.Persistence;
 using DarkDispatcher.Domain.Accounts;
+using DarkDispatcher.Domain.Accounts.Ids;
 using DarkDispatcher.Domain.Projects;
 using DarkDispatcher.Domain.Projects.Ids;
 using FluentValidation;

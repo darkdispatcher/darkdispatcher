@@ -1,3 +1,3 @@
-namespace DarkDispatcher.Domain.Projects.Models;
+namespace DarkDispatcher.Domain.Projects.Entities;
 
 public record Environment(string Id, string Name, string Description, EnvironmentColor Color);

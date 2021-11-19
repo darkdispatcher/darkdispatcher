@@ -4,9 +4,11 @@ using DarkDispatcher.Core.Commands;
 using DarkDispatcher.Core.Ids;
 using DarkDispatcher.Core.Persistence;
 using DarkDispatcher.Domain.Features;
+using DarkDispatcher.Domain.Features.Entities;
+using DarkDispatcher.Domain.Features.Ids;
 using DarkDispatcher.Domain.Projects;
+using DarkDispatcher.Domain.Projects.Entities;
 using DarkDispatcher.Domain.Projects.Ids;
-using DarkDispatcher.Domain.Projects.Models;
 using FluentValidation;
 
 namespace DarkDispatcher.Application.Modules.Projects.Commands;

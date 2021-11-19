@@ -1,6 +1,6 @@
 using DarkDispatcher.Domain.ValueObjects;
 
-namespace DarkDispatcher.Domain.Accounts;
+namespace DarkDispatcher.Domain.Accounts.Entities;
 
 public class User
 {
