@@ -6,8 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using DarkDispatcher.Core;
 using DarkDispatcher.Infrastructure;
-using DarkDispatcher.Infrastructure.Grpc.Services;
-using DarkDispatcher.Infrastructure.Identity;
+using DarkDispatcher.Server.Services;
 
 namespace DarkDispatcher.Server;
 
@@ -25,7 +24,6 @@ public class Startup
   public void ConfigureServices(IServiceCollection services)
   {
     services.AddDarkDispatcherCore()
-      .AddIdentity(_configuration["Identity"])
       .AddInfrastructure(_configuration, _environment);
       
     services.AddGrpc(options =>

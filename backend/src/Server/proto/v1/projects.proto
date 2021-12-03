@@ -1,7 +1,7 @@
 ﻿syntax = "proto3";
-package darkDispatcher.grpc.projects.v1;
+package darkDispatcher.v1;
 
-import "protos/models/project.proto";
+import "proto/v1/models/project.proto";
 import "google/protobuf/empty.proto";
 
 service ProjectService {

@@ -4,17 +4,17 @@ using System.Threading.Tasks;
 using DarkDispatcher.Application.Modules.Accounts.Commands;
 using DarkDispatcher.Application.Modules.Accounts.Projections;
 using DarkDispatcher.Application.Modules.Accounts.Queries;
-using DarkDispatcher.Grpc.V1;
 using DarkDispatcher.Proto;
+using DarkDispatcher.V1;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
-namespace DarkDispatcher.Infrastructure.Grpc.Services;
+namespace DarkDispatcher.Server.Services;
 
-public class OrganizationService : DarkDispatcher.Grpc.V1.OrganizationService.OrganizationServiceBase
+public class OrganizationService : DarkDispatcher.V1.OrganizationService.OrganizationServiceBase
 {
   private readonly IMediator _mediator;
   private readonly IHttpContextAccessor _httpContextAccessor;

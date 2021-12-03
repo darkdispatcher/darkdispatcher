@@ -1,7 +1,7 @@
 syntax = "proto3";
-package darkDispatcher.grpc.v1;
+package darkDispatcher.v1;
 
-import "protos/models/organization.proto";
+import "proto/v1/models/organization.proto";
 import "google/protobuf/empty.proto";
 
 service OrganizationService {
