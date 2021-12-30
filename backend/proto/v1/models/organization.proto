@@ -1,5 +1,5 @@
 ﻿syntax = "proto3";
-package darkDispatcher.proto;
+package darkDispatcher.v1;
 
 message Organization {
   string organization_id = 1;

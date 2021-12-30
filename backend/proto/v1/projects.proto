@@ -1,19 +1,19 @@
 ﻿syntax = "proto3";
 package darkDispatcher.v1;
 
-import "proto/v1/models/project.proto";
+import "models/project.proto";
 import "google/protobuf/empty.proto";
 
 service ProjectService {
   rpc ListProjects(google.protobuf.Empty) returns (ListProjectsResponse);
-  rpc GetProject(GetProjectRequest) returns (darkDispatcher.proto.Project);
-  rpc CreateProject(CreateProjectRequest) returns (darkDispatcher.proto.Project);
-  rpc UpdateProject(UpdateProjectRequest) returns (darkDispatcher.proto.Project);
+  rpc GetProject(GetProjectRequest) returns (darkDispatcher.v1.Project);
+  rpc CreateProject(CreateProjectRequest) returns (darkDispatcher.v1.Project);
+  rpc UpdateProject(UpdateProjectRequest) returns (darkDispatcher.v1.Project);
   rpc DeleteProject(DeleteProjectRequest) returns (google.protobuf.Empty);
 }
 
 message ListProjectsResponse {
-  repeated darkDispatcher.proto.Project projects = 1;
+  repeated darkDispatcher.v1.Project projects = 1;
 }
 
 message GetProjectRequest {

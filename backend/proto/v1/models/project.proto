@@ -1,7 +1,7 @@
 ﻿syntax = "proto3";
-package darkDispatcher.proto;
+package darkDispatcher.v1;
 
-import "proto/v1/models/organization.proto";
+import "models/organization.proto";
 
 message Project {
   Organization organization = 1;

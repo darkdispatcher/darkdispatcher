@@ -1,19 +1,19 @@
 syntax = "proto3";
 package darkDispatcher.v1;
 
-import "proto/v1/models/organization.proto";
+import "models/organization.proto";
 import "google/protobuf/empty.proto";
 
 service OrganizationService {
   rpc ListOrganizations (google.protobuf.Empty) returns (ListOrganizationsResponse);
-  rpc GetOrganization (GetOrganizationRequest) returns (darkDispatcher.proto.Organization);
-  rpc CreateOrganization (CreateOrganizationRequest) returns (darkDispatcher.proto.Organization);
-  rpc UpdateOrganization (UpdateOrganizationRequest) returns (darkDispatcher.proto.Organization);
+  rpc GetOrganization (GetOrganizationRequest) returns (darkDispatcher.v1.Organization);
+  rpc CreateOrganization (CreateOrganizationRequest) returns (darkDispatcher.v1.Organization);
+  rpc UpdateOrganization (UpdateOrganizationRequest) returns (darkDispatcher.v1.Organization);
   rpc DeleteOrganization (DeleteOrganizationRequest) returns (google.protobuf.Empty);
 }
 
 message ListOrganizationsResponse {
-  repeated darkDispatcher.proto.Organization organizations = 1;
+  repeated darkDispatcher.v1.Organization organizations = 1;
 }
 
 message GetOrganizationRequest {
@@ -25,7 +25,7 @@ message CreateOrganizationRequest {
 }
 
 message UpdateOrganizationRequest {
-  darkDispatcher.proto.Organization organization = 1;
+  darkDispatcher.v1.Organization organization = 1;
 }
 
 message DeleteOrganizationRequest {

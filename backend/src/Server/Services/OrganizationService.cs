@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using DarkDispatcher.Application.Modules.Accounts.Commands;
 using DarkDispatcher.Application.Modules.Accounts.Projections;
 using DarkDispatcher.Application.Modules.Accounts.Queries;
-using DarkDispatcher.Proto;
 using DarkDispatcher.V1;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
