@@ -8,13 +8,15 @@ using System.Threading.Tasks;
 using Marten;
 using Marten.Exceptions;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
 
 namespace DarkDispatcher.Infrastructure.Marten.Identity;
 
 public class MartenUserStore :
   MartenUserStore<MartenUser, MartenRole, MartenUserClaim, MartenUserLogin, MartenUserToken>
 {
-  public MartenUserStore(IDocumentSession documentSession) : base(documentSession)
+  public MartenUserStore(IDocumentSession documentSession) : 
+    base(documentSession)
   {
   }
 }
@@ -196,7 +198,7 @@ public class MartenUserStore<TUser, TRole, TUserClaim, TUserLogin, TUserToken> :
   {
     cancellationToken.ThrowIfCancellationRequested();
 
-    var user = await Users.SingleOrDefaultAsync(x =>
+    var user = await Users.SingleOrDefaultAsync(x => 
       x.Logins.Any(l => l.LoginProvider == loginProvider && l.ProviderKey == providerKey), cancellationToken);
 
     if (user == null)
@@ -394,7 +396,7 @@ public class MartenUserStore<TUser, TRole, TUserClaim, TUserLogin, TUserToken> :
   /// <param name="login">The login to add to the user.</param>
   /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
   /// <returns>The <see cref="Task"/> that represents the asynchronous operation.</returns>
-  public override Task AddLoginAsync(TUser user, UserLoginInfo login, CancellationToken cancellationToken = default)
+  public override async Task AddLoginAsync(TUser user, UserLoginInfo login, CancellationToken cancellationToken = default)
   {
     cancellationToken.ThrowIfCancellationRequested();
     ThrowIfDisposed();
@@ -403,15 +405,15 @@ public class MartenUserStore<TUser, TRole, TUserClaim, TUserLogin, TUserToken> :
 
     if (login == null)
       throw new ArgumentNullException(nameof(login));
-
-    user.Logins.Add(new MartenUserLogin
+    
+    var existingUser = await FindByLoginAsync(login.LoginProvider, login.ProviderKey, cancellationToken);
+    if (existingUser != null)
     {
-      ProviderKey = login.ProviderKey,
-      LoginProvider = login.LoginProvider,
-      ProviderDisplayName = login.ProviderDisplayName,
-    });
-
-    return Task.CompletedTask;
+      //_logger.LogWarning("AddLogin for user failed because it was already associated with another user.");
+      return;
+    }
+   
+    user.Logins.Add(CreateUserLogin(user, login));
   }
 
   /// <summary>
@@ -583,8 +585,9 @@ public class MartenUserStore<TUser, TRole, TUserClaim, TUserLogin, TUserToken> :
     if (string.IsNullOrEmpty(normalizedRoleName))
       throw new ArgumentNullException(nameof(normalizedRoleName));
 
-    var result = await Users.Where(user => user.Roles.Contains(normalizedRoleName)).ToListAsync(cancellationToken);
+    var users = await Users.ToListAsync(cancellationToken);
+    var results = users.Where(x => x.Roles.Contains(normalizedRoleName)).ToList();
 
-    return result.ToList();
+    return results;
   }
 }

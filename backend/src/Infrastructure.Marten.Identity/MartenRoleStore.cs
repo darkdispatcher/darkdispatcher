@@ -193,8 +193,7 @@ public class MartenRoleStore<TRole> :
   {
     cancellationToken.ThrowIfCancellationRequested();
     ThrowIfDisposed();
-    var roleId = new Guid(id);
-    return Roles.FirstOrDefaultAsync(u => u.Id.Equals(roleId), cancellationToken);
+    return Roles.FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
   }
 
   /// <summary>
