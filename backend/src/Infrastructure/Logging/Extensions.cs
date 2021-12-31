@@ -6,15 +6,17 @@ namespace DarkDispatcher.Infrastructure.Logging;
 
 public static class Extensions
 {
-  public static ILoggingBuilder AddLogging(this ILoggingBuilder builder, IConfiguration configuration)
+  public static ILoggingBuilder AddDefaultLogging(this ILoggingBuilder builder, IConfiguration configuration)
   {
+    builder.ClearProviders();
+    
     var logger = new LoggerConfiguration()
-      .ReadFrom.Configuration(configuration)
       .Enrich.FromLogContext()
       .Enrich.WithEnvironmentName()
       .Enrich.WithMachineName()
       .Enrich.WithProcessId()
       .Enrich.WithThreadId()
+      .WriteTo.Console()
       .CreateLogger();
 
     Log.Logger = logger;

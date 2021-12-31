@@ -1,7 +1,9 @@
 using DarkDispatcher.Core.Ids;
 using DarkDispatcher.Core.Persistence;
 using FluentAssertions;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Moq;
 using Xunit;
 
 namespace DarkDispatcher.Core.Tests;
@@ -17,9 +19,10 @@ public class ExtensionsTests
   {
     // Arrange
     var services = new ServiceCollection();
+    var configurationMock = new Mock<IConfiguration>();
       
     // Act
-    services.AddDarkDispatcherCore();
+    services.AddDarkDispatcherCore(configurationMock.Object);
       
     // Assert
     using var provider = services.BuildServiceProvider();

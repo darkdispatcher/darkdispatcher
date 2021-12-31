@@ -4,6 +4,7 @@ using DarkDispatcher.Core.Ids;
 using DarkDispatcher.Core.Persistence;
 using DarkDispatcher.Core.Queries;
 using MediatR;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -21,7 +22,7 @@ internal static class ServiceCollectionExtensions
       .AddTransient<IEventHandler<TEvent>>(sp => sp.GetRequiredService<TEventHandler>());
   }
     
-  public static IDarkDispatcherBuilder AddDarkDispatcherCore(this IServiceCollection services)
+  public static IDarkDispatcherBuilder AddDarkDispatcherCore(this IServiceCollection services, IConfiguration configuration)
   {
     services
       .AddMediatR()
@@ -33,7 +34,7 @@ internal static class ServiceCollectionExtensions
     services.TryAddScoped<IEventStore, InMemoryEventStore>();
     services.TryAddScoped<IEventBus, EventBus>();
       
-    return DarkDispatcherBuilder.Create(services);
+    return DarkDispatcherBuilder.Create(configuration, services);
   }
     
   private static IServiceCollection AddMediatR(this IServiceCollection services)

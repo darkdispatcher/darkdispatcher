@@ -1,9 +1,9 @@
-﻿{
+{
   "profiles": {
     "Api": {
       "commandName": "Project",
       "dotnetRunMessages": "true",
-      "launchBrowser": true,
+      "launchBrowser": false,
       "launchUrl": "https://localhost:5001",
       "applicationUrl": "http://localhost:5000;https://localhost:5001",
       "environmentVariables": {

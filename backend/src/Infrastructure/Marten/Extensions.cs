@@ -23,14 +23,13 @@ internal static class Extensions
 
   public static IDarkDispatcherBuilder AddMarten(
     this IDarkDispatcherBuilder builder,
-    IConfiguration configuration,
     Action<StoreOptions>? configureOptions = null)
   {
     builder.Services.AddTransient<IEventStore, MartenEventStore>();
     builder.Services.AddScoped<IReadRepository, MartenReadRepository>();
       
     var martenConfig = new MartenOptions();
-    configuration.GetSection(DefaultConfigKey).Bind(martenConfig);
+    builder.Configuration.GetSection(DefaultConfigKey).Bind(martenConfig);
 
     var documentStore = builder.Services
       .AddMarten(options =>

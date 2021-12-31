@@ -3,7 +3,6 @@ using DarkDispatcher.Application.Modules.Accounts.Commands;
 using DarkDispatcher.Core;
 using DarkDispatcher.Infrastructure.Marten;
 using MediatR;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Weasel.Postgresql;
@@ -12,7 +11,7 @@ namespace DarkDispatcher.Infrastructure;
 
 public static class Extensions
 {
-  public static IDarkDispatcherBuilder AddInfrastructure(this IDarkDispatcherBuilder builder, IConfiguration configuration, IHostEnvironment environment)
+  public static IDarkDispatcherBuilder AddInfrastructure(this IDarkDispatcherBuilder builder, IHostEnvironment environment)
   {
     builder.Services
       .AddHttpContextAccessor()
@@ -21,7 +20,7 @@ public static class Extensions
 
     builder
       .AddValidations()
-      .AddMarten(configuration, options =>
+      .AddMarten(options =>
       {
         // Use the more permissive schema auto create behavior while in development
         if (environment.IsDevelopment())
