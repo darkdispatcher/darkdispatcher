@@ -1,8 +1,7 @@
 using DarkDispatcher.Server;
 using Microsoft.AspNetCore.Builder;
 
-var builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder(args)
+  .AddDarkDispatcher();
 
-await builder
-  .AddDarkDispatcher()
-  .RunDarkDispatcherAsync();
+await builder.RunDarkDispatcherAsync();

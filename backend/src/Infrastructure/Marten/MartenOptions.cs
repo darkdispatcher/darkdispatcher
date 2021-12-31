@@ -4,7 +4,7 @@ namespace DarkDispatcher.Infrastructure.Marten;
 
 public static class Defaults
 {
-  public const string WriteModelSchema = "dd";
+  public const string WriteModelSchema = "events";
   public const string ReadModelSchema = "dd";
 }
   

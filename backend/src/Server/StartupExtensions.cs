@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using DarkDispatcher.Core;
 using DarkDispatcher.Infrastructure;
 using DarkDispatcher.Infrastructure.Logging;
+using DarkDispatcher.Infrastructure.Marten.Identity;
 using DarkDispatcher.Server.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -22,7 +23,8 @@ public static class StartupExtensions
     // Services
     builder.Services
       .AddDarkDispatcherCore(builder.Configuration)
-      .AddInfrastructure(builder.Environment);
+      .AddInfrastructure(builder.Environment)
+      .AddMartenIdentity();
       
     builder.Services.AddGrpc(options =>
     {
@@ -50,6 +52,7 @@ public static class StartupExtensions
         });
     });
 
+    
     return app.RunAsync();
   }
 
