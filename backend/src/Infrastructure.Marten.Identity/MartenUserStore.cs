@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading;
@@ -11,17 +12,19 @@ using Microsoft.AspNetCore.Identity;
 namespace DarkDispatcher.Infrastructure.Marten.Identity;
 
 public class MartenUserStore :
-  MartenUserStore<MartenUser, MartenUserClaim, MartenUserLogin, MartenUserToken>
+  MartenUserStore<MartenUser, MartenRole, MartenUserClaim, MartenUserLogin, MartenUserToken>
 {
   public MartenUserStore(IDocumentSession documentSession) : base(documentSession)
   {
   }
 }
 
-public class MartenUserStore<TUser, TUserClaim, TUserLogin, TUserToken> :
-  UserStoreBase<TUser, Guid, TUserClaim, TUserLogin, TUserToken>,
+public class MartenUserStore<TUser, TRole, TUserClaim, TUserLogin, TUserToken> :
+  UserStoreBase<TUser, string, TUserClaim, TUserLogin, TUserToken>,
+  IUserRoleStore<TUser>,
   IProtectedUserStore<TUser>
   where TUser : MartenUser
+  where TRole : MartenRole
   where TUserClaim : MartenUserClaim, new()
   where TUserLogin : MartenUserLogin, new()
   where TUserToken : MartenUserToken, new()
@@ -38,6 +41,7 @@ public class MartenUserStore<TUser, TUserClaim, TUserLogin, TUserToken> :
   /// A navigation property for the users the store contains.
   /// </summary>
   public override IQueryable<TUser> Users => _documentSession.Query<TUser>();
+  public IQueryable<TRole> Roles => _documentSession.Query<TRole>();
 
   /// <summary>
   /// Creates the specified <paramref name="user"/> in the user store.
@@ -125,7 +129,7 @@ public class MartenUserStore<TUser, TUserClaim, TUserLogin, TUserToken> :
   {
     cancellationToken.ThrowIfCancellationRequested();
     ThrowIfDisposed();
-    return await Users.FirstOrDefaultAsync(user => user.Id == new Guid(userId), token: cancellationToken);
+    return await Users.FirstOrDefaultAsync(user => user.Id == userId, token: cancellationToken);
   }
 
   /// <summary>
@@ -136,12 +140,13 @@ public class MartenUserStore<TUser, TUserClaim, TUserLogin, TUserToken> :
   /// <returns>
   /// The <see cref="Task"/> that represents the asynchronous operation, containing the user matching the specified <paramref name="normalizedUserName"/> if it exists.
   /// </returns>
-  public override Task<TUser> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken = default)
+  public override async Task<TUser> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken = default)
   {
     cancellationToken.ThrowIfCancellationRequested();
     ThrowIfDisposed();
 
-    return Users.FirstOrDefaultAsync(u => u.NormalizedUserName == normalizedUserName, cancellationToken);
+    var user = await Users.FirstOrDefaultAsync(u => u.NormalizedUserName == normalizedUserName, cancellationToken);
+    return user;
   }
 
   /// <summary>
@@ -150,11 +155,12 @@ public class MartenUserStore<TUser, TUserClaim, TUserLogin, TUserToken> :
   /// <param name="userId">The user's id.</param>
   /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
   /// <returns>The user if it exists.</returns>
-  protected override Task<TUser> FindUserAsync(Guid userId, CancellationToken cancellationToken)
+  protected override async Task<TUser> FindUserAsync(string userId, CancellationToken cancellationToken)
   {
     cancellationToken.ThrowIfCancellationRequested();
 
-    return Users.SingleOrDefaultAsync(u => u.Id.Equals(userId), cancellationToken);
+    var user = await Users.SingleOrDefaultAsync(u => u.Id.Equals(userId), cancellationToken);
+    return user;
   }
 
   /// <summary>
@@ -165,7 +171,7 @@ public class MartenUserStore<TUser, TUserClaim, TUserLogin, TUserToken> :
   /// <param name="providerKey">The key provided by the <paramref name="loginProvider"/> to identify a user.</param>
   /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
   /// <returns>The user login if it exists.</returns>
-  protected override async Task<TUserLogin> FindUserLoginAsync(Guid userId, string loginProvider, string providerKey,
+  protected override async Task<TUserLogin> FindUserLoginAsync(string userId, string loginProvider, string providerKey,
     CancellationToken cancellationToken)
   {
     cancellationToken.ThrowIfCancellationRequested();
@@ -469,5 +475,116 @@ public class MartenUserStore<TUser, TUserClaim, TUserLogin, TUserToken> :
     ThrowIfDisposed();
 
     return Users.SingleOrDefaultAsync(u => u.NormalizedEmail == normalizedEmail, cancellationToken);
+  }
+
+  /// <summary>
+  /// Adds the given <paramref name="normalizedRoleName"/> to the specified <paramref name="user"/>.
+  /// </summary>
+  /// <param name="user">The user to add the role to.</param>
+  /// <param name="normalizedRoleName">The role to add.</param>
+  /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
+  /// <returns>The <see cref="Task"/> that represents the asynchronous operation.</returns>
+  public async Task AddToRoleAsync(TUser user, string normalizedRoleName, CancellationToken cancellationToken = default)
+  {
+    cancellationToken.ThrowIfCancellationRequested();
+    ThrowIfDisposed();
+    if (user == null)
+      throw new ArgumentNullException(nameof(user));
+    
+    if (string.IsNullOrWhiteSpace(normalizedRoleName))
+      throw new ArgumentException("Value cannot be null or empty.", nameof(normalizedRoleName));
+
+    var role = await Roles.FirstOrDefaultAsync(r => r.NormalizedName == normalizedRoleName, cancellationToken);
+    if (role == null)
+    {
+      throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, "Role {0} does not exist.", normalizedRoleName));
+    }
+    
+    user.Roles.Add(role.NormalizedName);
+  }
+
+  /// <summary>
+  /// Removes the given <paramref name="normalizedRoleName"/> from the specified <paramref name="user"/>.
+  /// </summary>
+  /// <param name="user">The user to remove the role from.</param>
+  /// <param name="normalizedRoleName">The role to remove.</param>
+  /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
+  /// <returns>The <see cref="Task"/> that represents the asynchronous operation.</returns>
+  public async Task RemoveFromRoleAsync(TUser user, string normalizedRoleName, CancellationToken cancellationToken = default)
+  {
+    cancellationToken.ThrowIfCancellationRequested();
+    ThrowIfDisposed();
+    if (user == null)
+      throw new ArgumentNullException(nameof(user));
+    if (string.IsNullOrWhiteSpace(normalizedRoleName))
+      throw new ArgumentException("Value cannot be null or empty.", nameof(normalizedRoleName));
+    
+    var role = await Roles.FirstOrDefaultAsync(r => r.NormalizedName == normalizedRoleName, cancellationToken);
+    if (role != null)
+    {
+      user.Roles.Remove(role.NormalizedName);
+    }
+  }
+
+  /// <summary>
+  /// Retrieves the roles the specified <paramref name="user"/> is a member of.
+  /// </summary>
+  /// <param name="user">The user whose roles should be retrieved.</param>
+  /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
+  /// <returns>A <see cref="Task{TResult}"/> that contains the roles the user is a member of.</returns>
+  public async Task<IList<string>> GetRolesAsync(TUser user, CancellationToken cancellationToken = default)
+  {
+    cancellationToken.ThrowIfCancellationRequested();
+    ThrowIfDisposed();
+    if (user == null)
+      throw new ArgumentNullException(nameof(user));
+    
+    var roles = await Roles.Where(role => user.Roles.Contains(role.NormalizedName))
+      .Select(role => role.Name)
+      .ToListAsync(cancellationToken);
+
+    return roles.ToList();
+  }
+
+  /// <summary>
+  /// Returns a flag indicating if the specified user is a member of the give <paramref name="normalizedRoleName"/>.
+  /// </summary>
+  /// <param name="user">The user whose role membership should be checked.</param>
+  /// <param name="normalizedRoleName">The role to check membership of</param>
+  /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
+  /// <returns>A <see cref="Task{TResult}"/> containing a flag indicating if the specified user is a member of the given group. If the
+  /// user is a member of the group the returned value with be true, otherwise it will be false.</returns>
+  public async Task<bool> IsInRoleAsync(TUser user, string normalizedRoleName, CancellationToken cancellationToken = default)
+  {
+    cancellationToken.ThrowIfCancellationRequested();
+    ThrowIfDisposed();
+    if (user == null)
+      throw new ArgumentNullException(nameof(user));
+    if (string.IsNullOrWhiteSpace(normalizedRoleName))
+      throw new ArgumentException("Value cannot be null or empty.", nameof(normalizedRoleName));
+    
+    var role = await Roles.FirstOrDefaultAsync(r => r.NormalizedName == normalizedRoleName, cancellationToken);
+
+    return user.Roles.Contains(role.NormalizedName);
+  }
+  
+  /// <summary>
+  /// Retrieves all users in the specified role.
+  /// </summary>
+  /// <param name="normalizedRoleName">The role whose users should be retrieved.</param>
+  /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
+  /// <returns>
+  /// The <see cref="Task"/> contains a list of users, if any, that are in the specified role.
+  /// </returns>
+  public async Task<IList<TUser>> GetUsersInRoleAsync(string normalizedRoleName, CancellationToken cancellationToken = default)
+  {
+    cancellationToken.ThrowIfCancellationRequested();
+    ThrowIfDisposed();
+    if (string.IsNullOrEmpty(normalizedRoleName))
+      throw new ArgumentNullException(nameof(normalizedRoleName));
+
+    var result = await Users.Where(user => user.Roles.Contains(normalizedRoleName)).ToListAsync(cancellationToken);
+
+    return result.ToList();
   }
 }

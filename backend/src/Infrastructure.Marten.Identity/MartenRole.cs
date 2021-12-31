@@ -1,14 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Marten.Schema;
 using Microsoft.AspNetCore.Identity;
 
 namespace DarkDispatcher.Infrastructure.Marten.Identity;
 
-public class MartenRole : IdentityRole<Guid>
+[DatabaseSchemaName(Defaults.SchemaName)]
+[DocumentAlias(Defaults.RoleTable)]
+public class MartenRole : IdentityRole<string>
 {
   public IList<MartenRoleClaim> Claims { get; } = new List<MartenRoleClaim>();
 }
 
-public class MartenRoleClaim : IdentityRoleClaim<Guid>
+public class MartenRoleClaim : IdentityRoleClaim<string>
 {
 }

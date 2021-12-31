@@ -1,4 +1,5 @@
 using DarkDispatcher.Core;
+using Marten;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -16,6 +17,7 @@ public static class Extensions
       .AddRoles<MartenRole>()
       .AddUserStore<MartenUserStore>()
       .AddRoleStore<MartenRoleStore>();
+
 
     builder.Services.AddHostedService<SeedService>();
     

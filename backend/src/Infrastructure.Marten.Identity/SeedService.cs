@@ -30,18 +30,22 @@ internal class SeedService : IHostedService
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<MartenUser>>();
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<MartenRole>>();
 
-    var role = await roleManager.CreateAsync(new MartenRole
+    var roleId = idGenerator.New();
+    await roleManager.CreateAsync(new MartenRole
     {
-      Id = Guid.NewGuid(),
+      Id = roleId,
       Name = "admin"
     });
 
-    var user = await userManager.CreateAsync(new MartenUser
+    var user = new MartenUser
     {
-      Id = Guid.NewGuid(),
+      Id = idGenerator.New(),
       Email = "joe@gmail.com",
-      UserName = "jdoe"
-    });
+      UserName = "admin"
+    };
+    await userManager.CreateAsync(user);
+    await userManager.AddPasswordAsync(user, "Adm!n123");
+    await userManager.AddToRoleAsync(user, "admin");
   }
 
   public Task StopAsync(CancellationToken cancellationToken)
