@@ -56,9 +56,7 @@ public class MartenUserStore<TUser, TRole, TUserClaim, TUserLogin, TUserToken> :
     cancellationToken.ThrowIfCancellationRequested();
     ThrowIfDisposed();
     if (user == null)
-    {
       throw new ArgumentNullException(nameof(user));
-    }
 
     _documentSession.Insert(user);
     await _documentSession.SaveChangesAsync(cancellationToken);

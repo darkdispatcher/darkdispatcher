@@ -31,12 +31,11 @@ public class DatabaseFixture : IDisposable
       
       _.Policies.AllDocumentsAreMultiTenanted();
     });
-    DocumentStore.Advanced.Clean.CompletelyRemoveAll();
-    DocumentStore.Advanced.Clean.DeleteAllDocuments();
   }
 
   public void Dispose()
   {
+    DocumentStore.Advanced.Clean.DeleteAllDocuments();
     DocumentStore.Dispose();
   }
 }

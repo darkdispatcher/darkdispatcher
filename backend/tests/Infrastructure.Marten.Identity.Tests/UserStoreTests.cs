@@ -85,18 +85,6 @@ public class UserStoreTests :
     role => role.Name.StartsWith(roleName);
 
   [Fact]
-  public async Task AddDupeLoginFails2()
-  {
-    var manager = CreateManager();
-    var user = CreateTestUser();
-    var login = new UserLoginInfo("Provider", "key", "display");
-    IdentityResultAssert.IsSuccess(await manager.CreateAsync(user));
-    IdentityResultAssert.IsSuccess(await manager.AddLoginAsync(user, login));
-    IdentityResultAssert.IsFailure(await manager.AddLoginAsync(user, login), _errorDescriber.LoginAlreadyAssociated());
-    IdentityResultAssert.VerifyLogMessage(manager.Logger, "AddLogin for user failed because it was already associated with another user.");
-  }
-  
-  [Fact]
   public async Task SqlUserStoreMethodsThrowWhenDisposedTest()
   {
     var store = new MartenUserStore(_session);
