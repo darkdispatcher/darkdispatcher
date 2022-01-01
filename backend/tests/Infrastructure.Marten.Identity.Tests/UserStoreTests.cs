@@ -10,7 +10,7 @@ using Xunit;
 namespace DarkDispatcher.Infrastructure.Marten.Identity.Tests;
 
 public class UserStoreTests :
-  IdentitySpecificationTestBase<MartenUser, MartenRole>, IClassFixture<DatabaseFixture>,
+  IdentitySpecificationTestBase<User, Role>, IClassFixture<DatabaseFixture>,
   IDisposable
 {
   private readonly DatabaseFixture _fixture;
@@ -29,19 +29,19 @@ public class UserStoreTests :
   protected override void AddUserStore(IServiceCollection services, object context = null)
   {
     var session = (IDocumentSession)context;
-    services.AddSingleton<IUserStore<MartenUser>>(new MartenUserStore(session));
+    services.AddSingleton<IUserStore<User>>(new MartenUserStore(session));
   }
 
-  protected override void SetUserPasswordHash(MartenUser user, string hashedPassword)
+  protected override void SetUserPasswordHash(User user, string hashedPassword)
   {
     user.PasswordHash = hashedPassword;
   }
 
-  protected override MartenUser CreateTestUser(string namePrefix = "", string email = "", string phoneNumber = "",
+  protected override User CreateTestUser(string namePrefix = "", string email = "", string phoneNumber = "",
     bool lockoutEnabled = false, DateTimeOffset? lockoutEnd = null, bool useNamePrefixAsUserName = false)
   {
     var userName = useNamePrefixAsUserName ? namePrefix : $"{namePrefix}{Guid.NewGuid()}";
-    return new MartenUser(userName)
+    return new User(userName)
     {
       Id = Guid.NewGuid().ToString(),
       Email = email,
@@ -51,10 +51,10 @@ public class UserStoreTests :
     };
   }
 
-  protected override Expression<Func<MartenUser, bool>> UserNameEqualsPredicate(string userName) =>
+  protected override Expression<Func<User, bool>> UserNameEqualsPredicate(string userName) =>
     user => user.UserName == userName;
 
-  protected override Expression<Func<MartenUser, bool>> UserNameStartsWithPredicate(string userName) =>
+  protected override Expression<Func<User, bool>> UserNameStartsWithPredicate(string userName) =>
     user => user.UserName.StartsWith(userName);
 
   private IDocumentSession CreateSession()
@@ -65,29 +65,29 @@ public class UserStoreTests :
   protected override void AddRoleStore(IServiceCollection services, object context = null)
   {
     var session = (IDocumentSession)context;
-    services.AddSingleton<IRoleStore<MartenRole>>(new MartenRoleStore(session));
+    services.AddSingleton<IRoleStore<Role>>(new MartenRoleStore(session));
   }
 
-  protected override MartenRole CreateTestRole(string roleNamePrefix = "", bool useRoleNamePrefixAsRoleName = false)
+  protected override Role CreateTestRole(string roleNamePrefix = "", bool useRoleNamePrefixAsRoleName = false)
   {
     var roleName = useRoleNamePrefixAsRoleName ? roleNamePrefix : $"{roleNamePrefix}{Guid.NewGuid()}";
-    return new MartenRole
+    return new Role
     {
       Id = Guid.NewGuid().ToString(),
       Name = roleName
     };
   }
 
-  protected override Expression<Func<MartenRole, bool>> RoleNameEqualsPredicate(string roleName) =>
+  protected override Expression<Func<Role, bool>> RoleNameEqualsPredicate(string roleName) =>
     role => role.Name == roleName;
 
-  protected override Expression<Func<MartenRole, bool>> RoleNameStartsWithPredicate(string roleName) =>
+  protected override Expression<Func<Role, bool>> RoleNameStartsWithPredicate(string roleName) =>
     role => role.Name.StartsWith(roleName);
 
   [Fact]
   public async Task MartenUserStoreMethodsThrowWhenDisposedTest()
   {
-    var store = new MartenUserStore(_session);
+    var store = new MartenUserStore(CreateSession());
     store.Dispose();
     await Assert.ThrowsAsync<ObjectDisposedException>(async () => await store.AddClaimsAsync(null, null));
     await Assert.ThrowsAsync<ObjectDisposedException>(async () => await store.AddLoginAsync(null, null));
@@ -151,11 +151,11 @@ public class UserStoreTests :
     await Assert.ThrowsAsync<ArgumentNullException>("user",
       async () => await store.SetSecurityStampAsync(null, null));
     await Assert.ThrowsAsync<ArgumentNullException>("login",
-      async () => await store.AddLoginAsync(new MartenUser("fake"), null));
+      async () => await store.AddLoginAsync(new User("fake"), null));
     await Assert.ThrowsAsync<ArgumentNullException>("claims",
-      async () => await store.AddClaimsAsync(new MartenUser("fake"), null));
+      async () => await store.AddClaimsAsync(new User("fake"), null));
     await Assert.ThrowsAsync<ArgumentNullException>("claims",
-      async () => await store.RemoveClaimsAsync(new MartenUser("fake"), null));
+      async () => await store.RemoveClaimsAsync(new User("fake"), null));
     await Assert.ThrowsAsync<ArgumentNullException>("user", async () => await store.GetEmailConfirmedAsync(null));
     await Assert.ThrowsAsync<ArgumentNullException>("user",
       async () => await store.SetEmailConfirmedAsync(null, true));
@@ -181,17 +181,17 @@ public class UserStoreTests :
     await Assert.ThrowsAsync<ArgumentNullException>("user",
       async () => await store.IncrementAccessFailedCountAsync(null));
     await Assert.ThrowsAsync<ArgumentException>("normalizedRoleName",
-      async () => await store.AddToRoleAsync(new MartenUser("fake"), null));
+      async () => await store.AddToRoleAsync(new User("fake"), null));
     await Assert.ThrowsAsync<ArgumentException>("normalizedRoleName",
-      async () => await store.RemoveFromRoleAsync(new MartenUser("fake"), null));
+      async () => await store.RemoveFromRoleAsync(new User("fake"), null));
     await Assert.ThrowsAsync<ArgumentException>("normalizedRoleName",
-      async () => await store.IsInRoleAsync(new MartenUser("fake"), null));
+      async () => await store.IsInRoleAsync(new User("fake"), null));
     await Assert.ThrowsAsync<ArgumentException>("normalizedRoleName",
-      async () => await store.AddToRoleAsync(new MartenUser("fake"), ""));
+      async () => await store.AddToRoleAsync(new User("fake"), ""));
     await Assert.ThrowsAsync<ArgumentException>("normalizedRoleName",
-      async () => await store.RemoveFromRoleAsync(new MartenUser("fake"), ""));
+      async () => await store.RemoveFromRoleAsync(new User("fake"), ""));
     await Assert.ThrowsAsync<ArgumentException>("normalizedRoleName",
-      async () => await store.IsInRoleAsync(new MartenUser("fake"), ""));
+      async () => await store.IsInRoleAsync(new User("fake"), ""));
   }
 
   [Fact]
@@ -199,7 +199,7 @@ public class UserStoreTests :
   {
     var manager = CreateManager();
     var guid = Guid.NewGuid().ToString();
-    var user = new MartenUser { UserName = $"New{guid}" };
+    var user = new User { UserName = $"New{guid}" };
     IdentityResultAssert.IsSuccess(await manager.CreateAsync(user));
     IdentityResultAssert.IsSuccess(await manager.DeleteAsync(user));
   }
@@ -208,9 +208,9 @@ public class UserStoreTests :
   public async Task TwoUsersSamePasswordDifferentHash()
   {
     var manager = CreateManager();
-    var userA = new MartenUser(Guid.NewGuid().ToString());
+    var userA = new User(Guid.NewGuid().ToString());
     IdentityResultAssert.IsSuccess(await manager.CreateAsync(userA, "password"));
-    var userB = new MartenUser(Guid.NewGuid().ToString());
+    var userB = new User(Guid.NewGuid().ToString());
     IdentityResultAssert.IsSuccess(await manager.CreateAsync(userB, "password"));
 
     Assert.NotEqual(userA.PasswordHash, userB.PasswordHash);
@@ -220,12 +220,12 @@ public class UserStoreTests :
   public async Task FindByEmailThrowsWithTwoUsersWithSameEmail()
   {
     var manager = CreateManager();
-    var userA = new MartenUser(Guid.NewGuid().ToString())
+    var userA = new User(Guid.NewGuid().ToString())
     {
       Email = "dupe@dupe.com"
     };
     IdentityResultAssert.IsSuccess(await manager.CreateAsync(userA, "password"));
-    var userB = new MartenUser(Guid.NewGuid().ToString())
+    var userB = new User(Guid.NewGuid().ToString())
     {
       Email = "dupe@dupe.com"
     };

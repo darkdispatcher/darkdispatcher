@@ -6,11 +6,11 @@ namespace DarkDispatcher.Infrastructure.Marten.Identity;
 
 [DatabaseSchemaName(Defaults.SchemaName)]
 [DocumentAlias(Defaults.RoleTable)]
-public class MartenRole : IdentityRole<string>
+public class Role : IdentityRole<string>
 {
-  public IList<MartenRoleClaim> Claims { get; } = new List<MartenRoleClaim>();
+  public IList<RoleClaim> Claims { get; } = new List<RoleClaim>();
 }
 
-public class MartenRoleClaim : IdentityRoleClaim<string>
+public class RoleClaim : IdentityRoleClaim<string>
 {
 }

@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Identity;
 namespace DarkDispatcher.Infrastructure.Marten.Identity;
 
 public class MartenUserStore :
-  MartenUserStore<MartenUser, MartenRole, MartenUserClaim, MartenUserLogin, MartenUserToken>
+  MartenUserStore<User, Role, UserClaim, UserLogin, UserToken>
 {
   public MartenUserStore(IDocumentSession documentSession) : 
     base(documentSession)
@@ -24,11 +24,11 @@ public class MartenUserStore<TUser, TRole, TUserClaim, TUserLogin, TUserToken> :
   UserStoreBase<TUser, string, TUserClaim, TUserLogin, TUserToken>,
   IUserRoleStore<TUser>,
   IProtectedUserStore<TUser>
-  where TUser : MartenUser
-  where TRole : MartenRole
-  where TUserClaim : MartenUserClaim, new()
-  where TUserLogin : MartenUserLogin, new()
-  where TUserToken : MartenUserToken, new()
+  where TUser : User
+  where TRole : Role
+  where TUserClaim : UserClaim, new()
+  where TUserLogin : UserLogin, new()
+  where TUserToken : UserToken, new()
 {
   private readonly IDocumentSession _documentSession;
 
@@ -239,7 +239,7 @@ public class MartenUserStore<TUser, TRole, TUserClaim, TUserLogin, TUserToken> :
 
     foreach (var claim in claims)
     {
-      user.Claims.Add(new MartenUserClaim
+      user.Claims.Add(new UserClaim
       {
         ClaimType = claim.Type,
         ClaimValue = claim.Value

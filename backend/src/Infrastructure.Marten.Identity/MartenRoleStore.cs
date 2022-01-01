@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace DarkDispatcher.Infrastructure.Marten.Identity;
 
-public class MartenRoleStore : MartenRoleStore<MartenRole>
+public class MartenRoleStore : MartenRoleStore<Role>
 {
   public MartenRoleStore(IDocumentSession documentSession) : base(documentSession)
   {
@@ -20,7 +20,7 @@ public class MartenRoleStore : MartenRoleStore<MartenRole>
 public class MartenRoleStore<TRole> :
   IQueryableRoleStore<TRole>,
   IRoleClaimStore<TRole>
-  where TRole : MartenRole
+  where TRole : Role
 {
   private bool _disposed;
   private readonly IDocumentSession _documentSession;
@@ -240,7 +240,7 @@ public class MartenRoleStore<TRole> :
     if (claim == null)
       throw new ArgumentNullException(nameof(claim));
 
-    role.Claims.Add(new MartenRoleClaim{ ClaimType = claim.Type, ClaimValue = claim.Value });
+    role.Claims.Add(new RoleClaim{ ClaimType = claim.Type, ClaimValue = claim.Value });
     return Task.CompletedTask;
   }
 

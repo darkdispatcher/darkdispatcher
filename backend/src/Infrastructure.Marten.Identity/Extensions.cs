@@ -10,11 +10,11 @@ public static class Extensions
   public static IDarkDispatcherBuilder AddMartenIdentity(this IDarkDispatcherBuilder builder)
   {
     builder.Services
-      .AddIdentityCore<MartenUser>(options =>
+      .AddIdentityCore<User>(options =>
       {
 
       })
-      .AddRoles<MartenRole>()
+      .AddRoles<Role>()
       .AddUserStore<MartenUserStore>()
       .AddRoleStore<MartenRoleStore>();
 

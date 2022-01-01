@@ -27,17 +27,17 @@ internal class SeedService : IHostedService
   {
     using var scope = _services.CreateScope();
     var idGenerator = scope.ServiceProvider.GetRequiredService<IIdGenerator>();
-    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<MartenUser>>();
-    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<MartenRole>>();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<Role>>();
 
     var roleId = idGenerator.New();
-    await roleManager.CreateAsync(new MartenRole
+    await roleManager.CreateAsync(new Role
     {
       Id = roleId,
       Name = "admin"
     });
 
-    var user = new MartenUser("admin")
+    var user = new User("admin")
     {
       Id = idGenerator.New(),
       Email = "joe@gmail.com"
