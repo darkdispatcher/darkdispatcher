@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using Marten;
 using Marten.Exceptions;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Logging;
 
 namespace DarkDispatcher.Infrastructure.Marten.Identity;
 
@@ -36,7 +35,7 @@ public class MartenUserStore<TUser, TRole, TUserClaim, TUserLogin, TUserToken> :
   public MartenUserStore(IDocumentSession documentSession, IdentityErrorDescriber describer = null)
     : base(describer ?? new IdentityErrorDescriber())
   {
-    _documentSession = documentSession;
+    _documentSession = documentSession ?? throw new ArgumentNullException(nameof(documentSession));
   }
 
   /// <summary>

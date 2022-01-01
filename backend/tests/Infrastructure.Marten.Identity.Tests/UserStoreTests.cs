@@ -40,10 +40,10 @@ public class UserStoreTests :
   protected override MartenUser CreateTestUser(string namePrefix = "", string email = "", string phoneNumber = "",
     bool lockoutEnabled = false, DateTimeOffset? lockoutEnd = null, bool useNamePrefixAsUserName = false)
   {
-    return new MartenUser
+    var userName = useNamePrefixAsUserName ? namePrefix : $"{namePrefix}{Guid.NewGuid()}";
+    return new MartenUser(userName)
     {
       Id = Guid.NewGuid().ToString(),
-      UserName = useNamePrefixAsUserName ? namePrefix : $"{namePrefix}{Guid.NewGuid()}",
       Email = email,
       PhoneNumber = phoneNumber,
       LockoutEnabled = lockoutEnabled,
@@ -85,7 +85,7 @@ public class UserStoreTests :
     role => role.Name.StartsWith(roleName);
 
   [Fact]
-  public async Task SqlUserStoreMethodsThrowWhenDisposedTest()
+  public async Task MartenUserStoreMethodsThrowWhenDisposedTest()
   {
     var store = new MartenUserStore(_session);
     store.Dispose();
@@ -115,6 +115,132 @@ public class UserStoreTests :
       async () => await store.SetPhoneNumberConfirmedAsync(null, true));
     await Assert.ThrowsAsync<ObjectDisposedException>(
       async () => await store.GetPhoneNumberConfirmedAsync(null));
+  }
+
+  [Fact]
+  public async Task UserStorePublicNullCheckTest()
+  {
+    Assert.Throws<ArgumentNullException>("documentSession", () => new MartenUserStore(null));
+    var store = new MartenUserStore(CreateSession());
+    await Assert.ThrowsAsync<ArgumentNullException>("user", async () => await store.GetUserIdAsync(null));
+    await Assert.ThrowsAsync<ArgumentNullException>("user", async () => await store.GetUserNameAsync(null));
+    await Assert.ThrowsAsync<ArgumentNullException>("user", async () => await store.SetUserNameAsync(null, null));
+    await Assert.ThrowsAsync<ArgumentNullException>("user", async () => await store.CreateAsync(null));
+    await Assert.ThrowsAsync<ArgumentNullException>("user", async () => await store.UpdateAsync(null));
+    await Assert.ThrowsAsync<ArgumentNullException>("user", async () => await store.DeleteAsync(null));
+    await Assert.ThrowsAsync<ArgumentNullException>("user", async () => await store.AddClaimsAsync(null, null));
+    await Assert.ThrowsAsync<ArgumentNullException>("user",
+      async () => await store.ReplaceClaimAsync(null, null, null));
+    await Assert.ThrowsAsync<ArgumentNullException>("user", async () => await store.RemoveClaimsAsync(null, null));
+    await Assert.ThrowsAsync<ArgumentNullException>("user", async () => await store.GetClaimsAsync(null));
+    await Assert.ThrowsAsync<ArgumentNullException>("user", async () => await store.GetLoginsAsync(null));
+    await Assert.ThrowsAsync<ArgumentNullException>("user", async () => await store.GetRolesAsync(null));
+    await Assert.ThrowsAsync<ArgumentNullException>("user", async () => await store.AddLoginAsync(null, null));
+    await
+      Assert.ThrowsAsync<ArgumentNullException>("user", async () => await store.RemoveLoginAsync(null, null, null));
+    await Assert.ThrowsAsync<ArgumentNullException>("user", async () => await store.AddToRoleAsync(null, null));
+    await
+      Assert.ThrowsAsync<ArgumentNullException>("user",
+        async () => await store.RemoveFromRoleAsync(null, null));
+    await Assert.ThrowsAsync<ArgumentNullException>("user", async () => await store.IsInRoleAsync(null, null));
+    await Assert.ThrowsAsync<ArgumentNullException>("user", async () => await store.GetPasswordHashAsync(null));
+    await
+      Assert.ThrowsAsync<ArgumentNullException>("user",
+        async () => await store.SetPasswordHashAsync(null, null));
+    await Assert.ThrowsAsync<ArgumentNullException>("user", async () => await store.GetSecurityStampAsync(null));
+    await Assert.ThrowsAsync<ArgumentNullException>("user",
+      async () => await store.SetSecurityStampAsync(null, null));
+    await Assert.ThrowsAsync<ArgumentNullException>("login",
+      async () => await store.AddLoginAsync(new MartenUser("fake"), null));
+    await Assert.ThrowsAsync<ArgumentNullException>("claims",
+      async () => await store.AddClaimsAsync(new MartenUser("fake"), null));
+    await Assert.ThrowsAsync<ArgumentNullException>("claims",
+      async () => await store.RemoveClaimsAsync(new MartenUser("fake"), null));
+    await Assert.ThrowsAsync<ArgumentNullException>("user", async () => await store.GetEmailConfirmedAsync(null));
+    await Assert.ThrowsAsync<ArgumentNullException>("user",
+      async () => await store.SetEmailConfirmedAsync(null, true));
+    await Assert.ThrowsAsync<ArgumentNullException>("user", async () => await store.GetEmailAsync(null));
+    await Assert.ThrowsAsync<ArgumentNullException>("user", async () => await store.SetEmailAsync(null, null));
+    await Assert.ThrowsAsync<ArgumentNullException>("user", async () => await store.GetPhoneNumberAsync(null));
+    await Assert.ThrowsAsync<ArgumentNullException>("user", async () => await store.SetPhoneNumberAsync(null, null));
+    await Assert.ThrowsAsync<ArgumentNullException>("user",
+      async () => await store.GetPhoneNumberConfirmedAsync(null));
+    await Assert.ThrowsAsync<ArgumentNullException>("user",
+      async () => await store.SetPhoneNumberConfirmedAsync(null, true));
+    await Assert.ThrowsAsync<ArgumentNullException>("user", async () => await store.GetTwoFactorEnabledAsync(null));
+    await Assert.ThrowsAsync<ArgumentNullException>("user",
+      async () => await store.SetTwoFactorEnabledAsync(null, true));
+    await Assert.ThrowsAsync<ArgumentNullException>("user", async () => await store.GetAccessFailedCountAsync(null));
+    await Assert.ThrowsAsync<ArgumentNullException>("user", async () => await store.GetLockoutEnabledAsync(null));
+    await Assert.ThrowsAsync<ArgumentNullException>("user",
+      async () => await store.SetLockoutEnabledAsync(null, false));
+    await Assert.ThrowsAsync<ArgumentNullException>("user", async () => await store.GetLockoutEndDateAsync(null));
+    await Assert.ThrowsAsync<ArgumentNullException>("user",
+      async () => await store.SetLockoutEndDateAsync(null, new DateTimeOffset()));
+    await Assert.ThrowsAsync<ArgumentNullException>("user", async () => await store.ResetAccessFailedCountAsync(null));
+    await Assert.ThrowsAsync<ArgumentNullException>("user",
+      async () => await store.IncrementAccessFailedCountAsync(null));
+    await Assert.ThrowsAsync<ArgumentException>("normalizedRoleName",
+      async () => await store.AddToRoleAsync(new MartenUser("fake"), null));
+    await Assert.ThrowsAsync<ArgumentException>("normalizedRoleName",
+      async () => await store.RemoveFromRoleAsync(new MartenUser("fake"), null));
+    await Assert.ThrowsAsync<ArgumentException>("normalizedRoleName",
+      async () => await store.IsInRoleAsync(new MartenUser("fake"), null));
+    await Assert.ThrowsAsync<ArgumentException>("normalizedRoleName",
+      async () => await store.AddToRoleAsync(new MartenUser("fake"), ""));
+    await Assert.ThrowsAsync<ArgumentException>("normalizedRoleName",
+      async () => await store.RemoveFromRoleAsync(new MartenUser("fake"), ""));
+    await Assert.ThrowsAsync<ArgumentException>("normalizedRoleName",
+      async () => await store.IsInRoleAsync(new MartenUser("fake"), ""));
+  }
+
+  [Fact]
+  public async Task CanCreateUsingManager()
+  {
+    var manager = CreateManager();
+    var guid = Guid.NewGuid().ToString();
+    var user = new MartenUser { UserName = $"New{guid}" };
+    IdentityResultAssert.IsSuccess(await manager.CreateAsync(user));
+    IdentityResultAssert.IsSuccess(await manager.DeleteAsync(user));
+  }
+
+  [Fact]
+  public async Task TwoUsersSamePasswordDifferentHash()
+  {
+    var manager = CreateManager();
+    var userA = new MartenUser(Guid.NewGuid().ToString());
+    IdentityResultAssert.IsSuccess(await manager.CreateAsync(userA, "password"));
+    var userB = new MartenUser(Guid.NewGuid().ToString());
+    IdentityResultAssert.IsSuccess(await manager.CreateAsync(userB, "password"));
+
+    Assert.NotEqual(userA.PasswordHash, userB.PasswordHash);
+  }
+
+  [Fact]
+  public async Task FindByEmailThrowsWithTwoUsersWithSameEmail()
+  {
+    var manager = CreateManager();
+    var userA = new MartenUser(Guid.NewGuid().ToString())
+    {
+      Email = "dupe@dupe.com"
+    };
+    IdentityResultAssert.IsSuccess(await manager.CreateAsync(userA, "password"));
+    var userB = new MartenUser(Guid.NewGuid().ToString())
+    {
+      Email = "dupe@dupe.com"
+    };
+    IdentityResultAssert.IsSuccess(await manager.CreateAsync(userB, "password"));
+    await Assert.ThrowsAsync<InvalidOperationException>(async () => await manager.FindByEmailAsync("dupe@dupe.com"));
+  }
+
+  [Fact]
+  public async Task AddUserToUnknownRoleFails()
+  {
+    var manager = CreateManager();
+    var user = CreateTestUser();
+    IdentityResultAssert.IsSuccess(await manager.CreateAsync(user));
+    await Assert.ThrowsAsync<InvalidOperationException>(
+      async () => await manager.AddToRoleAsync(user, "bogus"));
   }
 
   public void Dispose()

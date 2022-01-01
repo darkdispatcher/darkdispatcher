@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Marten.Schema;
 using Microsoft.AspNetCore.Identity;
 
@@ -8,6 +9,16 @@ namespace DarkDispatcher.Infrastructure.Marten.Identity;
 [DocumentAlias(Defaults.UserTable)]
 public class MartenUser : IdentityUser<string>
 {
+  public MartenUser()
+  {
+    Id = Guid.NewGuid().ToString();
+  }
+
+  public MartenUser(string userName) : this()
+  {
+    UserName = userName;
+  }
+  
   public IList<string> Roles { get; set; } = new List<string>();
   public IList<MartenUserClaim> Claims { get; } = new List<MartenUserClaim>();
   public IList<MartenUserLogin> Logins { get; } = new List<MartenUserLogin>();

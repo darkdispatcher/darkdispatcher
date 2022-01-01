@@ -37,11 +37,10 @@ internal class SeedService : IHostedService
       Name = "admin"
     });
 
-    var user = new MartenUser
+    var user = new MartenUser("admin")
     {
       Id = idGenerator.New(),
-      Email = "joe@gmail.com",
-      UserName = "admin"
+      Email = "joe@gmail.com"
     };
     await userManager.CreateAsync(user);
     await userManager.AddPasswordAsync(user, "Adm!n123");
