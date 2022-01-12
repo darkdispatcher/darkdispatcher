@@ -87,7 +87,7 @@ public class UserStoreTests :
   [Fact]
   public async Task MartenUserStoreMethodsThrowWhenDisposedTest()
   {
-    var store = new MartenUserStore(_session);
+    var store = new MartenUserStore(CreateSession());
     store.Dispose();
     await Assert.ThrowsAsync<ObjectDisposedException>(async () => await store.AddClaimsAsync(null, null));
     await Assert.ThrowsAsync<ObjectDisposedException>(async () => await store.AddLoginAsync(null, null));

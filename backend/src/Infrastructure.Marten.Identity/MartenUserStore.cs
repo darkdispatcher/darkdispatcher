@@ -564,6 +564,9 @@ public class MartenUserStore<TUser, TRole, TUserClaim, TUserLogin, TUserToken> :
     
     var role = await Roles.FirstOrDefaultAsync(r => r.NormalizedName == normalizedRoleName, cancellationToken);
 
+    if (role is null)
+      throw new InvalidOperationException($"Role '{normalizedRoleName}' does not exist.");
+    
     return user.Roles.Contains(role.NormalizedName);
   }
   
