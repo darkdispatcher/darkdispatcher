@@ -48,7 +48,7 @@ jobs:
           dotnet-version: ${{ matrix.dotnet-version }}
 
       - name: build backend
-        run: dotnet build ./backend -c Release
+        run: dotnet build ./ -c Release
 
       - name: test
-        run: dotnet test ./backend -c Release -l trx --no-build --verbosity=normal
+        run: dotnet test ./ -c Release -l trx --no-build --verbosity=normal
