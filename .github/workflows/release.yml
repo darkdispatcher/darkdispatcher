@@ -23,20 +23,10 @@ jobs:
         with:
           node-version: 16
 
-#      - run: npm install -g semantic-release
-
       - name: Create Release
         run: npx semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-#      - name: Create Github Release
-#        uses: release-drafter/release-drafter@master
-#        with:
-#          version: ${{ github.event.inputs.version }}
-#          publish: true
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 #      - name: force update major tag
 #        run: |
