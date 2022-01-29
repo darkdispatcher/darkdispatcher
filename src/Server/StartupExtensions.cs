@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -19,27 +19,27 @@ public static class StartupExtensions
   public static WebApplicationBuilder AddDarkDispatcher(this WebApplicationBuilder builder)
   {
     builder.Logging.AddDefaultLogging(builder.Configuration);
-    
+
     // Services
     builder.Services
       .AddDarkDispatcherCore(builder.Configuration)
       .AddInfrastructure(builder.Environment)
       .AddMartenIdentity();
-      
+
     builder.Services.AddGrpc(options =>
     {
       options.EnableDetailedErrors = true;
     });
 
     builder.StartupBanner();
-    
+
     return builder;
   }
-  
+
   public static Task RunDarkDispatcherAsync(this WebApplicationBuilder builder)
   {
     var app = builder.Build();
-    
+
     app.UseRouting();
     app.UseEndpoints(endpoints =>
     {
@@ -52,7 +52,7 @@ public static class StartupExtensions
         });
     });
 
-    
+
     return app.RunAsync();
   }
 
@@ -60,7 +60,7 @@ public static class StartupExtensions
   {
     const string divider = "------------------------------------------------------------------";
     const ConsoleColor dividerColor = ConsoleColor.DarkMagenta;
-    
+
     // Product Name
     Console.ForegroundColor = dividerColor;
     Console.WriteLine($@"
@@ -68,7 +68,7 @@ public static class StartupExtensions
 {ProductName}
 {divider}");
     Console.ResetColor();
-    
+
     // Information
     var urls = builder.WebHost
       .GetSetting(WebHostDefaults.ServerUrlsKey)?
@@ -77,7 +77,7 @@ public static class StartupExtensions
     ConsoleMessage("Version", Assembly.GetEntryAssembly()?.GetName().Version?.ToString() ?? "");
     ConsoleMessage("Runtime", $"{RuntimeInformation.FrameworkDescription} - {builder.Environment.EnvironmentName}");
     ConsoleMessage("Architecture", RuntimeInformation.ProcessArchitecture.ToString());
-    ConsoleMessage("Platform",RuntimeInformation.OSDescription);
+    ConsoleMessage("Platform", RuntimeInformation.OSDescription);
 
     Console.ForegroundColor = dividerColor;
     Console.WriteLine(divider);
@@ -88,7 +88,7 @@ public static class StartupExtensions
   {
     var label = $"{title.PadLeft(titleWidth)}: ";
     Console.Write(label);
-    
+
     if (color == null)
     {
       Console.WriteLine(value);
@@ -100,17 +100,17 @@ public static class StartupExtensions
       Console.ResetColor();
     }
   }
-  
-  private static string ProductName 
-  {  
-    get  
+
+  private static string ProductName
+  {
+    get
     {
       var assembly = Assembly.GetEntryAssembly();
       if (assembly == null)
         return string.Empty;
-      
-      var customAttributes = assembly.GetCustomAttributes(typeof(AssemblyProductAttribute), false);  
+
+      var customAttributes = assembly.GetCustomAttributes(typeof(AssemblyProductAttribute), false);
       return customAttributes is { Length: > 0 } ? ((AssemblyProductAttribute)customAttributes[0]).Product : string.Empty;
-    }  
-  }  
+    }
+  }
 }

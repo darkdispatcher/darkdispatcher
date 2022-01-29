@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using DarkDispatcher.Core.Aggregates;
 using DarkDispatcher.Domain.Projects.Entities;

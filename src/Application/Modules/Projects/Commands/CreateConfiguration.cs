@@ -27,16 +27,16 @@ public class CreateConfiguration
       // {
       //   var exists = await repository.FindAsync<ConfigurationProjection>()
       // });
-        
+
       RuleFor(x => x.Name)
         .NotEmpty().WithMessage("Name is required.")
         .Length(min, max).WithMessage($"Name must be between {min} and {max} characters.");
-        
+
       RuleFor(x => x.Description)
         .MaximumLength(250).WithMessage("Description must not exceed 250 characters.");
     }
   }
-    
+
   internal class Handler : ICommandHandler<Command, Configuration>
   {
     private readonly IAggregateStore _store;
@@ -47,14 +47,14 @@ public class CreateConfiguration
       _store = store;
       _idGenerator = idGenerator;
     }
-      
+
     public async Task<Configuration> Handle(Command request, CancellationToken cancellationToken)
     {
       var id = _idGenerator.New();
       var configurationId = new ConfigurationId(request.ProjectId, id);
       var configuration = new Configuration(configurationId, request.Name, request.Description);
       var created = await _store.StoreAsync(configuration, cancellationToken);
-        
+
       return created;
     }
   }

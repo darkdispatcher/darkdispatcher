@@ -27,7 +27,7 @@ internal static class Extensions
   {
     builder.Services.AddTransient<IEventStore, MartenEventStore>();
     builder.Services.AddScoped<IReadRepository, MartenReadRepository>();
-      
+
     var martenConfig = new MartenOptions();
     builder.Configuration.GetSection(DefaultConfigKey).Bind(martenConfig);
 
@@ -48,7 +48,7 @@ internal static class Extensions
           o.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
         });
         options.Serializer(systemTextJsonSerializer);
-          
+
         options.Events.StreamIdentity = StreamIdentity.AsString;
         options.Events.TenancyStyle = TenancyStyle.Conjoined;
 
@@ -57,9 +57,9 @@ internal static class Extensions
         // Projections
         options.Projections.AsyncMode = martenConfig.DaemonMode;
         options.Projections.RegisterAllProjections();
-          
+
         options.Policies.AllDocumentsAreMultiTenanted();
-          
+
         configureOptions?.Invoke(options);
       })
       .InitializeStore();
@@ -74,7 +74,7 @@ internal static class Extensions
 
     return builder;
   }
-    
+
   /// <summary>
   /// Registers all projections of <see cref="IProjection"/> for Marten.
   /// </summary>

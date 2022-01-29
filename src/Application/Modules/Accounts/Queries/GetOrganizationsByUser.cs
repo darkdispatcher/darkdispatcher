@@ -12,7 +12,7 @@ namespace DarkDispatcher.Application.Modules.Accounts.Queries;
 public class GetOrganizationsByUser
 {
   public record Query(string UserId) : IQuery<IReadOnlyCollection<OrganizationProjection>>;
-    
+
   internal class Handler : IQueryHandler<Query, IReadOnlyCollection<OrganizationProjection>>
   {
     private readonly IReadRepository _repository;
@@ -21,7 +21,7 @@ public class GetOrganizationsByUser
     {
       _repository = repository;
     }
-      
+
     public async Task<IReadOnlyCollection<OrganizationProjection>> Handle(Query request, CancellationToken cancellationToken)
     {
       // TODO: Use actual UserId

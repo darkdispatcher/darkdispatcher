@@ -3,7 +3,7 @@ using DarkDispatcher.Domain.Accounts.Events.v1;
 
 namespace DarkDispatcher.Application.Modules.Accounts.Projections;
 
-public record OrganizationProjection : 
+public record OrganizationProjection :
   IProjection<OrganizationCreated>,
   IProjection<OrganizationDeleted>,
   IProjection<OrganizationUpdated>

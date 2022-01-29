@@ -12,7 +12,7 @@ public class QueryBus : IQueryBus
     _mediator = mediator;
   }
 
-  public Task<TResponse> SendAsync<TQuery, TResponse>(TQuery query) 
+  public Task<TResponse> SendAsync<TQuery, TResponse>(TQuery query)
     where TQuery : IQuery<TResponse>
     where TResponse : notnull
   {

@@ -18,7 +18,7 @@ public class UpdateConfiguration
       // TODO: Add Validation
     }
   }
-    
+
   internal class Handler : ICommandHandler<Command, Configuration>
   {
     private readonly IAggregateStore _store;
@@ -27,7 +27,7 @@ public class UpdateConfiguration
     {
       _store = store;
     }
-      
+
     public async Task<Configuration> Handle(Command request, CancellationToken cancellationToken)
     {
       var updated = await _store.StoreAsync(request.Configuration, cancellationToken);

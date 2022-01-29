@@ -25,7 +25,7 @@ public interface IAggregateStore
   /// <typeparam name="TAggregate">Aggregate type</typeparam>
   /// <returns></returns>
   ValueTask<TAggregate> LoadAsync<TAggregate>(
-    AggregateId aggregateId, 
+    AggregateId aggregateId,
     long? version = null,
     CancellationToken cancellationToken = default)
     where TAggregate : Aggregate, new();

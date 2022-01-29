@@ -1,4 +1,4 @@
-﻿namespace DarkDispatcher.Infrastructure.Marten.Identity;
+namespace DarkDispatcher.Infrastructure.Marten.Identity;
 
 internal class Defaults
 {

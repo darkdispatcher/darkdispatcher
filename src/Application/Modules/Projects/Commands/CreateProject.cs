@@ -28,12 +28,12 @@ public class CreateProject
       RuleFor(x => x.Name)
         .NotEmpty().WithMessage("Name is required.")
         .Length(min, max).WithMessage($"Name must be between {min} and {max} characters.");
-        
+
       RuleFor(x => x.Description)
         .MaximumLength(250).WithMessage("Description must not exceed 250 characters.");
     }
   }
-    
+
   internal class Handler : ICommandHandler<Command, Project>
   {
     private readonly IAggregateStore _store;
@@ -44,14 +44,14 @@ public class CreateProject
       _store = store;
       _idGenerator = idGenerator;
     }
-      
+
     public async Task<Project> Handle(Command request, CancellationToken cancellationToken)
     {
       var id = _idGenerator.New();
       var projectId = new ProjectId(request.OrganizationId, id);
       var project = new Project(projectId, request.Name, request.Description);
       var created = await _store.StoreAsync(project, cancellationToken);
-        
+
       return created;
     }
   }

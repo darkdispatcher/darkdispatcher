@@ -3,7 +3,7 @@ using DarkDispatcher.Core.Aggregates;
 namespace DarkDispatcher.Core.Tests.Helpers;
 
 internal record TestAggregateId(string Value) : AggregateId(Value);
-  
+
 internal sealed class TestAggregate : Aggregate<TestAggregateState, TestAggregateId>
 {
   public TestAggregate(TestAggregateId id, string name)
@@ -17,14 +17,14 @@ internal sealed class TestAggregate : Aggregate<TestAggregateState, TestAggregat
     var @event = new TestEvents.TestAggregateUpdated(GetId(), name);
     Apply(@event);
   }
-    
+
   public void Delete()
   {
     var @event = new TestEvents.TestAggregateDeleted(GetId());
     Apply(@event);
   }
 }
-  
+
 internal record TestAggregateState : AggregateState<TestAggregateState, TestAggregateId>
 {
   public TestAggregateState()
@@ -34,18 +34,18 @@ internal record TestAggregateState : AggregateState<TestAggregateState, TestAggr
       Id = new TestAggregateId(created.Id),
       Name = created.Name
     });
-      
+
     On<TestEvents.TestAggregateUpdated>((state, updated) => state with
     {
       Name = updated.Name
     });
-      
+
     On<TestEvents.TestAggregateDeleted>((state, deleted) => state with
     {
       IsDeleted = true
     });
   }
-    
+
   public string Name { get; init; } = null!;
   public bool IsDeleted { get; init; }
 }

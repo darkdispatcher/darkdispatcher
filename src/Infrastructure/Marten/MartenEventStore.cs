@@ -28,7 +28,7 @@ public class MartenEventStore : IEventStore
     where TAggregate : Aggregate
   {
     await using var session = GetSession(streamId);
-      
+
     session.Events.Append(streamId.AggregateId, expectedVersion, events);
     await session.SaveChangesAsync(cancellationToken);
   }
@@ -46,8 +46,8 @@ public class MartenEventStore : IEventStore
   }
 
   public async Task ReadStreamAsync(
-    StreamId streamId, 
-    long startVersion, 
+    StreamId streamId,
+    long startVersion,
     Action<DomainEvent> callback,
     CancellationToken cancellationToken = default)
   {
@@ -60,7 +60,7 @@ public class MartenEventStore : IEventStore
       callback(@event);
     }
   }
-    
+
   private IDocumentSession GetSession(StreamId streamId)
   {
     return !string.IsNullOrWhiteSpace(streamId.TenantId) ? _store.OpenSession(streamId.TenantId) : _store.OpenSession();

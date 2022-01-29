@@ -1,4 +1,4 @@
-﻿using DarkDispatcher.Core.Aggregates;
+using DarkDispatcher.Core.Aggregates;
 
 namespace DarkDispatcher.Domain.Projects.Ids;
 

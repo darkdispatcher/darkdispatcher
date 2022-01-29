@@ -33,23 +33,23 @@ public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TReques
   {
     _logger.LogInformation("[{Prefix}] Handle request={X-RequestData} and response={X-ResponseData}",
       nameof(ValidationBehavior<TRequest, TResponse>), typeof(TRequest).Name, typeof(TResponse).Name);
-      
+
     if (!_validators.Any())
       return await next();
-      
+
     var context = new ValidationContext<TRequest>(request);
     var validationResults = await Task.WhenAll(_validators.Select(v => v.ValidateAsync(context, cancellationToken)));
     var failures = validationResults.SelectMany(r => r.Errors).Where(f => f != null).ToList();
-      
+
     _logger.LogDebug($"Handling {typeof(TRequest).FullName} with content {JsonSerializer.Serialize(request)}");
-      
+
     if (failures.Count != 0)
       throw new ValidationException(failures);
 
     var response = await next();
-      
+
     _logger.LogInformation($"Handled {typeof(TRequest).FullName}");
-      
+
     return response;
   }
 }

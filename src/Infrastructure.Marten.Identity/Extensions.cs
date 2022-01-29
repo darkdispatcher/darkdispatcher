@@ -20,7 +20,7 @@ public static class Extensions
 
 
     builder.Services.AddHostedService<SeedService>();
-    
+
     return builder;
   }
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text.Json.Serialization;
 using Marten;
 using Marten.Services;
@@ -17,7 +17,7 @@ public class DatabaseFixture : IDisposable
     {
       _.Connection("Host=127.0.0.1;Port=5434;Database=DarkDispatcher;User Id=postgres;Password=DarkDispatcher20!;");
       _.AutoCreateSchemaObjects = AutoCreate.All;
-      
+
       var systemTextJsonSerializer = new SystemTextJsonSerializer
       {
         Casing = Casing.CamelCase,
@@ -28,7 +28,7 @@ public class DatabaseFixture : IDisposable
         o.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
       });
       _.Serializer(systemTextJsonSerializer);
-      
+
       _.Policies.AllDocumentsAreMultiTenanted();
     });
   }

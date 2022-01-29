@@ -15,7 +15,7 @@ namespace DarkDispatcher.Application.Modules.Projects.Commands;
 
 public class CreateFeature
 {
-  public record Command(ConfigurationId ConfigurationId, string Key, string Name, VariationType Type, Variation[] Variations, RuleVariationDefaults Defaults, Tag[] Tags = null, string? Description = null) : ICommand<Feature>;
+  public record Command(ConfigurationId ConfigurationId, string Key, string Name, VariationType Type, Variation[] Variations, RuleVariationDefaults Defaults, Tag[]? Tags = null, string? Description = null) : ICommand<Feature>;
 
   internal class Validator : AbstractValidator<Command>
   {
@@ -30,12 +30,12 @@ public class CreateFeature
       RuleFor(x => x.Name)
         .NotEmpty().WithMessage("Name is required.")
         .Length(min, max).WithMessage($"Name must be between {min} and {max} characters.");
-        
+
       RuleFor(x => x.Description)
         .MaximumLength(250).WithMessage("Description must not exceed 250 characters.");
     }
   }
-    
+
   internal class Handler : ICommandHandler<Command, Feature>
   {
     private readonly IAggregateStore _store;
@@ -46,14 +46,14 @@ public class CreateFeature
       _store = store;
       _idGenerator = idGenerator;
     }
-      
+
     public async Task<Feature> Handle(Command request, CancellationToken cancellationToken)
     {
       var id = _idGenerator.New();
       var featureId = new FeatureId(request.ConfigurationId, id);
       var feature = new Feature(featureId, request.Key, request.Name, request.Type, request.Variations, request.Defaults, request.Tags, request.Description);
       var created = await _store.StoreAsync(feature, cancellationToken);
-        
+
       return created;
     }
   }

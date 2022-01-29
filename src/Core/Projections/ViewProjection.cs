@@ -12,7 +12,8 @@ public abstract class ViewProjection
   protected void On<TEvent>(Action<TEvent> handle)
     where TEvent : DomainEvent
   {
-    if (!Handlers.TryAdd(typeof(TEvent), x => handle((TEvent) x))) {
+    if (!Handlers.TryAdd(typeof(TEvent), x => handle((TEvent)x)))
+    {
       throw new InvalidOperationException($"Duplicate handler for {typeof(TEvent).Name}");
     }
   }

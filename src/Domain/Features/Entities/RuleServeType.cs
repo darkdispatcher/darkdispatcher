@@ -1,4 +1,4 @@
-﻿using DarkDispatcher.Domain.SeedWork;
+using DarkDispatcher.Domain.SeedWork;
 
 namespace DarkDispatcher.Domain.Features.Entities;
 

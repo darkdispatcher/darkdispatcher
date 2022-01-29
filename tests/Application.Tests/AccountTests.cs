@@ -1,9 +1,9 @@
 using System.Linq;
-using Xunit;
 using DarkDispatcher.Domain.Accounts;
 using DarkDispatcher.Domain.Accounts.Events.v1;
 using DarkDispatcher.Domain.Accounts.Ids;
 using FluentAssertions;
+using Xunit;
 
 namespace DarkDispatcher.Application.Tests;
 

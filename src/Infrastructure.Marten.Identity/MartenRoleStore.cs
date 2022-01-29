@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -31,7 +31,7 @@ public class MartenRoleStore<TRole> :
   }
 
   public IQueryable<TRole> Roles => _documentSession.Query<TRole>();
-  
+
   /// <summary>
   /// Creates a new role in a store as an asynchronous operation.
   /// </summary>
@@ -44,14 +44,14 @@ public class MartenRoleStore<TRole> :
     ThrowIfDisposed();
     if (role == null)
       throw new ArgumentNullException(nameof(role));
-    
+
     _documentSession.Insert(role);
     await _documentSession.SaveChangesAsync(cancellationToken);
 
     return IdentityResult.Success;
   }
 
-  
+
   /// <summary>
   /// Updates a role in a store as an asynchronous operation.
   /// </summary>
@@ -64,7 +64,7 @@ public class MartenRoleStore<TRole> :
     ThrowIfDisposed();
     if (role == null)
       throw new ArgumentNullException(nameof(role));
-    
+
     _documentSession.Update(role);
     role.ConcurrencyStamp = Guid.NewGuid().ToString();
 
@@ -76,7 +76,7 @@ public class MartenRoleStore<TRole> :
     {
       return IdentityResult.Failed(new IdentityError { Description = "Concurrency error" });
     }
-    
+
     return IdentityResult.Success;
   }
 
@@ -111,7 +111,7 @@ public class MartenRoleStore<TRole> :
     ThrowIfDisposed();
     if (role == null)
       throw new ArgumentNullException(nameof(role));
-    
+
     return Task.FromResult(role.Id.ToString());
   }
 
@@ -127,7 +127,7 @@ public class MartenRoleStore<TRole> :
     ThrowIfDisposed();
     if (role == null)
       throw new ArgumentNullException(nameof(role));
-    
+
     return Task.FromResult(role.Name);
   }
 
@@ -144,7 +144,7 @@ public class MartenRoleStore<TRole> :
     ThrowIfDisposed();
     if (role == null)
       throw new ArgumentNullException(nameof(role));
-    
+
     role.Name = roleName;
     return Task.CompletedTask;
   }
@@ -161,7 +161,7 @@ public class MartenRoleStore<TRole> :
     ThrowIfDisposed();
     if (role == null)
       throw new ArgumentNullException(nameof(role));
-    
+
     return Task.FromResult(role.NormalizedName);
   }
 
@@ -178,7 +178,7 @@ public class MartenRoleStore<TRole> :
     ThrowIfDisposed();
     if (role == null)
       throw new ArgumentNullException(nameof(role));
-    
+
     role.NormalizedName = normalizedName;
     return Task.CompletedTask;
   }
@@ -240,7 +240,7 @@ public class MartenRoleStore<TRole> :
     if (claim == null)
       throw new ArgumentNullException(nameof(claim));
 
-    role.Claims.Add(new RoleClaim{ ClaimType = claim.Type, ClaimValue = claim.Value });
+    role.Claims.Add(new RoleClaim { ClaimType = claim.Type, ClaimValue = claim.Value });
     return Task.CompletedTask;
   }
 
@@ -260,14 +260,14 @@ public class MartenRoleStore<TRole> :
       throw new ArgumentNullException(nameof(claim));
 
     var claimsToRemove = role.Claims.Where(c => c.ClaimType == claim.Type && c.ClaimValue == claim.Value).ToList();
-    foreach(var c in claimsToRemove)
+    foreach (var c in claimsToRemove)
     {
       role.Claims.Remove(c);
     }
 
     return Task.CompletedTask;
   }
-  
+
   /// <summary>
   /// Throws if this class has been disposed.
   /// </summary>
@@ -278,7 +278,7 @@ public class MartenRoleStore<TRole> :
       throw new ObjectDisposedException(GetType().Name);
     }
   }
-  
+
   /// <summary>
   /// Dispose the stores
   /// </summary>

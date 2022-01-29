@@ -7,6 +7,6 @@ internal class TestProjection1
 {
   public void Apply(TestEvents.TestAggregateCreated @event)
   {
-      
+
   }
 }

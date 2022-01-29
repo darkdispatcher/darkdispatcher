@@ -26,7 +26,7 @@ public class UserStoreTests :
     return CreateSession();
   }
 
-  protected override void AddUserStore(IServiceCollection services, object context = null)
+  protected override void AddUserStore(IServiceCollection services, object? context = null)
   {
     var session = (IDocumentSession)context;
     services.AddSingleton<IUserStore<User>>(new MartenUserStore(session));
@@ -62,7 +62,7 @@ public class UserStoreTests :
     return _session ??= _fixture.DocumentStore.OpenSession();
   }
 
-  protected override void AddRoleStore(IServiceCollection services, object context = null)
+  protected override void AddRoleStore(IServiceCollection services, object? context = null)
   {
     var session = (IDocumentSession)context;
     services.AddSingleton<IRoleStore<Role>>(new MartenRoleStore(session));

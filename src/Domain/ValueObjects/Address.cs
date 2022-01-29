@@ -2,9 +2,9 @@ namespace DarkDispatcher.Domain.ValueObjects;
 
 public record Address(
   string Address1,
-  string City, 
-  string State, 
-  string PostalCode, 
+  string City,
+  string State,
+  string PostalCode,
   string Country,
   string? Address2 = null)
 {

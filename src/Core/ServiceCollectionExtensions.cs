@@ -21,22 +21,22 @@ internal static class ServiceCollectionExtensions
       .AddTransient<INotificationHandler<TEvent>>(sp => sp.GetRequiredService<TEventHandler>())
       .AddTransient<IEventHandler<TEvent>>(sp => sp.GetRequiredService<TEventHandler>());
   }
-    
+
   public static IDarkDispatcherBuilder AddDarkDispatcherCore(this IServiceCollection services, IConfiguration configuration)
   {
     services
       .AddMediatR()
       .AddScoped<ICommandBus, CommandBus>()
       .AddScoped<IQueryBus, QueryBus>();
-      
+
     services.AddScoped<IAggregateStore, AggregateStore>();
     services.TryAddScoped<IIdGenerator, GuidIdGenerator>();
     services.TryAddScoped<IEventStore, InMemoryEventStore>();
     services.TryAddScoped<IEventBus, EventBus>();
-      
+
     return DarkDispatcherBuilder.Create(configuration, services);
   }
-    
+
   private static IServiceCollection AddMediatR(this IServiceCollection services)
   {
     return services.AddScoped<IMediator, Mediator>()

@@ -11,10 +11,10 @@ public class TypeExtensionsTests
   public void GivenAGenericInterface_WhenClassesImplementInterface_ShouldFindAllConcreteImplementations()
   {
     // Arrange
-      
+
     // Act
     var types = typeof(IProjection<>).GetAllTypesImplementingOpenGenericType();
-      
+
     // Assert
     types.Should().HaveCount(2);
   }

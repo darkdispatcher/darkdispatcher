@@ -11,7 +11,7 @@ namespace DarkDispatcher.Application.Modules.Accounts.Queries;
 public class GetOrganization
 {
   public record Query(string OrganizationId) : IQuery<OrganizationProjection>;
-    
+
   internal class Handler : IQueryHandler<Query, OrganizationProjection>
   {
     private readonly IReadRepository _repository;

@@ -7,7 +7,7 @@ public static class Defaults
   public const string WriteModelSchema = "events";
   public const string ReadModelSchema = "dd";
 }
-  
+
 public class MartenOptions
 {
   public string ConnectionString { get; set; } = default!;

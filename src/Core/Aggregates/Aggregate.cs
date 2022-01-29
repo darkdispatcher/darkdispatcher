@@ -10,7 +10,7 @@ namespace DarkDispatcher.Core.Aggregates;
 public abstract class Aggregate
 {
   private readonly ConcurrentQueue<DomainEvent> _changes = new();
-    
+
   public IReadOnlyCollection<DomainEvent> Changes => _changes.ToImmutableList();
 
   /// <summary>
@@ -19,14 +19,14 @@ public abstract class Aggregate
   /// </summary>
   /// <returns></returns>
   public abstract string? GetTenantId();
-    
+
   /// <summary>
   /// Get the aggregate id in a storage-friendly format. Allows using a value object as the aggregate id
   /// inside the model, which then gets converted to a string for storage purposes.
   /// </summary>
   /// <returns></returns>
   public abstract string GetId();
-    
+
   public long Version { get; protected set; }
 
   /// <summary>
@@ -90,10 +90,11 @@ public abstract class Aggregate<T> : Aggregate where T : AggregateState<T>, new(
     return state.When(evt);
   }
 }
-  
+
 public abstract class Aggregate<T, TId> : Aggregate<T>
   where T : AggregateState<T, TId>, new()
-  where TId : AggregateId {
+  where TId : AggregateId
+{
   public TId GetAggregateId() => State.Id;
   public override string? GetTenantId() => State.Id.TenantId;
   public override string GetId() => State.Id.Value;

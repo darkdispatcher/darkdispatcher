@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -14,7 +14,7 @@ namespace DarkDispatcher.Infrastructure.Marten.Identity;
 public class MartenUserStore :
   MartenUserStore<User, Role, UserClaim, UserLogin, UserToken>
 {
-  public MartenUserStore(IDocumentSession documentSession) : 
+  public MartenUserStore(IDocumentSession documentSession) :
     base(documentSession)
   {
   }
@@ -32,7 +32,7 @@ public class MartenUserStore<TUser, TRole, TUserClaim, TUserLogin, TUserToken> :
 {
   private readonly IDocumentSession _documentSession;
 
-  public MartenUserStore(IDocumentSession documentSession, IdentityErrorDescriber describer = null)
+  public MartenUserStore(IDocumentSession documentSession, IdentityErrorDescriber? describer = null)
     : base(describer ?? new IdentityErrorDescriber())
   {
     _documentSession = documentSession ?? throw new ArgumentNullException(nameof(documentSession));
@@ -195,7 +195,7 @@ public class MartenUserStore<TUser, TRole, TUserClaim, TUserLogin, TUserToken> :
   {
     cancellationToken.ThrowIfCancellationRequested();
 
-    var user = await Users.SingleOrDefaultAsync(x => 
+    var user = await Users.SingleOrDefaultAsync(x =>
       x.Logins.Any(l => l.LoginProvider == loginProvider && l.ProviderKey == providerKey), cancellationToken);
 
     if (user == null)
@@ -402,14 +402,14 @@ public class MartenUserStore<TUser, TRole, TUserClaim, TUserLogin, TUserToken> :
 
     if (login == null)
       throw new ArgumentNullException(nameof(login));
-    
+
     var existingUser = await FindByLoginAsync(login.LoginProvider, login.ProviderKey, cancellationToken);
     if (existingUser != null)
     {
       //_logger.LogWarning("AddLogin for user failed because it was already associated with another user.");
       return;
     }
-   
+
     user.Logins.Add(CreateUserLogin(user, login));
   }
 
@@ -489,7 +489,7 @@ public class MartenUserStore<TUser, TRole, TUserClaim, TUserLogin, TUserToken> :
     ThrowIfDisposed();
     if (user == null)
       throw new ArgumentNullException(nameof(user));
-    
+
     if (string.IsNullOrWhiteSpace(normalizedRoleName))
       throw new ArgumentException("Value cannot be null or empty.", nameof(normalizedRoleName));
 
@@ -498,7 +498,7 @@ public class MartenUserStore<TUser, TRole, TUserClaim, TUserLogin, TUserToken> :
     {
       throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, "Role {0} does not exist.", normalizedRoleName));
     }
-    
+
     user.Roles.Add(role.NormalizedName);
   }
 
@@ -517,7 +517,7 @@ public class MartenUserStore<TUser, TRole, TUserClaim, TUserLogin, TUserToken> :
       throw new ArgumentNullException(nameof(user));
     if (string.IsNullOrWhiteSpace(normalizedRoleName))
       throw new ArgumentException("Value cannot be null or empty.", nameof(normalizedRoleName));
-    
+
     var role = await Roles.FirstOrDefaultAsync(r => r.NormalizedName == normalizedRoleName, cancellationToken);
     if (role != null)
     {
@@ -537,7 +537,7 @@ public class MartenUserStore<TUser, TRole, TUserClaim, TUserLogin, TUserToken> :
     ThrowIfDisposed();
     if (user == null)
       throw new ArgumentNullException(nameof(user));
-    
+
     var roles = await Roles.Where(role => user.Roles.Contains(role.NormalizedName))
       .Select(role => role.Name)
       .ToListAsync(cancellationToken);
@@ -561,15 +561,15 @@ public class MartenUserStore<TUser, TRole, TUserClaim, TUserLogin, TUserToken> :
       throw new ArgumentNullException(nameof(user));
     if (string.IsNullOrWhiteSpace(normalizedRoleName))
       throw new ArgumentException("Value cannot be null or empty.", nameof(normalizedRoleName));
-    
+
     var role = await Roles.FirstOrDefaultAsync(r => r.NormalizedName == normalizedRoleName, cancellationToken);
 
     if (role is null)
       throw new InvalidOperationException($"Role '{normalizedRoleName}' does not exist.");
-    
+
     return user.Roles.Contains(role.NormalizedName);
   }
-  
+
   /// <summary>
   /// Retrieves all users in the specified role.
   /// </summary>

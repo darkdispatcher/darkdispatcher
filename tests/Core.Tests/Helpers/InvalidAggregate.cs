@@ -3,7 +3,7 @@ using DarkDispatcher.Core.Aggregates;
 namespace DarkDispatcher.Core.Tests.Helpers;
 
 internal record InvalidAggregateId(string Value) : AggregateId(Value);
-  
+
 internal sealed class InvalidAggregate : Aggregate<InvalidAggregateState, InvalidAggregateId>
 {
   public InvalidAggregate(InvalidAggregateId id)
@@ -20,6 +20,6 @@ internal record InvalidAggregateState : AggregateState<InvalidAggregateState, In
     On<TestEvents.Invalid>((state, invalid) => state with { });
     On<TestEvents.Invalid>((state, invalid) => state with { });
   }
-    
+
   public string Name { get; init; } = null!;
 }

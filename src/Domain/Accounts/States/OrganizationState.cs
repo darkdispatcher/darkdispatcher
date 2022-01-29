@@ -1,4 +1,4 @@
-﻿using DarkDispatcher.Core.Aggregates;
+using DarkDispatcher.Core.Aggregates;
 using DarkDispatcher.Domain.Accounts.Events.v1;
 using DarkDispatcher.Domain.Accounts.Ids;
 
@@ -13,19 +13,19 @@ public record OrganizationState : AggregateState<OrganizationState, Organization
       Id = new OrganizationId(created.Id),
       Name = created.Name
     });
-      
+
     On<OrganizationUpdated>((state, updated) => state with
     {
       Name = updated.Name
     });
-      
+
     On<OrganizationDeleted>((state, deleted) => state with
     {
       IsDeleted = true
     });
   }
-    
+
   public string Name { get; init; } = null!;
-    
+
   public bool IsDeleted { get; init; }
 }

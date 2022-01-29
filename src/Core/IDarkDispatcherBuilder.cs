@@ -22,6 +22,6 @@ internal class DarkDispatcherBuilder : IDarkDispatcherBuilder
     _configuration = configuration;
     _services = services;
   }
-    
+
   public static IDarkDispatcherBuilder Create(IConfiguration configuration, IServiceCollection services) => new DarkDispatcherBuilder(configuration, services);
 }

@@ -9,7 +9,7 @@ public static class Extensions
   public static ILoggingBuilder AddDefaultLogging(this ILoggingBuilder builder, IConfiguration configuration)
   {
     builder.ClearProviders();
-    
+
     var logger = new LoggerConfiguration()
       .Enrich.FromLogContext()
       .Enrich.WithEnvironmentName()

@@ -36,7 +36,7 @@ internal class AggregateStore : IAggregateStore
     var aggregate = new TAggregate();
     var streamId = new StreamId(aggregateId.TenantId, aggregateId.Value);
     await _eventStore.ReadStreamAsync(streamId, version ?? 0L, e => aggregate.Fold(e), cancellationToken);
-      
+
     return aggregate;
   }
 }

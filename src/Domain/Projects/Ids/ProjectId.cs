@@ -1,4 +1,4 @@
-﻿using DarkDispatcher.Core.Aggregates;
+using DarkDispatcher.Core.Aggregates;
 using DarkDispatcher.Domain.Accounts;
 using DarkDispatcher.Domain.Accounts.Ids;
 

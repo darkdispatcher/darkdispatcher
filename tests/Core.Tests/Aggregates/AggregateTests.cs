@@ -24,7 +24,7 @@ public class AggregateTests
     var @event = aggregate.Changes.Single();
     @event.Should().BeOfType<TestEvents.TestAggregateUpdated>();
   }
-    
+
   [Fact]
   public void GivenANewAggregate_WhenClearingChanges_ShouldHaveEmptyChanges()
   {
@@ -40,16 +40,16 @@ public class AggregateTests
     // Assert
     aggregate.Changes.Should().BeEmpty();
   }
-    
+
   [Fact]
   public void GivenAnInvalidAggregateState_WhenRegisteringEventTwice_ShouldThrowException()
   {
     // Arrange
-      
+
     // Act/Assert
     Assert.Throws<InvalidOperationException>(() => new InvalidAggregateState());
   }
-    
+
   [Fact]
   public void GivenANewAggregate_WhenLoadingFromHistory_ShouldMutateProperly()
   {
@@ -61,8 +61,8 @@ public class AggregateTests
     aggregate.ClearChanges();
     var created = new TestEvents.TestAggregateCreated(id.Value, "test99");
     var updated = new TestEvents.TestAggregateUpdated(id.Value, "test101");
-    aggregate.Load(new DomainEvent[]{ created, updated });
-      
+    aggregate.Load(new DomainEvent[] { created, updated });
+
     // Assert
     aggregate.Changes.Should().BeEmpty();
     aggregate.State.Name.Should().Be("test101");

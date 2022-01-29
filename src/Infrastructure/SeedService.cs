@@ -37,10 +37,10 @@ internal class SeedService : IHostedService
 
     // Organization
     var organization = await mediator.Send(new CreateOrganization.Command("Acme"), cancellationToken);
-      
+
     // Project
     var project = await mediator.Send(new CreateProject.Command(organization.GetAggregateId(), "Demo", "Demo project"), cancellationToken);
-      
+
     // Environments
     var development = new Environment(idGenerator.New(), "Development", "Development Environment", EnvironmentColor.FireEngineRed);
     var staging = new Environment(idGenerator.New(), "Staging", "Staging Environment", EnvironmentColor.WindsorTan);
@@ -59,7 +59,7 @@ internal class SeedService : IHostedService
     var configuration = await mediator.Send(new CreateConfiguration.Command(project.GetAggregateId(), "Demo Config", "Demo configuration"), cancellationToken);
     configuration.Update("demo-config", "Demo Config");
     configuration = await mediator.Send(new UpdateConfiguration.Command(configuration), cancellationToken);
-      
+
     // Features
     var trueVariation = new Variation(idGenerator.New(), "true");
     var falseVariation = new Variation(idGenerator.New(), "false");

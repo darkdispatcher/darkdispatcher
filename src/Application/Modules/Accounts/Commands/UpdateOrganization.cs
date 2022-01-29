@@ -18,7 +18,7 @@ public class UpdateOrganization
     {
       _store = store;
     }
-      
+
     public async Task<Organization> Handle(Command request, CancellationToken cancellationToken)
     {
       var updated = await _store.StoreAsync(request.Organization, cancellationToken);

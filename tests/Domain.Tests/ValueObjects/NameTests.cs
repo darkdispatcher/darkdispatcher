@@ -1,4 +1,4 @@
-﻿using DarkDispatcher.Domain.ValueObjects;
+using DarkDispatcher.Domain.ValueObjects;
 using Xunit;
 
 namespace DarkDispatcher.Domain.Tests.ValueObjects;
@@ -18,7 +18,7 @@ public class NameTests
     // Assert
     Assert.Equal(expected, actual);
   }
-  
+
   [Fact]
   public void GivenTwoNames_WhenComparing_ShouldEqual()
   {
@@ -28,11 +28,11 @@ public class NameTests
 
     // Act
     var result = name1.Equals(name2);
-    
+
     // Assert
     Assert.True(result);
   }
-  
+
   [Fact]
   public void GivenTwoNames_WhenComparing_ShouldNotEqual()
   {
@@ -42,7 +42,7 @@ public class NameTests
 
     // Act
     var result = name1.Equals(name2);
-    
+
     // Assert
     Assert.False(result);
   }

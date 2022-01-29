@@ -1,4 +1,4 @@
-﻿using DarkDispatcher.Core.Events;
+using DarkDispatcher.Core.Events;
 using DarkDispatcher.Domain.Features.Ids;
 using DarkDispatcher.Domain.Projects.Entities;
 

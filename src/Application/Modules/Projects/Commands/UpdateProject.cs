@@ -18,7 +18,7 @@ public class UpdateProject
     {
       _store = store;
     }
-      
+
     public async Task<Project> Handle(Command request, CancellationToken cancellationToken)
     {
       var updated = await _store.StoreAsync(request.Project, cancellationToken);

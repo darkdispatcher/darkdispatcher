@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using DarkDispatcher.Domain.ValueObjects;
 using Xunit;
 
@@ -19,7 +19,7 @@ public class AddressTests
     // Assert
     Assert.Equal(expected, actual);
   }
-  
+
   [Fact]
   public void GivenTwoAddresses_WhenComparing_ShouldEqual()
   {
@@ -29,11 +29,11 @@ public class AddressTests
 
     // Act
     var result = address1.Equals(address2);
-    
+
     // Assert
     Assert.True(result);
   }
-  
+
   [Fact]
   public void GivenTwoAddresses_WhenComparing_ShouldNotEqual()
   {
@@ -43,7 +43,7 @@ public class AddressTests
 
     // Act
     var result = address1.Equals(address2);
-    
+
     // Assert
     Assert.False(result);
   }

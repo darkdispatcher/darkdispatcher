@@ -19,7 +19,7 @@ public class CreateOrganization
     {
       const int min = 4;
       const int max = 50;
-        
+
       RuleFor(x => x.Name)
         .NotEmpty().WithMessage("Name is required.")
         .Length(min, max).WithMessage($"Name must be between {min} and {max} characters.");
@@ -36,13 +36,13 @@ public class CreateOrganization
       _store = store;
       _idGenerator = idGenerator;
     }
-      
+
     public async Task<Organization> Handle(Command request, CancellationToken cancellationToken)
     {
       var id = _idGenerator.New();
       var organization = new Organization(new OrganizationId(id), request.Name);
       var created = await _store.StoreAsync(organization, cancellationToken);
-        
+
       return created;
     }
   }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Marten.Schema;
 using Microsoft.AspNetCore.Identity;
@@ -18,7 +18,7 @@ public class User : IdentityUser<string>
   {
     UserName = userName;
   }
-  
+
   public IList<string> Roles { get; set; } = new List<string>();
   public IList<UserClaim> Claims { get; } = new List<UserClaim>();
   public IList<UserLogin> Logins { get; } = new List<UserLogin>();

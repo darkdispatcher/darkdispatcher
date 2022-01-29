@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using DarkDispatcher.Domain.SeedWork;
 using Xunit;
 
@@ -44,14 +44,14 @@ public class EnumerationTests
     var color1 = TestColor.Red;
     var color2 = TestColor.Green;
     const int expected = -1;
-    
+
     // Act
     var result = color1.CompareTo(color2);
-    
+
     // Assert
     Assert.Equal(expected, result);
   }
-  
+
   [Fact]
   public void GivenTestColor_WhenCompareTo_ShouldValid()
   {
@@ -59,10 +59,10 @@ public class EnumerationTests
     var color1 = TestColor.Red;
     var color2 = TestColor.Red;
     const int expected = 0;
-    
+
     // Act
     var result = color1.CompareTo(color2);
-    
+
     // Assert
     Assert.Equal(expected, result);
   }
@@ -76,37 +76,37 @@ public class EnumerationTests
       TestColor.Red,
       TestColor.Green
     };
-    
+
     // Act
-    var colors = Enumeration.Where<TestColor>(c => c.HexValue.StartsWith("#9900") || c.HexValue.StartsWith("#0099") );
-    
+    var colors = Enumeration.Where<TestColor>(c => c.HexValue.StartsWith("#9900") || c.HexValue.StartsWith("#0099"));
+
     // Assert
     Assert.Equal(expected, colors);
   }
-  
+
   [Fact]
   public void GivenTestColor_WhenSingleOrDefault_ShouldResultInSingle()
   {
     // Arrange
     var expected = TestColor.Red;
-    
+
     // Act
     var color = Enumeration.SingleOrDefault<TestColor>(c => c.HexValue.StartsWith("#9900"));
-    
+
     // Assert
     Assert.Equal(expected, color);
   }
-  
+
   [Fact]
   public void GivenTestColor_WhenSingleOrDefault_ShouldResultInDefault()
   {
     // Arrange
     var expected = default(TestColor);
-    
-    
+
+
     // Act
     var color = Enumeration.SingleOrDefault<TestColor>(c => c.HexValue.StartsWith("#8888"));
-    
+
     // Assert
     Assert.Equal(expected, color);
   }
@@ -117,7 +117,7 @@ public class EnumerationTests
     public static readonly TestColor Green = new(2, "Green", "#009900");
     public static readonly TestColor Blue = new(3, "Blue", "#000099");
   }
-  
+
   public static TheoryData<TestColor> NameData => new()
   {
     TestColor.Red,

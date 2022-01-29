@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Marten.Schema;
 using Microsoft.AspNetCore.Identity;
 

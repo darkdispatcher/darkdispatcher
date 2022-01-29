@@ -22,7 +22,7 @@ public sealed class Feature : Aggregate<FeatureState, FeatureId>
     Tag[] tags,
     string? description = null)
   {
-    if (State.Type is VariationType.String or VariationType.Number && variations.HasDuplicates(x => x.Value)) 
+    if (State.Type is VariationType.String or VariationType.Number && variations.HasDuplicates(x => x.Value))
       throw new InvalidOperationException("All variation values must be unique.");
 
     var @event = new FeatureCreated(id, key, name, type, variations, defaults, tags, description);

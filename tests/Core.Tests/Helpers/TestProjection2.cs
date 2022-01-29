@@ -7,6 +7,6 @@ internal class TestProjection2
 {
   public void Apply(TestEvents.Invalid @event)
   {
-      
+
   }
 }

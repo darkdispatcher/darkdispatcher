@@ -26,7 +26,7 @@ public class InMemoryEventStoreTests
     var streamId = new StreamId("1234", aggregate.GetId());
     await eventStore!.AddEventsAsync<TestAggregate>(streamId, aggregate.Version, aggregate.Changes);
     var events = await eventStore.GetEventsAsync(streamId);
-      
+
     // Assert
     events.Should().HaveCount(2);
     events.Should().ContainSingle(x => x is TestEvents.TestAggregateCreated);
