@@ -1,0 +1,33 @@
+﻿name: release
+
+on:
+  workflow_dispatch:
+    inputs:
+      release:
+        default: 1.0.0
+        description: The release version (1.1.0)
+        required: true
+
+env:
+  HUSKY: '0'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      -  uses: actions/checkout@v2
+         with:
+           fetch-depth: 0
+
+      - name: Create Github Release
+        uses: release-drafter/release-drafter@master
+        with:
+          version: ${{ github.event.inputs.version }}
+          publish: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: force update major tag
+        run: |
+          git tag v${{ steps.version.outputs.major }} ${{ steps.version.outputs.tag }} -f
+          git push origin refs/tags/v${{ steps.version.outputs.major }} -f
