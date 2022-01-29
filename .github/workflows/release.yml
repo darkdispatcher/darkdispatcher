@@ -2,10 +2,6 @@
 
 on:
   workflow_dispatch:
-    inputs:
-      version:
-        description: The release version (v1.1.0)
-        required: true
 
 env:
   HUSKY: '0'
@@ -24,7 +20,9 @@ jobs:
           node-version: 16
 
       - name: Create Release
-        run: npx semantic-release
+        run: |
+          npm i @semantic-release/changelog -D
+          npx semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
