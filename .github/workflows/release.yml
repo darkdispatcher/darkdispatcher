@@ -18,15 +18,27 @@ jobs:
          with:
            fetch-depth: 0
 
-      - name: Create Github Release
-        uses: release-drafter/release-drafter@master
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
         with:
-          version: ${{ github.event.inputs.version }}
-          publish: true
+          node-version: 16
+
+#      - run: npm install -g semantic-release
+
+      - name: Create Release
+        run: npx semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: force update major tag
-        run: |
-          git tag v${{ steps.version.outputs.major }} ${{ steps.version.outputs.tag }} -f
-          git push origin refs/tags/v${{ steps.version.outputs.major }} -f
+#      - name: Create Github Release
+#        uses: release-drafter/release-drafter@master
+#        with:
+#          version: ${{ github.event.inputs.version }}
+#          publish: true
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+#      - name: force update major tag
+#        run: |
+#          git tag v${{ steps.version.outputs.major }} ${{ steps.version.outputs.tag }} -f
+#          git push origin refs/tags/v${{ steps.version.outputs.major }} -f
