@@ -1,9 +1,10 @@
-name: main
-concurrency: main
+name: ci
+concurrency: ci
 
 on:
   pull_request:
-    branches: [ main ]
+    branches:
+      - main
     paths-ignore:
       - '.github/ISSUE_TEMPLATE/**'
       - '**/*.md'
@@ -47,7 +48,7 @@ jobs:
         with:
           dotnet-version: ${{ matrix.dotnet-version }}
 
-      - name: build backend
+      - name: build
         run: dotnet build ./ -c Release
 
       - name: test
