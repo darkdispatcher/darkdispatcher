@@ -24,6 +24,7 @@ ProjectSection(SolutionItems) = preProject
 	global.json = global.json
 	nuget.config = nuget.config
 	.dockerignore = .dockerignore
+	.editorconfig = .editorconfig
 EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server", "src\Server\Server.csproj", "{FC9F2DEE-BBCA-4971-B399-1F7B19A4F365}"
