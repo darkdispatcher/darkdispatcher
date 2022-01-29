@@ -1,0 +1,18 @@
+{
+  "profiles": {
+    "Api": {
+      "commandName": "Project",
+      "dotnetRunMessages": "true",
+      "launchBrowser": false,
+      "launchUrl": "https://localhost:5001",
+      "applicationUrl": "http://localhost:5000;https://localhost:5001",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ConnectionStrings:Identity": "Host=127.0.0.1;Port=5434;Database=DarkDispatcher;User Id=postgres;Password=DarkDispatcher20!;",
+        "EventStore:ShouldRecreateDatabase": "True",
+        "EventStore:DaemonMode": "Solo",
+        "EventStore:ConnectionString": "Server=127.0.0.1;Port=5434;Database=DarkDispatcher;User Id=postgres;Password=DarkDispatcher20!;"
+      }
+    }
+  }
+}
