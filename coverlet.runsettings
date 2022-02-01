@@ -6,7 +6,7 @@
                 <Configuration>
                     <Format>opencover</Format>
                     <Exclude>[coverlet.*.tests?]*,[*]Coverlet.Core*</Exclude>
-                    <Include>[coverlet.*]*,[*]Coverlet.Core*</Include>
+                    <Include></Include>
                     <ExcludeByAttribute>Obsolete,GeneratedCodeAttribute,CompilerGeneratedAttribute</ExcludeByAttribute>
                     <ExcludeByFile></ExcludeByFile>
                     <IncludeDirectory>./src/</IncludeDirectory>
