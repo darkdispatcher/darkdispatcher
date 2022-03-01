@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using DarkDispatcher.Domain.ValueObjects;
 using Xunit;
 

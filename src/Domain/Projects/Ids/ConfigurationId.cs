@@ -2,4 +2,4 @@ using DarkDispatcher.Core.Aggregates;
 
 namespace DarkDispatcher.Domain.Projects.Ids;
 
-public record ConfigurationId(ProjectId ProjectId, string Value) : AggregateId(ProjectId.TenantId, Value);
+public record ConfigurationId(string OrganizationId, string ProjectId, string Value) : AggregateId(OrganizationId, Value);

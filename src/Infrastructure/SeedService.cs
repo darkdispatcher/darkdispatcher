@@ -4,15 +4,12 @@ using System.Threading.Tasks;
 using DarkDispatcher.Application.Modules.Accounts.Commands;
 using DarkDispatcher.Application.Modules.Projects.Commands;
 using DarkDispatcher.Core.Ids;
-using DarkDispatcher.Domain.Features;
 using DarkDispatcher.Domain.Features.Entities;
-using DarkDispatcher.Domain.Projects;
 using DarkDispatcher.Domain.Projects.Entities;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Environment = DarkDispatcher.Domain.Projects.Entities.Environment;
 
 namespace DarkDispatcher.Infrastructure;
 
@@ -42,12 +39,9 @@ internal class SeedService : IHostedService
     var project = await mediator.Send(new CreateProject.Command(organization.GetAggregateId(), "Demo", "Demo project"), cancellationToken);
 
     // Environments
-    var development = new Environment(idGenerator.New(), "Development", "Development Environment", EnvironmentColor.FireEngineRed);
-    var staging = new Environment(idGenerator.New(), "Staging", "Staging Environment", EnvironmentColor.WindsorTan);
-    var production = new Environment(idGenerator.New(), "Production", "Production Environment", EnvironmentColor.GreenPigment);
-    project.CreateEnvironment(development);
-    project.CreateEnvironment(staging);
-    project.CreateEnvironment(production);
+    var development = await mediator.Send(new CreateEnvironment.Command(project.GetAggregateId(), "Development", "Development Environment", EnvironmentColor.FireEngineRed), cancellationToken);
+    var staging = await mediator.Send(new CreateEnvironment.Command(project.GetAggregateId(), "Staging", "Staging Environment", EnvironmentColor.WindsorTan), cancellationToken);
+    var production = await mediator.Send(new CreateEnvironment.Command(project.GetAggregateId(), "Production", "Production Environment", EnvironmentColor.GreenPigment), cancellationToken);
 
     // Tags
     var tag = new Tag(idGenerator.New(), "demo", TagColor.Concrete);

@@ -1,6 +1,4 @@
 using DarkDispatcher.Core;
-using Marten;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DarkDispatcher.Infrastructure.Marten.Identity;

@@ -64,8 +64,10 @@ public class UserStoreTests :
 
   protected override void AddRoleStore(IServiceCollection services, object? context = null)
   {
-    var session = (IDocumentSession)context;
-    services.AddSingleton<IRoleStore<Role>>(new MartenRoleStore(session));
+    if (context is IDocumentSession session)
+    {
+      services.AddSingleton<IRoleStore<Role>>(new MartenRoleStore(session));
+    }
   }
 
   protected override Role CreateTestRole(string roleNamePrefix = "", bool useRoleNamePrefixAsRoleName = false)

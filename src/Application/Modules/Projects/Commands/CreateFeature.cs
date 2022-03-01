@@ -6,7 +6,6 @@ using DarkDispatcher.Core.Persistence;
 using DarkDispatcher.Domain.Features;
 using DarkDispatcher.Domain.Features.Entities;
 using DarkDispatcher.Domain.Features.Ids;
-using DarkDispatcher.Domain.Projects;
 using DarkDispatcher.Domain.Projects.Entities;
 using DarkDispatcher.Domain.Projects.Ids;
 using FluentValidation;

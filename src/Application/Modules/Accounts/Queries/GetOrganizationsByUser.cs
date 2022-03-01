@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using DarkDispatcher.Application.Modules.Accounts.Projections;
 using DarkDispatcher.Core.Persistence;
 using DarkDispatcher.Core.Queries;
-using DarkDispatcher.Domain.Accounts;
 using DarkDispatcher.Domain.Accounts.Ids;
 
 namespace DarkDispatcher.Application.Modules.Accounts.Queries;

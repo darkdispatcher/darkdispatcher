@@ -1,32 +1,28 @@
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using DarkDispatcher.Core.Commands;
 using DarkDispatcher.Core.Ids;
 using DarkDispatcher.Core.Persistence;
 using DarkDispatcher.Domain.Projects;
+using DarkDispatcher.Domain.Projects.Entities;
 using DarkDispatcher.Domain.Projects.Ids;
 using FluentValidation;
 
 namespace DarkDispatcher.Application.Modules.Projects.Commands;
 
-public class CreateConfiguration
+public class CreateEnvironment
 {
-  public record Command(ProjectId ProjectId, string Name, string? Description) : ICommand<Configuration>;
+  public record Command(ProjectId ProjectId, string Name, string Description, EnvironmentColor Color) : ICommand<Environment>;
 
   internal class Validator : AbstractValidator<Command>
   {
-    public Validator(IReadRepository repository)
+    public Validator()
     {
       const int min = 4;
       const int max = 50;
 
       RuleFor(x => x.ProjectId)
-        .NotEmpty().WithMessage($"{nameof(ProjectId)} is required.");
-
-      // .MustAsync(async (key, cancellationToken) =>
-      // {
-      //   var exists = await repository.FindAsync<ConfigurationProjection>()
-      // });
+        .NotEmpty().WithMessage("ProjectId is required.");
 
       RuleFor(x => x.Name)
         .NotEmpty().WithMessage("Name is required.")
@@ -37,7 +33,7 @@ public class CreateConfiguration
     }
   }
 
-  internal class Handler : ICommandHandler<Command, Configuration>
+  internal class Handler : ICommandHandler<Command, Environment>
   {
     private readonly IAggregateStore _store;
     private readonly IIdGenerator _idGenerator;
@@ -48,14 +44,12 @@ public class CreateConfiguration
       _idGenerator = idGenerator;
     }
 
-    public async Task<Configuration> Handle(Command request, CancellationToken cancellationToken)
+    public async Task<Environment> Handle(Command request, CancellationToken cancellationToken)
     {
       var id = _idGenerator.New();
-      var organizationId = request.ProjectId.TenantId!;
-      var projectId = request.ProjectId.Value;
-      var configurationId = new ConfigurationId(organizationId, projectId, id);
-      var configuration = new Configuration(configurationId, request.Name, request.Description);
-      var created = await _store.StoreAsync(configuration, cancellationToken);
+      var environmentId = new EnvironmentId(request.ProjectId, id);
+      var environment = new Environment(environmentId, request.Name, request.Description, request.Color);
+      var created = await _store.StoreAsync(environment, cancellationToken);
 
       return created;
     }

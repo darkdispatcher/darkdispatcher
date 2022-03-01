@@ -2,7 +2,6 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using DarkDispatcher.Core.Ids;
-using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -30,21 +29,26 @@ internal class SeedService : IHostedService
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<Role>>();
 
-    var roleId = idGenerator.New();
-    await roleManager.CreateAsync(new Role
+    const string adminRoleName = "admin";
+    var role = await roleManager.FindByNameAsync(adminRoleName);
+    if (role == null)
     {
-      Id = roleId,
-      Name = "admin"
-    });
+      role = new Role {  Id = idGenerator.New(), Name = adminRoleName };
+      await roleManager.CreateAsync(role);
+    }
 
-    var user = new User("admin")
+    var user = await userManager.FindByEmailAsync("joe@gmail.com");
+    if (user == null)
     {
-      Id = idGenerator.New(),
-      Email = "joe@gmail.com"
-    };
-    await userManager.CreateAsync(user);
-    await userManager.AddPasswordAsync(user, "Adm!n123");
-    await userManager.AddToRoleAsync(user, "admin");
+      user = new User("admin")
+      {
+        Id = idGenerator.New(),
+        Email = "joe@gmail.com"
+      };
+      await userManager.CreateAsync(user);
+      await userManager.AddPasswordAsync(user, "Adm!n123");
+      await userManager.AddToRoleAsync(user, adminRoleName);
+    }
   }
 
   public Task StopAsync(CancellationToken cancellationToken)

@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using DarkDispatcher.Core.Commands;
 using DarkDispatcher.Core.Ids;
 using DarkDispatcher.Core.Persistence;
-using DarkDispatcher.Domain.Accounts;
 using DarkDispatcher.Domain.Accounts.Ids;
 using DarkDispatcher.Domain.Projects;
 using DarkDispatcher.Domain.Projects.Ids;
@@ -48,7 +47,8 @@ public class CreateProject
     public async Task<Project> Handle(Command request, CancellationToken cancellationToken)
     {
       var id = _idGenerator.New();
-      var projectId = new ProjectId(request.OrganizationId, id);
+      var organizationId = request.OrganizationId.Value;
+      var projectId = new ProjectId(organizationId, id);
       var project = new Project(projectId, request.Name, request.Description);
       var created = await _store.StoreAsync(project, cancellationToken);
 

@@ -26,26 +26,6 @@ public sealed class Project : Aggregate<ProjectState, ProjectId>
     Apply(@event);
   }
 
-  public void CreateEnvironment(Environment environment)
-  {
-    var (id, name, description, color) = environment;
-    var @event = new EnvironmentCreated(GetAggregateId(), id, name, description, color.ToString());
-    Apply(@event);
-  }
-
-  public void UpdateEnvironment(Environment environment)
-  {
-    var (id, name, description, color) = environment;
-    var @event = new EnvironmentUpdated(GetAggregateId(), id, name, description, color.ToString());
-    Apply(@event);
-  }
-
-  public void DeleteEnvironment(Environment environment)
-  {
-    var @event = new EnvironmentDeleted(GetAggregateId(), environment.Id, environment.Name);
-    Apply(@event);
-  }
-
   public void CreateTag(Tag tag)
   {
     var (id, name, color) = tag;

@@ -12,14 +12,12 @@ public record ProjectState : AggregateState<ProjectState, ProjectId>
   public ProjectState()
   {
     RegisterProjectEventHandlers();
-    RegisterEnvironmentEventHandlers();
     RegisterTagEventHandlers();
   }
 
   public string Name { get; init; } = null!;
   public string? Description { get; init; }
   public bool IsDeleted { get; init; }
-  public List<Environment> Environments { get; } = new();
   public List<Tag> Tags { get; } = new();
 
   private void RegisterProjectEventHandlers()
@@ -40,43 +38,6 @@ public record ProjectState : AggregateState<ProjectState, ProjectId>
     On<ProjectDeleted>((state, _) => state with
     {
       IsDeleted = true
-    });
-  }
-
-  private void RegisterEnvironmentEventHandlers()
-  {
-    On<EnvironmentCreated>((state, added) =>
-    {
-      var color = EnvironmentColor.FindColorOrDefault(added.Name);
-      var environment = new Environment(added.Id, added.Name, added.Description, color);
-      state.Environments.Add(environment);
-      return state;
-    });
-
-    On<EnvironmentUpdated>((state, updated) =>
-    {
-      var index = state.Environments.FindIndex(x => x.Id == updated.Id);
-      if (index >= 0)
-      {
-        state.Environments[index] = Environments[index] with
-        {
-          Name = updated.Name,
-          Description = updated.Description,
-          Color = EnvironmentColor.FindColorOrDefault(updated.Color)
-        };
-      }
-
-      return state;
-    });
-
-    On<EnvironmentDeleted>((state, deleted) =>
-    {
-      var environment = state.Environments.SingleOrDefault(x => x.Id == deleted.Id);
-
-      if (environment != null)
-        state.Environments.Remove(environment);
-
-      return state;
     });
   }
 

@@ -3,5 +3,4 @@ using DarkDispatcher.Domain.Projects.Ids;
 
 namespace DarkDispatcher.Domain.Projects.Events.v1;
 
-public record EnvironmentCreated
-  (ProjectId ProjectId, string Id, string Name, string Description, string Color) : DomainEvent;
+public record EnvironmentCreated(EnvironmentId EnvironmentId, string Name, string Description, string Color) : DomainEvent;
