@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "Api": {
+    "Server": {
       "commandName": "Project",
       "dotnetRunMessages": "true",
       "launchBrowser": false,

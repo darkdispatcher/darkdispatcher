@@ -98,5 +98,4 @@ public abstract class Aggregate<T, TId> : Aggregate<T>
   public TId GetAggregateId() => State.Id;
   public override string? GetTenantId() => State.Id.TenantId;
   public override string GetId() => State.Id.Value;
-
 }

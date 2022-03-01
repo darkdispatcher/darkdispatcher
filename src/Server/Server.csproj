@@ -2,14 +2,7 @@
   <PropertyGroup>
     <Product>Dark Dispatcher Server</Product>
   </PropertyGroup>
-  <ItemGroup>
-    <Protobuf Include="..\..\proto\v1\**\*.proto" ProtoRoot="../../proto/v1/" GrpcServices="Server" />
-  </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Grpc.AspNetCore" Version="2.42.0" />
-  </ItemGroup>
-  
   <ItemGroup>
     <ProjectReference Include="..\Infrastructure.Marten.Identity\Infrastructure.Marten.Identity.csproj" />
     <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />

@@ -6,7 +6,6 @@ using DarkDispatcher.Core;
 using DarkDispatcher.Infrastructure;
 using DarkDispatcher.Infrastructure.Logging;
 using DarkDispatcher.Infrastructure.Marten.Identity;
-using DarkDispatcher.Server.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -26,10 +25,7 @@ public static class StartupExtensions
       .AddInfrastructure(builder.Environment)
       .AddMartenIdentity();
 
-    builder.Services.AddGrpc(options =>
-    {
-      options.EnableDetailedErrors = true;
-    });
+    builder.Services.AddControllers();
 
     builder.StartupBanner();
 
@@ -43,15 +39,8 @@ public static class StartupExtensions
     app.UseRouting();
     app.UseEndpoints(endpoints =>
     {
-      endpoints.MapGrpcService<OrganizationService>();
-
-      endpoints.MapGet("/",
-        async context =>
-        {
-          await context.Response.WriteAsync("Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
-        });
+      endpoints.MapDefaultControllerRoute();
     });
-
 
     return app.RunAsync();
   }
