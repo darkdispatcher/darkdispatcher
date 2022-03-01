@@ -12,6 +12,7 @@ on:
 
 env:
   HUSKY: '0'
+  DOTNET_VERSION: '6.0.x'
   DOTNET_NOLOGO: true
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
   DOTNET_CLI_TELEMETRY_OPTOUT: true
@@ -39,17 +40,14 @@ jobs:
           --health-timeout 5s
           --health-retries 5
 
-    strategy:
-      matrix:
-        dotnet-version: [ '6.0.x' ]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Setup .Net ${{ matrix.dotnet-version }}
-        uses: actions/setup-dotnet@v1
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v2
         with:
-          dotnet-version: ${{ matrix.dotnet-version }}
+          dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: build
         run: dotnet build -c Release
