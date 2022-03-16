@@ -8,9 +8,11 @@ public class EnvironmentProjection :
   IProjection<EnvironmentUpdated>,
   IProjection<EnvironmentDeleted>
 {
+  public string Id { get; private set; } = null!;
+
   public string OrganizationId { get; private set; } = null!;
   public string ProjectId { get; private set; } = null!;
-  public string Id { get; private set; } = null!;
+
   public string Name { get; private set; } = null!;
   public string? Description { get; private set; }
   public string Color { get; private set; }
@@ -18,7 +20,7 @@ public class EnvironmentProjection :
 
   public void Apply(EnvironmentCreated @event)
   {
-    OrganizationId = @event.EnvironmentId.ProjectId.TenantId;
+    OrganizationId = @event.EnvironmentId.TenantId;
     ProjectId = @event.EnvironmentId.ProjectId.Value;
     Id = @event.EnvironmentId.Value;
     Name = @event.Name;

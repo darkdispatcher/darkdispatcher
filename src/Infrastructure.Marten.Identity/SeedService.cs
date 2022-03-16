@@ -45,8 +45,10 @@ internal class SeedService : IHostedService
         Id = idGenerator.New(),
         Email = "joe@gmail.com"
       };
+
       await userManager.CreateAsync(user);
-      await userManager.AddPasswordAsync(user, "Adm!n123");
+      var password = Guid.NewGuid().ToString();
+      await userManager.AddPasswordAsync(user, password);
       await userManager.AddToRoleAsync(user, adminRoleName);
     }
   }

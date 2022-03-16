@@ -1,5 +1,6 @@
 using System;
 using System.Text.Json.Serialization;
+using DarkDispatcher.Application.Modules.Projects.Projections;
 using DarkDispatcher.Core;
 using DarkDispatcher.Core.Extensions;
 using DarkDispatcher.Core.Persistence;
@@ -53,6 +54,8 @@ internal static class Extensions
         options.Events.TenancyStyle = TenancyStyle.Conjoined;
 
         //options.Advanced.DefaultTenantUsageEnabled = false;
+
+        options.Schema.For<EnvironmentProjection>().Identity(x => x.Id);
 
         // Projections
         options.Projections.AsyncMode = martenConfig.DaemonMode;
