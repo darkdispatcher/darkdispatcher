@@ -6,6 +6,7 @@ using DarkDispatcher.Application.Modules.Projects.Commands;
 using DarkDispatcher.Core.Ids;
 using DarkDispatcher.Domain.Features.Entities;
 using DarkDispatcher.Domain.Projects.Entities;
+using Marten;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -29,8 +30,15 @@ internal class SeedService : IHostedService
   public async Task StartAsync(CancellationToken cancellationToken)
   {
     using var scope = _services.CreateScope();
+    var environment = scope.ServiceProvider.GetRequiredService<IHostEnvironment>();
     var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
     var idGenerator = scope.ServiceProvider.GetRequiredService<IIdGenerator>();
+
+    if (environment.IsDevelopment())
+    {
+      var documentStore = scope.ServiceProvider.GetRequiredService<IDocumentStore>();
+      await documentStore.Advanced.Clean.CompletelyRemoveAllAsync();
+    }
 
     // Organization
     _logger.LogInformation("Seeding organizations...");

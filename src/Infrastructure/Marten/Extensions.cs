@@ -7,6 +7,7 @@ using DarkDispatcher.Core.Persistence;
 using DarkDispatcher.Core.Projections;
 using Marten;
 using Marten.Events;
+using Marten.Events.Daemon.Resiliency;
 using Marten.Events.Projections;
 using Marten.Services;
 using Marten.Storage;
@@ -32,7 +33,7 @@ internal static class Extensions
     var martenConfig = new MartenOptions();
     builder.Configuration.GetSection(DefaultConfigKey).Bind(martenConfig);
 
-    var documentStore = builder.Services
+    var marten = builder.Services
       .AddMarten(options =>
       {
         options.Connection(martenConfig.ConnectionString);
@@ -41,8 +42,7 @@ internal static class Extensions
         options.DatabaseSchemaName = martenConfig.ReadModelSchema;
         var systemTextJsonSerializer = new SystemTextJsonSerializer
         {
-          Casing = Casing.CamelCase,
-          EnumStorage = EnumStorage.AsString
+          Casing = Casing.CamelCase, EnumStorage = EnumStorage.AsString
         };
         systemTextJsonSerializer.Customize(o =>
         {
@@ -53,27 +53,17 @@ internal static class Extensions
         options.Events.StreamIdentity = StreamIdentity.AsString;
         options.Events.TenancyStyle = TenancyStyle.Conjoined;
 
-        //options.Advanced.DefaultTenantUsageEnabled = false;
-
-        options.Schema.For<EnvironmentProjection>().Identity(x => x.Id);
-
         // Projections
-        options.Projections.AsyncMode = martenConfig.DaemonMode;
         options.Projections.RegisterAllProjections();
 
         options.Policies.AllDocumentsAreMultiTenanted();
 
+        options.AutoCreateSchemaObjects = AutoCreate.All;
+
         configureOptions?.Invoke(options);
       })
-      .InitializeStore();
-
-    if (martenConfig.ShouldRecreateDatabase)
-    {
-      documentStore.Advanced.Clean.CompletelyRemoveAll();
-    }
-
-    // TODO: Move to Hosted Service?
-    documentStore.Schema.ApplyAllConfiguredChangesToDatabaseAsync().Wait();
+      .AddAsyncDaemon(martenConfig.DaemonMode)
+      .ApplyAllDatabaseChangesOnStartup();
 
     return builder;
   }
@@ -87,12 +77,18 @@ internal static class Extensions
   private static ProjectionOptions RegisterAllProjections(this ProjectionOptions options, ProjectionLifecycle lifecycle = ProjectionLifecycle.Async)
   {
     var projections = typeof(IProjection<>).GetAllTypesImplementingOpenGenericType();
-    var methodInfo = typeof(ProjectionOptions).GetMethod(nameof(ProjectionOptions.SelfAggregate), new[] { typeof(ProjectionLifecycle?) });
+    var methodInfo = typeof(ProjectionOptions).GetMethod(nameof(ProjectionOptions.SelfAggregate), new[]
+    {
+      typeof(ProjectionLifecycle?)
+    });
 
     foreach (var view in projections)
     {
       var selfAggregateMethod = methodInfo!.MakeGenericMethod(view);
-      var parameters = new object[] { lifecycle };
+      var parameters = new object[]
+      {
+        lifecycle
+      };
       selfAggregateMethod.Invoke(options, parameters);
     }
 

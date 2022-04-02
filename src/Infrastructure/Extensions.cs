@@ -5,7 +5,7 @@ using DarkDispatcher.Infrastructure.Marten;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Weasel.Postgresql;
+using Weasel.Core;
 
 namespace DarkDispatcher.Infrastructure;
 

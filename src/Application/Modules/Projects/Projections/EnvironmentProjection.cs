@@ -12,10 +12,9 @@ public class EnvironmentProjection :
 
   public string OrganizationId { get; private set; } = null!;
   public string ProjectId { get; private set; } = null!;
-
   public string Name { get; private set; } = null!;
   public string? Description { get; private set; }
-  public string Color { get; private set; }
+  public string Color { get; private set; } = null!;
   public bool IsDeleted { get; private set; }
 
   public void Apply(EnvironmentCreated @event)
