@@ -1,4 +1,4 @@
-using DarkDispatcher.Application.Common.Behaviors;
+﻿using DarkDispatcher.Application.Common.Behaviors;
 using DarkDispatcher.Application.Modules.Accounts.Commands;
 using DarkDispatcher.Core;
 using DarkDispatcher.Infrastructure.Marten;
@@ -9,7 +9,7 @@ using Weasel.Core;
 
 namespace DarkDispatcher.Infrastructure;
 
-public static class Extensions
+public static class DarkDispatcherBuilderExtensions
 {
   public static IDarkDispatcherBuilder AddInfrastructure(this IDarkDispatcherBuilder builder, IHostEnvironment environment)
   {

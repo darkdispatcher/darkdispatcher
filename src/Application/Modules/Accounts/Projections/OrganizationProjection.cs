@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using DarkDispatcher.Core.Projections;
 using DarkDispatcher.Domain.Accounts.Events.v1;
 
@@ -13,6 +14,8 @@ public record OrganizationProjection :
   public string Name { get; set; } = null!;
 
   public bool IsDeleted { get; set; }
+
+  public ICollection<string> Users { get; set; } = null!;
 
   public void Apply(OrganizationCreated @event)
   {

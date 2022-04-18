@@ -61,7 +61,9 @@ internal static class Extensions
         options.AutoCreateSchemaObjects = AutoCreate.All;
 
         configureOptions?.Invoke(options);
-      })
+      });
+
+    marten
       .AddAsyncDaemon(martenConfig.DaemonMode)
       .ApplyAllDatabaseChangesOnStartup();
 

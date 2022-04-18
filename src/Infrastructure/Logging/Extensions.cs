@@ -1,7 +1,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Serilog;
-using Serilog.Events;
 
 namespace DarkDispatcher.Infrastructure.Logging;
 
@@ -12,7 +11,7 @@ public static class Extensions
     builder.ClearProviders();
 
     var logger = new LoggerConfiguration()
-      .MinimumLevel.Verbose()
+      .ReadFrom.Configuration(configuration)
       .Enrich.FromLogContext()
       .Enrich.WithEnvironmentName()
       .Enrich.WithMachineName()
