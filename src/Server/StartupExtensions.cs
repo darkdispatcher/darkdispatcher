@@ -6,9 +6,14 @@ using DarkDispatcher.Core;
 using DarkDispatcher.Infrastructure;
 using DarkDispatcher.Infrastructure.Logging;
 using DarkDispatcher.Infrastructure.Marten.Identity;
+using DarkDispatcher.Server.Queries;
+using HotChocolate.AspNetCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+using Organization = DarkDispatcher.Server.Models.Organization;
 
 namespace DarkDispatcher.Server;
 
@@ -20,11 +25,34 @@ public static class StartupExtensions
 
     // Services
     builder.Services
+      .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+      .AddJwtBearer(options =>
+      {
+        options.TokenValidationParameters =
+          new TokenValidationParameters
+          {
+            ValidIssuer = "",
+            ValidAudience = ""
+          };
+      });
+
+    builder.Services
+      .AddAuthorization()
       .AddDarkDispatcherCore(builder.Configuration)
       .AddInfrastructure(builder.Environment)
       .AddMartenIdentity();
 
-    builder.Services.AddControllers();
+    builder.Services
+      .AddGraphQLServer()
+      .AddAuthorization()
+
+      // Next we add the types to our schema.
+      .AddQueryType()
+      .AddMutationType()
+      .AddSubscriptionType()
+
+      .AddTypeExtension<OrganizationQueries>()
+      .AddType<Organization>();
 
     builder.StartupBanner();
 
@@ -35,10 +63,21 @@ public static class StartupExtensions
   {
     var app = builder.Build();
 
+    app.UseWebSockets();
     app.UseRouting();
+
+    app.UseAuthentication();
+    app.UseAuthorization();
+
     app.UseEndpoints(endpoints =>
     {
-      endpoints.MapDefaultControllerRoute();
+      endpoints.MapGraphQL()
+        .RequireAuthorization()
+        .WithOptions(new GraphQLServerOptions
+        {
+          AllowedGetOperations = AllowedGetOperations.QueryAndMutation,
+          EnableSchemaRequests = true
+        });
     });
 
     return app.RunAsync();
