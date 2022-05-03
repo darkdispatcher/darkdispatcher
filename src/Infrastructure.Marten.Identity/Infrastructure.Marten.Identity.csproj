@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
-    <PackageReference Include="Marten" Version="5.1.0" />
+    <PackageReference Include="Marten" Version="5.2.0" />
     <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="6.0.4" />
   </ItemGroup>
   <ItemGroup>
