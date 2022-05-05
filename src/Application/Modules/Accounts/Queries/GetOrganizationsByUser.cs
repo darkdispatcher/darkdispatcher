@@ -23,8 +23,9 @@ public class GetOrganizationsByUser
 
     public async Task<IReadOnlyCollection<OrganizationProjection>> Handle(Query request, CancellationToken cancellationToken)
     {
+      var organizationId = new OrganizationId("");
       var organizations =
-        await _repository.ListAsync<OrganizationProjection, OrganizationId>(new OrganizationId(""), x => x.IsDeleted == false && x.Users.Contains(request.UserId), cancellationToken);
+        await _repository.ListAsync<OrganizationProjection, OrganizationId>(organizationId, x => x.IsDeleted == false && x.Users.Contains(request.UserId), cancellationToken);
 
       return organizations;
     }

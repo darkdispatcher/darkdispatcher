@@ -6,13 +6,12 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using DarkDispatcher.Application.Modules.Accounts.Queries;
 using DarkDispatcher.Infrastructure.Extensions;
-using DarkDispatcher.Server.Models;
 using HotChocolate;
 using HotChocolate.Types;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace DarkDispatcher.Server.Queries;
+namespace DarkDispatcher.Server.Api.Organizations;
 
 [ExtendObjectType(OperationTypeNames.Query)]
 public class OrganizationQueries
@@ -24,6 +23,10 @@ public class OrganizationQueries
     _logger = logger;
   }
 
+  /// <summary>
+  /// List of the Organizations that belongs to the user.
+  /// </summary>
+  /// <returns></returns>
   public async Task<IReadOnlyCollection<Organization>> Organizations(ClaimsPrincipal user, [Service] IMediator mediator)
   {
     try

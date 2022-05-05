@@ -51,6 +51,11 @@ public abstract class Aggregate
   /// Clears all the pending changes.
   /// </summary>
   public void ClearChanges() => _changes.Clear();
+
+  /// <summary>
+  /// Use this method to ensure you are operating on an existing aggregate
+  /// </summary>
+  public bool Exists => Version > 0L;
 }
 
 public abstract class Aggregate<T> : Aggregate where T : AggregateState<T>, new()

@@ -24,7 +24,7 @@ public interface IAggregateStore
   /// <param name="cancellationToken">Cancellation token</param>
   /// <typeparam name="TAggregate">Aggregate type</typeparam>
   /// <returns></returns>
-  ValueTask<TAggregate> LoadAsync<TAggregate>(
+  ValueTask<TAggregate?> LoadAsync<TAggregate>(
     AggregateId aggregateId,
     long? version = null,
     CancellationToken cancellationToken = default)

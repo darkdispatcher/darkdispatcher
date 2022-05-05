@@ -12,6 +12,10 @@ internal sealed class TestAggregate : Aggregate<TestAggregateState, TestAggregat
     Apply(@event);
   }
 
+  public TestAggregate()
+  {
+  }
+
   public void Update(string name)
   {
     var @event = new TestEvents.TestAggregateUpdated(GetId(), name);

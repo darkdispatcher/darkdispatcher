@@ -27,7 +27,7 @@ internal class AggregateStore : IAggregateStore
     return aggregate;
   }
 
-  public async ValueTask<TAggregate> LoadAsync<TAggregate>(
+  public async ValueTask<TAggregate?> LoadAsync<TAggregate>(
     AggregateId aggregateId,
     long? version = null,
     CancellationToken cancellationToken = default)
@@ -37,6 +37,6 @@ internal class AggregateStore : IAggregateStore
     var streamId = new StreamId(aggregateId.TenantId, aggregateId.Value);
     await _eventStore.ReadStreamAsync(streamId, version ?? 0L, e => aggregate.Fold(e), cancellationToken);
 
-    return aggregate;
+    return !aggregate.Exists ? null : aggregate;
   }
 }

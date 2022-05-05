@@ -6,14 +6,14 @@ using DarkDispatcher.Core;
 using DarkDispatcher.Infrastructure;
 using DarkDispatcher.Infrastructure.Logging;
 using DarkDispatcher.Infrastructure.Marten.Identity;
-using DarkDispatcher.Server.Queries;
+using DarkDispatcher.Server.Api.Organizations;
 using HotChocolate.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using Organization = DarkDispatcher.Server.Models.Organization;
+using Organization = DarkDispatcher.Server.Api.Organizations.Organization;
 
 namespace DarkDispatcher.Server;
 
@@ -44,14 +44,19 @@ public static class StartupExtensions
 
     builder.Services
       .AddGraphQLServer()
+      .ModifyOptions(options =>
+      {
+        options.UseXmlDocumentation = true;
+      })
       .AddAuthorization()
 
       // Next we add the types to our schema.
       .AddQueryType()
       .AddMutationType()
-      .AddSubscriptionType()
+      //.AddSubscriptionType()
 
       .AddTypeExtension<OrganizationQueries>()
+      .AddTypeExtension<OrganizationMutations>()
       .AddType<Organization>();
 
     builder.StartupBanner();
@@ -72,7 +77,6 @@ public static class StartupExtensions
     app.UseEndpoints(endpoints =>
     {
       endpoints.MapGraphQL()
-        .RequireAuthorization()
         .WithOptions(new GraphQLServerOptions
         {
           AllowedGetOperations = AllowedGetOperations.QueryAndMutation,

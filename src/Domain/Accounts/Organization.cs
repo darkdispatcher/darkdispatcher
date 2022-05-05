@@ -13,6 +13,10 @@ public sealed class Organization : Aggregate<OrganizationState, OrganizationId>
     Apply(@event);
   }
 
+  public Organization()
+  {
+  }
+
   public void Update(string name)
   {
     var @event = new OrganizationUpdated(GetId(), name);

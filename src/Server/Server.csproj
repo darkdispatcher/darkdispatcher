@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Mutations" />
+    <Folder Include="Api" />
+    <Folder Include="Config" />
   </ItemGroup>
 </Project>

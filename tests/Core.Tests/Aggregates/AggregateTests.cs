@@ -10,6 +10,31 @@ namespace DarkDispatcher.Core.Tests.Aggregates;
 public class AggregateTests
 {
   [Fact]
+  public void GivenANewAggregate_ShouldBeVersionOne()
+  {
+    // Arrange
+    var id = new TestAggregateId(Guid.NewGuid().ToString());
+    var aggregate = new TestAggregate(id, "test");
+
+    // Assert
+    aggregate.Version.Should().Be(1);
+  }
+
+  [Fact]
+  public void GivenANewAggregate_WhenAddingAnEvent_ShouldBeVersionTwo()
+  {
+    // Arrange
+    var id = new TestAggregateId(Guid.NewGuid().ToString());
+    var aggregate = new TestAggregate(id, "test");
+
+    // Act
+    aggregate.Update("test2");
+
+    // Assert
+    aggregate.Version.Should().Be(2);
+  }
+
+  [Fact]
   public void GivenANewAggregate_WhenApplyingAnEvent_ShouldAddItToUncommittedEvents()
   {
     // Arrange
