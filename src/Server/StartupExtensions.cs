@@ -7,11 +7,13 @@ using DarkDispatcher.Infrastructure;
 using DarkDispatcher.Infrastructure.Logging;
 using DarkDispatcher.Infrastructure.Marten.Identity;
 using DarkDispatcher.Server.Api.Organizations;
+using DarkDispatcher.Server.Config;
 using HotChocolate.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Organization = DarkDispatcher.Server.Api.Organizations.Organization;
 
@@ -21,43 +23,15 @@ public static class StartupExtensions
 {
   public static WebApplicationBuilder AddDarkDispatcher(this WebApplicationBuilder builder)
   {
-    builder.Logging.AddDefaultLogging(builder.Configuration);
+    builder.Logging.ConfigureForDarkDispatcher(builder.Configuration);
 
     // Services
     builder.Services
-      .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-      .AddJwtBearer(options =>
-      {
-        options.TokenValidationParameters =
-          new TokenValidationParameters
-          {
-            ValidIssuer = "",
-            ValidAudience = ""
-          };
-      });
-
-    builder.Services
-      .AddAuthorization()
-      .AddDarkDispatcherCore(builder.Configuration)
+      .AddDarkDispatcherCore(builder.Configuration, builder.Environment.EnvironmentName)
+      .ConfigureJwtBearer()
+      .ConfigureGraphQL()
       .AddInfrastructure(builder.Environment)
       .AddMartenIdentity();
-
-    builder.Services
-      .AddGraphQLServer()
-      .ModifyOptions(options =>
-      {
-        options.UseXmlDocumentation = true;
-      })
-      .AddAuthorization()
-
-      // Next we add the types to our schema.
-      .AddQueryType()
-      .AddMutationType()
-      //.AddSubscriptionType()
-
-      .AddTypeExtension<OrganizationQueries>()
-      .AddTypeExtension<OrganizationMutations>()
-      .AddType<Organization>();
 
     builder.StartupBanner();
 

@@ -6,7 +6,7 @@ namespace DarkDispatcher.Infrastructure.Logging;
 
 public static class Extensions
 {
-  public static ILoggingBuilder AddDefaultLogging(this ILoggingBuilder builder, IConfiguration configuration)
+  public static ILoggingBuilder ConfigureForDarkDispatcher(this ILoggingBuilder builder, IConfiguration configuration)
   {
     builder.ClearProviders();
 

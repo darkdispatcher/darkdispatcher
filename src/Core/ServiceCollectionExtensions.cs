@@ -22,7 +22,7 @@ internal static class ServiceCollectionExtensions
       .AddTransient<IEventHandler<TEvent>>(sp => sp.GetRequiredService<TEventHandler>());
   }
 
-  public static IDarkDispatcherBuilder AddDarkDispatcherCore(this IServiceCollection services, IConfiguration configuration)
+  public static IDarkDispatcherBuilder AddDarkDispatcherCore(this IServiceCollection services, IConfiguration configuration, string environment)
   {
     services
       .AddMediatR()
@@ -34,7 +34,7 @@ internal static class ServiceCollectionExtensions
     services.TryAddScoped<IEventStore, InMemoryEventStore>();
     services.TryAddScoped<IEventBus, EventBus>();
 
-    return DarkDispatcherBuilder.Create(configuration, services);
+    return DarkDispatcherBuilder.Create(configuration, services, environment);
   }
 
   private static IServiceCollection AddMediatR(this IServiceCollection services)

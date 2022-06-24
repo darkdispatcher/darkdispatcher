@@ -22,7 +22,7 @@ public class ExtensionsTests
     var configurationMock = new Mock<IConfiguration>();
 
     // Act
-    services.AddDarkDispatcherCore(configurationMock.Object);
+    services.AddDarkDispatcherCore(configurationMock.Object, "tests");
 
     // Assert
     using var provider = services.BuildServiceProvider();
