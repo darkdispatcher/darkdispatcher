@@ -3,7 +3,6 @@ using System.Text.Json.Serialization;
 using Marten;
 using Marten.Services;
 using Weasel.Core;
-using Weasel.Postgresql;
 
 namespace DarkDispatcher.Infrastructure.Marten.Identity.Tests;
 

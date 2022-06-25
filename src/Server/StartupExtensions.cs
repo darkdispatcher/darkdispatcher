@@ -7,16 +7,10 @@ using DarkDispatcher.Core.Extensions;
 using DarkDispatcher.Infrastructure;
 using DarkDispatcher.Infrastructure.Logging;
 using DarkDispatcher.Infrastructure.Marten.Identity;
-using DarkDispatcher.Server.Api.Organizations;
 using DarkDispatcher.Server.Config;
 using HotChocolate.AspNetCore;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
-using Organization = DarkDispatcher.Server.Api.Organizations.Organization;
 
 namespace DarkDispatcher.Server;
 

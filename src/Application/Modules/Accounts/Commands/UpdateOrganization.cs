@@ -5,7 +5,6 @@ using DarkDispatcher.Core.Persistence;
 using DarkDispatcher.Domain.Accounts;
 using DarkDispatcher.Domain.Accounts.Ids;
 using FluentValidation;
-using MediatR;
 
 namespace DarkDispatcher.Application.Modules.Accounts.Commands;
 

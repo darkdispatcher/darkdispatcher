@@ -1,20 +1,17 @@
 using System;
 using System.Text.Json.Serialization;
-using DarkDispatcher.Application.Modules.Projects.Projections;
 using DarkDispatcher.Core;
 using DarkDispatcher.Core.Extensions;
 using DarkDispatcher.Core.Persistence;
 using DarkDispatcher.Core.Projections;
 using Marten;
 using Marten.Events;
-using Marten.Events.Daemon.Resiliency;
 using Marten.Events.Projections;
 using Marten.Services;
 using Marten.Storage;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Weasel.Core;
-using Weasel.Postgresql;
 using IEventStore = DarkDispatcher.Core.Persistence.IEventStore;
 
 namespace DarkDispatcher.Infrastructure.Marten;

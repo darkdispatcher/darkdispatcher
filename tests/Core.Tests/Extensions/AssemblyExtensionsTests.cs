@@ -2,7 +2,6 @@ using System.Reflection;
 using DarkDispatcher.Core.Extensions;
 using DarkDispatcher.Core.Tests.Helpers;
 using FluentAssertions;
-using Moq;
 using Xunit;
 
 namespace DarkDispatcher.Core.Tests.Extensions;
