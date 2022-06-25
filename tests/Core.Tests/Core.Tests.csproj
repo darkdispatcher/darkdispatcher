@@ -23,5 +23,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Core\Core.csproj" />
+    <ProjectReference Include="..\Core.Tests.Helpers\Core.Tests.Helpers.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Helpers" />
   </ItemGroup>
 </Project>

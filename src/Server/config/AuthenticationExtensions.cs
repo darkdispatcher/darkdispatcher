@@ -4,11 +4,16 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace DarkDispatcher.Server.Config;
 
-public static class JwtBearerExtensions
+public static class AuthenticationExtensions
 {
   private const string JwtSectionName = "JwtAuthentication";
 
-  public static IDarkDispatcherBuilder ConfigureJwtBearer(this IDarkDispatcherBuilder builder)
+  /// <summary>
+  /// Add JwtBearer Authentication to Server
+  /// </summary>
+  /// <param name="builder"></param>
+  /// <returns></returns>
+  public static IDarkDispatcherBuilder AddDarkDispatcherAuthentication(this IDarkDispatcherBuilder builder)
   {
     builder.Services.Configure<JwtBearerOptions>(JwtBearerDefaults.AuthenticationScheme, builder.Configuration.GetSection(JwtSectionName));
 

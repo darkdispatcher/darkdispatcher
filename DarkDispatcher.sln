@@ -36,6 +36,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Marten.Ident
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Marten.Identity.Tests", "tests\Infrastructure.Marten.Identity.Tests\Infrastructure.Marten.Identity.Tests.csproj", "{C43A990A-7449-4D9F-9582-2DB44BE2264E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.Tests.Helpers", "tests\Core.Tests.Helpers\Core.Tests.Helpers.csproj", "{7A75AC4B-A747-4581-BA7E-3A21CDCF5AD8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -52,6 +54,7 @@ Global
 		{AA7E27E5-9884-40BA-886F-EF3F6ABAFB45} = {A3E186F1-80E6-4BE9-BC75-EDD9B37B8008}
 		{D95F9CF0-3EF5-4B73-881B-BB8253E6DC8F} = {EDB52D78-445A-4FC9-A30C-BBD0BED7E5A1}
 		{C43A990A-7449-4D9F-9582-2DB44BE2264E} = {A3E186F1-80E6-4BE9-BC75-EDD9B37B8008}
+		{7A75AC4B-A747-4581-BA7E-3A21CDCF5AD8} = {A3E186F1-80E6-4BE9-BC75-EDD9B37B8008}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{531EBC27-3818-4F2E-8FFD-028188DDD51E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -94,5 +97,9 @@ Global
 		{C43A990A-7449-4D9F-9582-2DB44BE2264E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C43A990A-7449-4D9F-9582-2DB44BE2264E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C43A990A-7449-4D9F-9582-2DB44BE2264E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A75AC4B-A747-4581-BA7E-3A21CDCF5AD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A75AC4B-A747-4581-BA7E-3A21CDCF5AD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A75AC4B-A747-4581-BA7E-3A21CDCF5AD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A75AC4B-A747-4581-BA7E-3A21CDCF5AD8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
